@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DOAN_SALE_LAPTOP.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -26,5 +27,7 @@ namespace DOAN_SALE_LAPTOP.Controllers
 
             return View();
         }
+
+        DuLieu csdl = new DuLieu();
     }
 }
