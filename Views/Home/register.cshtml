@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="register-container">
+    <div class="register-box shadow-lg rounded-3 p-4 bg-white">
+        <h2 class="text-center mb-4 text-primary fw-bold">Đăng ký tài khoản</h2>
+
+        <form method="post" action="/Home/register">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Họ tên</label>
+                <input type="text" name="hoten" class="form-control" placeholder="Nhập họ tên..." required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Nhập email..." required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..." required />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Số điện thoại</label>
+                <input type="text" name="sodt" class="form-control" placeholder="Nhập số điện thoại..." />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="bi bi-person-plus"></i> Đăng ký
+            </button>
+        </form>
+
+        @if (ViewBag.Message != null)
+        {
+            <p class="text-center text-success mt-3 fw-semibold">@ViewBag.Message</p>
+        }
+
+        <div class="text-center mt-3">
+            <a href="/Home/Login" class="text-decoration-none">Đã có tài khoản? <b>Đăng nhập</b></a>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        body {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .register-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+        }
+
+        .form-label {
+            color: #2d3436;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #0984e3, #00cec9);
+            border: none;
+            transition: 0.3s;
+        }
+
+            .btn-primary:hover {
+                background: linear-gradient(90deg, #00cec9, #0984e3);
+                transform: translateY(-2px);
+            }
+
+        input.form-control {
+            border-radius: 8px;
+        }
+
+        .text-primary {
+            color: #0984e3 !important;
+        }
+    </style>
+}
