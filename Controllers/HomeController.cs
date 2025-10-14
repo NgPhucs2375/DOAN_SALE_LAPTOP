@@ -19,8 +19,22 @@ namespace DOAN_SALE_LAPTOP.Controllers
         DB db = new DB();
         public ActionResult Index()
         {
-            return View();
+            var laptop = db.dsLaptop;
+            return View(db.dsLaptop);
         }
+
+        public ActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return HttpNotFound();
+
+            var laptop = db.dsLaptop.FirstOrDefault(l => l.IDLaptop == id);
+            if (laptop == null)
+                return HttpNotFound();
+
+            return View(laptop);
+        }
+
 
         public ActionResult About()
         {
@@ -89,5 +103,6 @@ namespace DOAN_SALE_LAPTOP.Controllers
             Session["KHACHHANG"] = null;
             return RedirectToAction("Login");
         }
+        
     }
 }
