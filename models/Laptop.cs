@@ -13,6 +13,6 @@ namespace DOAN_SALE_LAPTOP.Models
         public string GraphLaptop { set; get; }
         public string IDLoai { set; get; }
         public string IDCungCap {  set; get; }
-
+        public string HinhAnh { get; set; }
     }
 }

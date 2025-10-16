@@ -1,0 +1,70 @@
+﻿@model DOAN_SALE_LAPTOP.Models.Laptop
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container py-5 animate__animated animate__fadeIn">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden mx-auto" style="max-width: 900px;">
+        <div class="row g-0">
+            <div class="col-md-6 text-center bg-light p-4 d-flex align-items-center justify-content-center">
+                <img src="~/Content/Images/@Model.HinhAnh"
+                     class="img-fluid rounded-3 shadow-sm"
+                     alt="@Model.NameLaptop"
+                     style="max-height: 400px; object-fit: contain;">
+            </div>
+            <div class="col-md-6 p-5">
+                <h2 class="fw-bold mb-3 text-center text-primary">
+                    <i class="fa-solid fa-laptop"></i> @Model.NameLaptop
+                </h2>
+
+                <h4 class="text-danger fw-bold text-center mb-4">
+                    💰 @String.Format("{0:N0} VNĐ", Model.PriceLaptop)
+                </h4>
+
+                <hr />
+
+                <div class="fs-5">
+                    <p><b>🧠 Cấu hình:</b> <span class="text-dark">@Model.GraphLaptop</span></p>
+                    <p><b>🏷️ Mã loại:</b> <span class="text-dark">@Model.IDLoai</span></p>
+                    <p><b>🏢 Nhà cung cấp:</b> <span class="text-dark">@Model.IDCungCap</span></p>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg px-4 me-2">
+                        <i class="fa-solid fa-arrow-left"></i> Quay lại
+                    </a>
+           
+                    <div class="col-6 btn btn-success">
+                        @using (Html.BeginForm("MuaNgay", "Home", FormMethod.Post))
+                        {
+                            @Html.Hidden("id", Model.IDLaptop)
+                            <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                <i class="fas fa-bolt"></i> Mua ngay
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+    .text-primary {
+        color: #007bff !important;
+    }
+
+    .btn {
+        border-radius: 30px;
+    }
+</style>

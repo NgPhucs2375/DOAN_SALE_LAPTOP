@@ -1,6 +1,7 @@
 ﻿CREATE DATABASE QL_LAPTOP
+GO
 USE QL_LAPTOP
-
+GO
 --- BẢNG KHÁCH HÀNG (Thông tin khách hàng)
 CREATE TABLE KHACHHANG
 (
@@ -10,6 +11,7 @@ CREATE TABLE KHACHHANG
 	EMAIL NVARCHAR(50) UNIQUE,
 	DIACHI NVARCHAR(100),
 	NGAYSINH DATE,
+	MATKHAU VARCHAR(50) NOT NULL,
 	GIOITINH NVARCHAR(5) CHECK(GIOITINH IN(N'NAM',N'NỮ'))
 );
 
@@ -23,6 +25,7 @@ CREATE TABLE NHANVIEN
 	SODT VARCHAR(11) UNIQUE CHECK(SODT LIKE '0%'),
 	EMAIL NVARCHAR(50) UNIQUE,
 	LUONG DECIMAL(12,2) CHECK(LUONG>0),
+	MATKHAU VARCHAR(50) NOT NULL,
 	NGAYVAOLAM DATE DEFAULT GETDATE()
 );
 
@@ -72,7 +75,7 @@ CREATE TABLE HOADON
 	MAKH CHAR(5) NOT NULL,
 	MANV CHAR(5) NOT NULL,
 	TONGTIEN DECIMAL(15,2) DEFAULT 0,    --- mặc định tổng tiền là 0
-	TRANGTHAI_THANHTOAN NVARCHAR(20) DEFAULT N'CHƯA THANH TOÁN' CHECK(TRANGTHAI_THANHTOAN IN (N'ĐÃ THANH TOÁN',N'CHƯA THANH TOÁN')),
+	TRANGTHAI_THANHTOAN NVARCHAR(30) DEFAULT N'CHƯA THANH TOÁN' CHECK(TRANGTHAI_THANHTOAN IN (N'ĐÃ THANH TOÁN',N'CHƯA THANH TOÁN')),
 	FOREIGN KEY (MAKH) REFERENCES KHACHHANG(MAKH),
 	FOREIGN KEY (MANV) REFERENCES NHANVIEN(MANV)
 );
@@ -110,29 +113,29 @@ CREATE TABLE THANHTOAN
 	FOREIGN KEY (MAHD) REFERENCES HOADON(MAHD)
 );
 
-INSERT INTO KHACHHANG (MAKH, HOTEN, SODT, EMAIL, DIACHI, NGAYSINH, GIOITINH) VALUES
-('KH001', N'Nguyễn Văn A', '0901234567', 'anva@mail.com', N'108 Láng Hạ, Hà Nội', '1995-05-15', N'NAM'),
-('KH002', N'Trần Thị B', '0912345678', 'buttb@mail.com', N'25 Hai Bà Trưng, Đà Nẵng', '1998-11-20', N'NỮ'),
-('KH003', N'Lê Minh C', '0987654321', 'minhcle@mail.com', N'45 Nguyễn Huệ, TP.HCM', '1990-01-01', N'NAM'),
-('KH004', N'Phạm Thu D', '0976543210', 'thupha@mail.com', N'12 Pasteur, Nha Trang', '2000-07-25', N'NỮ'),
-('KH005', N'Hoàng Văn E', '0965432109', 'ehoang@mail.com', N'30 Hùng Vương, Cần Thơ', '1985-03-10', N'NAM'),
-('KH006', N'Võ Kim F', '0943210987', 'kimvo@mail.com', N'8 Tràng Tiền, Hà Nội', '1999-09-02', N'NỮ'),
-('KH007', N'Đỗ Trọng G', '0932109876', 'trongd@mail.com', N'60 Điện Biên Phủ, Hải Phòng', '1992-12-12', N'NAM'),
-('KH008', N'Bùi Thị H', '0921098765', 'buihth@mail.com', N'5 Phan Chu Trinh, Huế', '1997-04-18', N'NỮ'),
-('KH009', N'Chu Đức I', '0910987654', 'chuduc@mail.com', N'9 Lê Lợi, TP.HCM', '1988-06-28', N'NAM'),
-('KH010', N'Đinh Thúy K', '0909876543', 'thuyk@mail.com', N'78 Lý Tự Trọng, Hà Nội', '2001-10-30', N'NỮ');
+INSERT INTO KHACHHANG (MAKH, HOTEN, SODT, EMAIL, DIACHI, NGAYSINH, MATKHAU, GIOITINH) VALUES
+('KH001', N'Nguyễn Văn A', '0901234567', 'anva@mail.com', N'108 Láng Hạ, Hà Nội', '1995-05-15', '1234', N'NAM'),
+('KH002', N'Trần Thị B', '0912345678', 'buttb@mail.com', N'25 Hai Bà Trưng, Đà Nẵng', '1998-11-20', '1234', N'NỮ'),
+('KH003', N'Lê Minh C', '0987654321', 'minhcle@mail.com', N'45 Nguyễn Huệ, TP.HCM', '1990-01-01', '1234', N'NAM'),
+('KH004', N'Phạm Thu D', '0976543210', 'thupha@mail.com', N'12 Pasteur, Nha Trang', '2000-07-25', '1234', N'NỮ'),
+('KH005', N'Hoàng Văn E', '0965432109', 'ehoang@mail.com', N'30 Hùng Vương, Cần Thơ', '1985-03-10', '1234', N'NAM'),
+('KH006', N'Võ Kim F', '0943210987', 'kimvo@mail.com', N'8 Tràng Tiền, Hà Nội', '1999-09-02', '1234', N'NỮ'),
+('KH007', N'Đỗ Trọng G', '0932109876', 'trongd@mail.com', N'60 Điện Biên Phủ, Hải Phòng', '1992-12-12', '1234', N'NAM'),
+('KH008', N'Bùi Thị H', '0921098765', 'buihth@mail.com', N'5 Phan Chu Trinh, Huế', '1997-04-18', '1234', N'NỮ'),
+('KH009', N'Chu Đức I', '0910987654', 'chuduc@mail.com', N'9 Lê Lợi, TP.HCM', '1988-06-28', '1234', N'NAM'),
+('KH010', N'Đinh Thúy K', '0909876543', 'thuyk@mail.com', N'78 Lý Tự Trọng, Hà Nội', '2001-10-30', '1234', N'NỮ');
 
-INSERT INTO NHANVIEN (MANV, HOTEN, CHUCVU, SODT, EMAIL, LUONG, NGAYVAOLAM) VALUES
-('NV001', N'Lê Văn T', N'Giám đốc', '0900111222', 'letv@comp.com', 30000000.00, '2018-01-01'),
-('NV002', N'Trần Thị U', N'Quản lý', '0911222333', 'tranuv@comp.com', 15000000.00, '2019-03-15'),
-('NV003', N'Hoàng Văn V', N'Trưởng phòng', '0988777666', 'hoangvw@comp.com', 12000000.00, '2020-05-20'),
-('NV004', N'Phạm Thị X', N'Nhân viên bán hàng', '0977666555', 'phamxy@comp.com', 8000000.00, '2021-08-10'),
-('NV005', N'Đỗ Đức Y', N'Kế toán', '0966555444', 'doduy@comp.com', 10000000.00, '2022-01-05'),
-('NV006', N'Bùi Minh Z', N'Nhân viên bán hàng', '0944333222', 'buimz@comp.com', 8000000.00, '2022-11-25'),
-('NV007', N'Chu Anh M', N'Nhân viên bán hàng', '0933222111', 'chuam@comp.com', 9000000.00, '2023-02-14'),
-('NV008', N'Đinh Thị N', N'Nhân viên bán hàng', '0922111000', 'dinhnt@comp.com', 8500000.00, '2023-06-01'),
-('NV009', N'Nguyễn P', N'Nhân viên bán hàng', '0955444333', 'nguyenp@comp.com', 8000000.00, '2024-01-20'),
-('NV010', N'Lại Q', N'Nhân viên bán hàng', '0999888777', 'laiq@comp.com', 8000000.00, '2024-05-15');
+INSERT INTO NHANVIEN (MANV, HOTEN, CHUCVU, SODT, EMAIL, LUONG,MATKHAU, NGAYVAOLAM) VALUES
+('NV001', N'Lê Văn T', N'Giám đốc', '0900111222', 'letv@comp.com', 30000000.00, '1234', '2018-01-01'),
+('NV002', N'Trần Thị U', N'Quản lý', '0911222333', 'tranuv@comp.com', 15000000.00, '1234', '2019-03-15'),
+('NV003', N'Hoàng Văn V', N'Trưởng phòng', '0988777666', 'hoangvw@comp.com', 12000000.00, '1234', '2020-05-20'),
+('NV004', N'Phạm Thị X', N'Nhân viên bán hàng', '0977666555', 'phamxy@comp.com', 8000000.00, '1234', '2021-08-10'),
+('NV005', N'Đỗ Đức Y', N'Kế toán', '0966555444', 'doduy@comp.com', 10000000.00, '1234', '2022-01-05'),
+('NV006', N'Bùi Minh Z', N'Nhân viên bán hàng', '0944333222', 'buimz@comp.com', 8000000.00, '1234', '2022-11-25'),
+('NV007', N'Chu Anh M', N'Nhân viên bán hàng', '0933222111', 'chuam@comp.com', 9000000.00, '1234', '2023-02-14'),
+('NV008', N'Đinh Thị N', N'Nhân viên bán hàng', '0922111000', 'dinhnt@comp.com', 8500000.00, '1234', '2023-06-01'),
+('NV009', N'Nguyễn P', N'Nhân viên bán hàng', '0955444333', 'nguyenp@comp.com', 8000000.00, '1234', '2024-01-20'),
+('NV010', N'Lại Q', N'Nhân viên bán hàng', '0999888777', 'laiq@comp.com', 8000000.00, '1234', '2024-05-15');
 
 INSERT INTO NHACUNGCAP (MANCC, TENNCC, SODT, EMAIL, DIACHI) VALUES
 ('NCC01', N'Công ty TNHH Laptop HP', '0901000111', 'hplaptop@ncc.com', N'1A Cộng Hòa, TP.HCM'),
@@ -235,6 +238,50 @@ INSERT INTO THANHTOAN (MAHD, HINHTHUC, SOTIEN, NGAYTHANHTOAN) VALUES
 ('HD010', N'CHUYỂN KHOẢN', 44000000.00, '2024-09-22');
 
 
+ALTER TABLE LAPTOP
+ADD HINHANH NVARCHAR(255);
+
+UPDATE LAPTOP
+SET HINHANH = 'HP360.jpg'
+WHERE MALAPTOP = 'LT001';
+
+UPDATE LAPTOP
+SET HINHANH = 'DELL13.jpg'
+WHERE MALAPTOP = 'LT002';
+
+UPDATE LAPTOP
+SET HINHANH = 'ASUS14.jpg'
+WHERE MALAPTOP = 'LT003';
+
+UPDATE LAPTOP
+SET HINHANH = 'SS4.jpg'
+WHERE MALAPTOP = 'LT004';
+
+UPDATE LAPTOP
+SET HINHANH = 'HELIOS.jpg'
+WHERE MALAPTOP = 'LT005';
+
+UPDATE LAPTOP
+SET HINHANH = 'X1.jpg'
+WHERE MALAPTOP = 'LT006';
+
+UPDATE LAPTOP
+SET HINHANH = 'MSI15.jpg'
+WHERE MALAPTOP = 'LT007';
+
+UPDATE LAPTOP
+SET HINHANH = 'M3.jpg'
+WHERE MALAPTOP = 'LT008';
+
+UPDATE LAPTOP
+SET HINHANH = 'SURFACE6.jpg'
+WHERE MALAPTOP = 'LT009';
+
+UPDATE LAPTOP
+SET HINHANH = 'U9311.jpg'
+WHERE MALAPTOP = 'LT010';
+
+
 SELECT * FROM KHACHHANG
 SELECT * FROM NHANVIEN
 SELECT * FROM NHACUNGCAP
@@ -313,3 +360,4 @@ SELECT LT.TENLAPTOP, BH.THOIHAN_THANG
 FROM BAOHANH BH
 JOIN LAPTOP LT ON BH.MALAPTOP = LT.MALAPTOP
 WHERE BH.THOIHAN_THANG > (SELECT AVG(THOIHAN_THANG) FROM BAOHANH);
+

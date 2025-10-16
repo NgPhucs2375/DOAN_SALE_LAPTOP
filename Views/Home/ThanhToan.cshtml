@@ -1,0 +1,340 @@
+﻿@* Views/Home/ThanhToan.cshtml *@
+@model DOAN_SALE_LAPTOP.Models.GioHang
+@{
+    ViewBag.Title = "Thanh Toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Kiểm tra Model null và tạo instance mới
+    var gioHang = Model ?? new DOAN_SALE_LAPTOP.Models.GioHang();
+    var khachHang = Session["KHACHHANG"] as DOAN_SALE_LAPTOP.Models.KhachHang;
+}
+
+<style>
+    /* Giữ nguyên CSS của bạn */
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin-top: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        border: none;
+        padding: 20px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+    .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    .alert-info {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        border: none;
+        border-radius: 10px;
+        color: #2d3436;
+    }
+
+    .input-group-sm {
+        max-width: 130px;
+    }
+
+    .btn-plus, .btn-minus {
+        width: 35px;
+        border-radius: 8px;
+    }
+
+    .quantity-input {
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .text-danger {
+        color: #e74c3c !important;
+    }
+
+    .border-bottom {
+        border-color: #e9ecef !important;
+    }
+
+    .btn-outline-primary {
+        border-radius: 20px;
+        padding: 8px 20px;
+    }
+
+    h2 {
+        color: #2d3436;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    h4, h5 {
+        color: #2d3436;
+        font-weight: 600;
+    }
+
+    .total-amount {
+        font-size: 1.5rem;
+        color: #e74c3c;
+        font-weight: 700;
+    }
+</style>
+
+<div class="container">
+    <h2>🛒 Thanh Toán Đơn Hàng</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (gioHang.Items != null && gioHang.Items.Any())
+    {
+        <div class="row">
+            <!-- Thông tin giao hàng -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-shipping-fast"></i> Thông tin giao hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        @if (khachHang != null)
+                        {
+                            <div class="alert alert-info mb-4">
+                                <h5><i class="fas fa-user"></i> Thông tin khách hàng</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Họ tên:</strong> @khachHang.FullNameKH</p>
+                                        <p><strong>SĐT:</strong> @khachHang.SDTKH</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Email:</strong> @khachHang.EmailKH</p>
+                                        <p><strong>Địa chỉ:</strong> @(string.IsNullOrEmpty(khachHang.DiaChiKH) ? "Chưa cập nhật" : khachHang.DiaChiKH)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @using (Html.BeginForm("ThanhToan", "Home", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group mb-4">
+                                <label for="diaChiGiaoHang" class="form-label fw-semibold">
+                                    <i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng:
+                                </label>
+                                <textarea class="form-control" id="diaChiGiaoHang" name="diaChiGiaoHang"
+                                          rows="3" required placeholder="Nhập địa chỉ giao hàng chi tiết...">@khachHang.DiaChiKH</textarea>
+                                <div class="invalid-feedback">Vui lòng nhập địa chỉ giao hàng.</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="ghiChu" class="form-label fw-semibold">
+                                    <i class="fas fa-sticky-note"></i> Ghi chú đơn hàng:
+                                </label>
+                                <textarea class="form-control" id="ghiChu" name="ghiChu"
+                                          rows="2" placeholder="Ghi chú thêm cho đơn hàng (không bắt buộc)..."></textarea>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-check-circle"></i> Xác nhận đặt hàng
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin đơn hàng -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-receipt"></i> Đơn hàng của bạn</h4>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var item in gioHang.Items)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                <div class="flex-grow-1">
+                                    <strong class="d-block">@item.NameLaptop</strong>
+                                    <small class="text-muted">Số lượng: @item.Quantity</small>
+                                    <br>
+                                    <small class="text-muted">@item.PriceLaptop.ToString("N0") ₫/sản phẩm</small>
+                                </div>
+                                <div class="font-weight-bold text-end">
+                                    @item.TotalPrice.ToString("N0") ₫
+                                </div>
+                            </div>
+                        }
+
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="fs-5">Tổng cộng:</strong>
+                            <strong class="total-amount">@gioHang.TotalAmount.ToString("N0") ₫</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chỉnh sửa số lượng -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-edit"></i> Chỉnh sửa số lượng</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var item in gioHang.Items)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="text-truncate" style="max-width: 120px;">
+                                    <small class="fw-semibold">@item.NameLaptop</small>
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <button class="btn btn-outline-secondary btn-minus" type="button" data-id="@item.IDLaptop">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" class="form-control form-control-sm quantity-input text-center"
+                                           value="@item.Quantity" min="1" data-id="@item.IDLaptop">
+                                    <button class="btn btn-outline-secondary btn-plus" type="button" data-id="@item.IDLaptop">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        <div class="text-center mt-3">
+                            <a href="@Url.Action("GioHang", "Home")" class="btn btn-outline-primary">
+                                <i class="fas fa-edit"></i> Chỉnh sửa chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center py-4">
+            <i class="fas fa-shopping-cart fa-3x mb-3 text-warning"></i>
+            <h4>Giỏ hàng của bạn đang trống</h4>
+            <p class="mb-3">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục thanh toán</p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Tăng số lượng
+            $('.btn-plus').click(function () {
+                var id = $(this).data('id');
+                var input = $('.quantity-input[data-id="' + id + '"]');
+                var currentVal = parseInt(input.val());
+                input.val(currentVal + 1);
+                updateQuantity(id, currentVal + 1);
+            });
+
+            // Giảm số lượng
+            $('.btn-minus').click(function () {
+                var id = $(this).data('id');
+                var input = $('.quantity-input[data-id="' + id + '"]');
+                var currentVal = parseInt(input.val());
+                if (currentVal > 1) {
+                    input.val(currentVal - 1);
+                    updateQuantity(id, currentVal - 1);
+                }
+            });
+
+            // Cập nhật khi thay đổi trực tiếp
+            $('.quantity-input').change(function () {
+                var id = $(this).data('id');
+                var quantity = parseInt($(this).val());
+                if (quantity < 1) quantity = 1;
+                $(this).val(quantity);
+                updateQuantity(id, quantity);
+            });
+
+            // Hàm cập nhật số lượng via AJAX
+            function updateQuantity(id, quantity) {
+                $.post('@Url.Action("CapNhatSoLuong", "Home")',
+                    { id: id, quantity: quantity },
+                    function (data) {
+                        if (data.success) {
+                            // Reload trang để cập nhật tổng tiền
+                            location.reload();
+                        }
+                    }).fail(function () {
+                        alert('Có lỗi xảy ra khi cập nhật số lượng!');
+                    });
+            }
+
+            // Form validation
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+    </script>
+}

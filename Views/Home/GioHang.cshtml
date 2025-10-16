@@ -1,0 +1,213 @@
+﻿@* Views/Home/GioHang.cshtml *@
+@model DOAN_SALE_LAPTOP.Models.GioHang
+@{
+    ViewBag.Title = "Giỏ Hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Giỏ Hàng Của Bạn</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr id="row-@item.IDLaptop">
+                            <td>
+                                <img src="@item.HinhAnh" alt="@item.NameLaptop" style="width: 80px; height: 60px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <strong>@item.NameLaptop</strong>
+                                <br>
+                                <small class="text-muted">@item.GraphLaptop</small>
+                            </td>
+                            <td class="price">@item.PriceLaptop.ToString("N0") ₫</td>
+                            <td>
+                                <div class="input-group" style="width: 140px;">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary btn-minus" type="button" data-id="@item.IDLaptop">-</button>
+                                    </div>
+                                    <input type="number" class="form-control quantity-input text-center"
+                                           value="@item.Quantity" min="1" data-id="@item.IDLaptop">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary btn-plus" type="button" data-id="@item.IDLaptop">+</button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="item-total" id="total-@item.IDLaptop">
+                                @item.TotalPrice.ToString("N0") ₫
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm btn-remove" data-id="@item.IDLaptop">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-info">
+                        <td colspan="4" class="text-right"><strong>Tổng cộng:</strong></td>
+                        <td colspan="2"><strong id="grand-total">@Model.TotalAmount.ToString("N0") ₫</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Tiếp tục mua hàng
+                </a>
+                <button id="btn-clear-all" class="btn btn-warning">
+                    <i class="fas fa-trash"></i> Xóa giỏ hàng
+                </button>
+            </div>
+            <div class="col-md-6 text-right">
+                @if (Session["KHACHHANG"] != null)
+                {
+                    <a href="@Url.Action("ThanhToan", "Home")" class="btn btn-success btn-lg">
+                        <i class="fas fa-credit-card"></i> Tiến hành thanh toán
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Home")" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập để đặt hàng
+                    </a>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <h4>Giỏ hàng của bạn đang trống</h4>
+            <p>Hãy chọn sản phẩm để thêm vào giỏ hàng!</p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Mua sắm ngay</a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .input-group-sm {
+            max-width: 120px;
+        }
+
+        .btn-plus, .btn-minus {
+            width: 30px;
+        }
+
+        .quantity-input {
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+    </style>
+}
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Tăng số lượng
+            $('.btn-plus').click(function () {
+                var id = $(this).data('id');
+                var input = $('.quantity-input[data-id="' + id + '"]');
+                var currentVal = parseInt(input.val());
+                input.val(currentVal + 1);
+                updateQuantity(id, currentVal + 1);
+            });
+
+            // Giảm số lượng
+            $('.btn-minus').click(function () {
+                var id = $(this).data('id');
+                var input = $('.quantity-input[data-id="' + id + '"]');
+                var currentVal = parseInt(input.val());
+                if (currentVal > 1) {
+                    input.val(currentVal - 1);
+                    updateQuantity(id, currentVal - 1);
+                }
+            });
+
+            // Cập nhật khi thay đổi trực tiếp
+            $('.quantity-input').change(function () {
+                var id = $(this).data('id');
+                var quantity = parseInt($(this).val());
+                if (quantity < 1) quantity = 1;
+                $(this).val(quantity);
+                updateQuantity(id, quantity);
+            });
+
+            // Xóa sản phẩm
+            $('.btn-remove').click(function () {
+                var id = $(this).data('id');
+                if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+                    removeItem(id);
+                }
+            });
+
+            // Xóa toàn bộ giỏ hàng
+            $('#btn-clear-all').click(function () {
+                if (confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) {
+                    window.location.href = '@Url.Action("XoaGioHang", "Home")';
+                }
+            });
+
+            // Hàm cập nhật số lượng via AJAX
+            function updateQuantity(id, quantity) {
+                $.post('@Url.Action("CapNhatSoLuong", "Home")',
+                    { id: id, quantity: quantity },
+                    function (data) {
+                        if (data.success) {
+                            $('#total-' + id).text(data.itemTotal + ' ₫');
+                            $('#grand-total').text(data.totalAmount + ' ₫');
+
+                            // Cập nhật badge số lượng
+                            $('.cart-badge').text(data.totalItems);
+                        }
+                    });
+            }
+
+            // Hàm xóa sản phẩm via AJAX
+            function removeItem(id) {
+                $.post('@Url.Action("XoaKhoiGioHang", "Home")',
+                    { id: id },
+                    function () {
+                        $('#row-' + id).fadeOut(300, function() {
+                            $(this).remove();
+                            location.reload(); // Reload để cập nhật tổng
+                        });
+                    });
+            }
+        });
+    </script>
+}

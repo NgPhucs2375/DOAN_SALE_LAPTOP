@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Đặt Hàng Thành Công";
+}
+
+<div class="container text-center">
+    <div class="alert alert-success">
+        <h2><i class="fas fa-check-circle"></i> Đặt Hàng Thành Công!</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4>Cảm ơn bạn đã mua hàng!</h4>
+            <p>Mã hóa đơn của bạn: <strong class="text-primary">@ViewBag.MaHoaDon</strong></p>
+            <p>Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng.</p>
+            <p class="text-muted">Trạng thái: <span class="badge badge-warning">Chờ xác nhận</span></p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> Tiếp tục mua sắm
+        </a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            <i class="fas fa-home"></i> Trang chủ
+        </a>
+    </div>
+</div>
