@@ -1,85 +1,4 @@
-﻿@*@{
-        ViewBag.Title = "Đăng nhập";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
-
-    <div class="login-container">
-        <div class="login-box shadow-lg rounded-3 p-4 bg-white">
-            <h2 class="text-center mb-4 text-primary fw-bold">Đăng nhập</h2>
-
-            <form method="post" action="/Home/Login">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="Nhập email..." required />
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">Mật khẩu</label>
-                    <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..." required />
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                    <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
-                </button>
-            </form>
-
-            @if (ViewBag.Message != null)
-            {
-                <p class="text-center text-danger mt-3 fw-semibold">@ViewBag.Message</p>
-            }
-
-            <div class="text-center mt-3">
-                <a href="/Home/Register" class="text-decoration-none">Chưa có tài khoản? <b>Đăng ký ngay</b></a>
-            </div>
-        </div>
-    </div>
-
-    @section Styles {
-        <style>
-            body {
-                background: linear-gradient(135deg, #74b9ff, #a29bfe);
-                font-family: "Segoe UI", sans-serif;
-            }
-
-            .login-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 85vh;
-            }
-
-            .login-box {
-                width: 100%;
-                max-width: 420px;
-                background: #fff;
-            }
-
-            .form-label {
-                color: #2d3436;
-            }
-
-            .btn-primary {
-                background: linear-gradient(90deg, #0984e3, #00cec9);
-                border: none;
-                transition: 0.3s;
-            }
-
-                .btn-primary:hover {
-                    background: linear-gradient(90deg, #00cec9, #0984e3);
-                    transform: translateY(-2px);
-                }
-
-            input.form-control {
-                border-radius: 8px;
-            }
-
-            .text-primary {
-                color: #0984e3 !important;
-            }
-        </style>
-    }*@
-
-@{
+﻿@{
     ViewBag.Title = "Đăng nhập";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -87,36 +6,41 @@
 <div class="login-container">
     <div class="login-box shadow-lg rounded-3 p-4 bg-white">
         <h2 class="text-center mb-4 text-primary fw-bold">Đăng nhập</h2>
-        <p class="text-center text-muted small">(Chỉ cần Email để đăng nhập)</p>
 
-        <form method="post" action="/Home/Login">
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Nhập email..." required />
-            </div>
-
-            <div class="mb-4" style="display: none;">
-                <label class="form-label fw-semibold">Mật khẩu</label>
-                <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..." />
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                <i class="fas fa-sign-in-alt"></i> Đăng nhập
-            </button>
-        </form>
-
-        @if (ViewBag.Message != null)
+        @if (ViewBag.Error != null)
         {
-            <p class="text-center text-danger mt-3 fw-semibold">@ViewBag.Message</p>
+            <div class="alert alert-danger">
+                @ViewBag.Error
+            </div>
         }
 
         @if (TempData["SuccessMessage"] != null)
         {
-            <p class="text-center text-success mt-3 fw-semibold">@TempData["SuccessMessage"]</p>
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
         }
 
+        <form method="post" action="@Url.Action("Login", "Home")">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="Email" class="form-control" placeholder="Nhập email..." required />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" name="Password" class="form-control" placeholder="Nhập mật khẩu..." required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+            </button>
+        </form>
+
         <div class="text-center mt-3">
-            <a href="/Home/Register" class="text-decoration-none">Chưa có tài khoản? <b>Đăng ký ngay</b></a>
+            <a href="@Url.Action("register", "Home")" class="text-decoration-none">
+                Chưa có tài khoản? <b>Đăng ký ngay</b>
+            </a>
         </div>
     </div>
 </div>
@@ -165,4 +89,3 @@
         }
     </style>
 }
-

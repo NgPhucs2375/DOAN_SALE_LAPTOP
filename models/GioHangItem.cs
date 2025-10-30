@@ -13,9 +13,7 @@ namespace DOAN_SALE_LAPTOP.Models
         public string GraphLaptop { get; set; }
         public string HinhAnh { get; set; }
         public int Quantity { get; set; }
-        public decimal TotalPrice
-        {
-            get { return PriceLaptop * Quantity; }
-        }
+
+        public decimal TotalPrice => PriceLaptop * Quantity;
     }
 }

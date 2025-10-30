@@ -58,9 +58,13 @@
                                 @item.TotalPrice.ToString("N0") ₫
                             </td>
                             <td>
-                                <button class="btn btn-danger btn-sm btn-remove" data-id="@item.IDLaptop">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </button>
+                                @using (Html.BeginForm("XoaKhoiGioHang","GioHang", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="id" value="@item.IDLaptop" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                }
                             </td>
                         </tr>
                     }
@@ -79,9 +83,12 @@
                 <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Tiếp tục mua hàng
                 </a>
-                <button id="btn-clear-all" class="btn btn-warning">
-                    <i class="fas fa-trash"></i> Xóa giỏ hàng
-                </button>
+                @using (Html.BeginForm("XoaGioHang","GioHang", FormMethod.Post))
+                {
+                    <button type="submit" id="btn-clear-all" class="btn btn-warning">
+                        <i class="fas fa-trash"></i> Xóa giỏ hàng
+                    </button>
+                }
             </div>
             <div class="col-md-6 text-right">
                 @if (Session["KHACHHANG"] != null)
@@ -167,45 +174,17 @@
                 updateQuantity(id, quantity);
             });
 
-            // Xóa sản phẩm
-            $('.btn-remove').click(function () {
-                var id = $(this).data('id');
-                if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
-                    removeItem(id);
-                }
-            });
-
-            // Xóa toàn bộ giỏ hàng
-            $('#btn-clear-all').click(function () {
-                if (confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) {
-                    window.location.href = '@Url.Action("XoaGioHang", "Home")';
-                }
-            });
-
-            // Hàm cập nhật số lượng via AJAX
+            // Hàm cập nhật số lượng via AJAX -> now calls GioHangController
             function updateQuantity(id, quantity) {
-                $.post('@Url.Action("CapNhatSoLuong", "Home")',
+                $.post('@Url.Action("CapNhatSoLuong", "GioHang")',
                     { id: id, quantity: quantity },
                     function (data) {
                         if (data.success) {
                             $('#total-' + id).text(data.itemTotal + ' ₫');
                             $('#grand-total').text(data.totalAmount + ' ₫');
-
-                            // Cập nhật badge số lượng
-                            $('.cart-badge').text(data.totalItems);
                         }
-                    });
-            }
-
-            // Hàm xóa sản phẩm via AJAX
-            function removeItem(id) {
-                $.post('@Url.Action("XoaKhoiGioHang", "Home")',
-                    { id: id },
-                    function () {
-                        $('#row-' + id).fadeOut(300, function() {
-                            $(this).remove();
-                            location.reload(); // Reload để cập nhật tổng
-                        });
+                    }).fail(function () {
+                        alert('Có lỗi xảy ra khi cập nhật số lượng!');
                     });
             }
         });

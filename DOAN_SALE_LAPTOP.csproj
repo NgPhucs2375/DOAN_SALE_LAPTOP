@@ -120,12 +120,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\GioHangController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BaoHanh.cs" />
     <Compile Include="Models\CTHoaDon.cs" />
+    <Compile Include="Models\CustomAuthorizeAttribute.cs" />
     <Compile Include="Models\DB.cs" />
     <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\GioHang.cs" />
@@ -198,6 +200,7 @@
     <Content Include="Views\Home\GioHang.cshtml" />
     <Content Include="Views\Home\ThanhToan.cshtml" />
     <Content Include="Views\Home\DatHangThanhCong.cshtml" />
+    <Content Include="Views\GioHang\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

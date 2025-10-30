@@ -3,14 +3,29 @@ GO
 USE QL_LAPTOP
 GO
 --- BẢNG KHÁCH HÀNG (Thông tin khách hàng)
+create table PHANQUYEN
+( 
+	MAQUYEN int  primary key not null ,
+	TENQUYEN nvarchar(30), 
+	MOTA nvarchar(200),
+)
+
+create table CAPQUYEN
+(
+	TENDN nvarchar(30)  not null unique,
+	MAQUYEN int not null,
+	constraint PK_CQ primary key(TenDN,MAQUYEN),
+	constraint FK_CQ foreign key (MAQUYEN) references PHANQUYEN(MAQUYEN)
+)
+
 CREATE TABLE KHACHHANG
 (
-	MAKH CHAR(5) PRIMARY KEY NOT NULL,
+	MAKH int identity PRIMARY KEY NOT NULL,
 	HOTEN NVARCHAR(100) NOT NULL,
 	SODT VARCHAR(11) UNIQUE CHECK(SODT LIKE '0%'),
-	EMAIL NVARCHAR(50) UNIQUE,
+	EMAIL NVARCHAR(100) UNIQUE,
 	DIACHI NVARCHAR(100),
-	NGAYSINH DATE,
+	NGAYSINH DATE default Getdate(),
 	MATKHAU VARCHAR(50) NOT NULL,
 	GIOITINH NVARCHAR(5) CHECK(GIOITINH IN(N'NAM',N'NỮ'))
 );
@@ -18,21 +33,23 @@ CREATE TABLE KHACHHANG
 --- BẢNG NHÂN VIÊN (Nhân viên bán hàng)
 CREATE TABLE NHANVIEN
 (
-	MANV CHAR(5) PRIMARY KEY NOT NULL,
+	MANV int identity PRIMARY KEY NOT NULL,
 	HOTEN NVARCHAR(100) NOT NULL,
-	CHUCVU NVARCHAR(50) DEFAULT N'Nhân viên'   --- mặc định là nhân viên
-        CHECK(CHUCVU IN (N'Giám đốc', N'Quản lý', N'Trưởng phòng', N'Nhân viên bán hàng', N'Kế toán')),
+	CHUCVU NVARCHAR(50) DEFAULT N'Nhân viên' ,  --- mặc định là nhân viên
+    CHECK(CHUCVU IN (N'Giám đốc', N'Quản lý', N'Trưởng phòng', N'Nhân viên bán hàng', N'Kế toán')),
 	SODT VARCHAR(11) UNIQUE CHECK(SODT LIKE '0%'),
 	EMAIL NVARCHAR(50) UNIQUE,
 	LUONG DECIMAL(12,2) CHECK(LUONG>0),
 	MATKHAU VARCHAR(50) NOT NULL,
-	NGAYVAOLAM DATE DEFAULT GETDATE()
-);
+	NGAYVAOLAM DATE DEFAULT GETDATE(),
+	TenDN nvarchar(30),
+	constraint FK_NV foreign key(TenDN) references CAPQUYEN(TenDN)
+);	
 
 --- BẢNG NHÀ CUNG CẤP (Nhà cung cấp laptop)
 CREATE TABLE NHACUNGCAP
 (
-	MANCC CHAR(5) PRIMARY KEY NOT NULL,
+	MANCC int identity PRIMARY KEY NOT NULL,
 	TENNCC NVARCHAR(100) NOT NULL,
 	SODT VARCHAR(11) UNIQUE CHECK(SODT LIKE '0%'),
 	EMAIL NVARCHAR(50) UNIQUE,
@@ -42,19 +59,19 @@ CREATE TABLE NHACUNGCAP
 --- BẢNG LOẠI LAPTOP (Phân loại laptop theo hãng/dòng)
 CREATE TABLE LOAI_LAPTOP
 (
-	MALOAI CHAR(5) PRIMARY KEY NOT NULL,
+	MALOAI int identity PRIMARY KEY NOT NULL,
 	TENLOAI NVARCHAR(100) UNIQUE NOT NULL
 );
 
 --- BẢNG LAPTOP(Danh mục sản phẩm)
 CREATE TABLE LAPTOP
 (
-	MALAPTOP CHAR(5) PRIMARY KEY NOT NULL,
+	MALAPTOP int identity PRIMARY KEY NOT NULL,
 	TENLAPTOP NVARCHAR(100) NOT NULL,
 	GIA DECIMAL(10,2) CHECK(GIA>0) NOT NULL, 
 	CAUHINH NVARCHAR(500),
-	MALOAI CHAR(5) NOT NULL, 
-	MANCC CHAR(5) NOT NULL, 
+	MALOAI int NOT NULL, 
+	MANCC int  NOT NULL, 
 	FOREIGN KEY (MALOAI) REFERENCES LOAI_LAPTOP(MALOAI),
 	FOREIGN KEY (MANCC) REFERENCES NHACUNGCAP(MANCC)
 );
@@ -62,19 +79,21 @@ CREATE TABLE LAPTOP
 --- BẢNG KHO (Quản lý tồn kho) 
 CREATE TABLE KHO
 (
-	MALAPTOP CHAR(5) PRIMARY KEY, 
+	MAKHO int identity not null,
+	MALAPTOP int, 
 	SOLUONG INT CHECK(SOLUONG>=0) DEFAULT 0, -- Số lượng mặc định là 0
+	constraint fk_kho primary key(MAKHO,MALAPTOP),
 	FOREIGN KEY (MALAPTOP) REFERENCES LAPTOP(MALAPTOP)
 );
 
 --- BẢNG HÓA ĐƠN(Hóa đơn bán hàng) 
 CREATE TABLE HOADON
 (
-	MAHD CHAR(5) PRIMARY KEY NOT NULL,
+	MAHD int identity PRIMARY KEY NOT NULL,
 	NGAYLAP DATE DEFAULT GETDATE(),
-	MAKH CHAR(5) NOT NULL,
-	MANV CHAR(5) NOT NULL,
-	TONGTIEN DECIMAL(15,2) DEFAULT 0,    --- mặc định tổng tiền là 0
+	MAKH int NOT NULL,
+	MANV int NOT NULL,
+	TONGTIEN DECIMAL(15,2) ,  
 	TRANGTHAI_THANHTOAN NVARCHAR(30) DEFAULT N'CHƯA THANH TOÁN' CHECK(TRANGTHAI_THANHTOAN IN (N'ĐÃ THANH TOÁN',N'CHƯA THANH TOÁN')),
 	FOREIGN KEY (MAKH) REFERENCES KHACHHANG(MAKH),
 	FOREIGN KEY (MANV) REFERENCES NHANVIEN(MANV)
@@ -83,8 +102,8 @@ CREATE TABLE HOADON
 --- BẢNG CHI TIẾT HÓA ĐƠN(Chi tiết sản phẩm trong hóa đơn)
 CREATE TABLE CT_HOADON
 (
-	MAHD CHAR(5) NOT NULL,
-	MALAPTOP CHAR(5) NOT NULL,
+	MAHD int identity NOT NULL,
+	MALAPTOP int NOT NULL,
 	SOLUONG INT CHECK(SOLUONG>0) NOT NULL,
 	DONGIA DECIMAL(12,2) CHECK(DONGIA>0) NOT NULL,
 	THANHTIEN AS (SOLUONG * DONGIA), 
@@ -96,8 +115,8 @@ CREATE TABLE CT_HOADON
 --- BẢNG BẢO HÀNH(Thông tin bảo hành)
 CREATE TABLE BAOHANH
 (
-	MABH CHAR(5) PRIMARY KEY NOT NULL,
-	MALAPTOP CHAR(5) NOT NULL,
+	MABH int identity PRIMARY KEY NOT NULL,
+	MALAPTOP int NOT NULL,
 	THOIHAN_THANG INT CHECK(THOIHAN_THANG>0), 
 	DIEUKIEN NVARCHAR(100),
 	FOREIGN KEY (MALAPTOP) REFERENCES LAPTOP(MALAPTOP)
@@ -106,136 +125,136 @@ CREATE TABLE BAOHANH
 --- BẢNG THANH TOÁN(Thông tin thanh toán) -- trường hợp 1 hóa đơn chỉ có 1 lần thanh toán
 CREATE TABLE THANHTOAN
 (
-	MAHD CHAR(5) PRIMARY KEY NOT NULL, 
+	MAHD int PRIMARY KEY NOT NULL, 
 	HINHTHUC NVARCHAR(50) CHECK(HINHTHUC IN (N'TIỀN MẶT',N'CHUYỂN KHOẢN',N'THẺ TÍN DỤNG')) NOT NULL,
 	SOTIEN DECIMAL(10,2) CHECK(SOTIEN>0) NOT NULL,
 	NGAYTHANHTOAN DATE DEFAULT GETDATE(), 
 	FOREIGN KEY (MAHD) REFERENCES HOADON(MAHD)
 );
 
-INSERT INTO KHACHHANG (MAKH, HOTEN, SODT, EMAIL, DIACHI, NGAYSINH, MATKHAU, GIOITINH) VALUES
-('KH001', N'Nguyễn Văn A', '0901234567', 'anva@mail.com', N'108 Láng Hạ, Hà Nội', '1995-05-15', '1234', N'NAM'),
-('KH002', N'Trần Thị B', '0912345678', 'buttb@mail.com', N'25 Hai Bà Trưng, Đà Nẵng', '1998-11-20', '1234', N'NỮ'),
-('KH003', N'Lê Minh C', '0987654321', 'minhcle@mail.com', N'45 Nguyễn Huệ, TP.HCM', '1990-01-01', '1234', N'NAM'),
-('KH004', N'Phạm Thu D', '0976543210', 'thupha@mail.com', N'12 Pasteur, Nha Trang', '2000-07-25', '1234', N'NỮ'),
-('KH005', N'Hoàng Văn E', '0965432109', 'ehoang@mail.com', N'30 Hùng Vương, Cần Thơ', '1985-03-10', '1234', N'NAM'),
-('KH006', N'Võ Kim F', '0943210987', 'kimvo@mail.com', N'8 Tràng Tiền, Hà Nội', '1999-09-02', '1234', N'NỮ'),
-('KH007', N'Đỗ Trọng G', '0932109876', 'trongd@mail.com', N'60 Điện Biên Phủ, Hải Phòng', '1992-12-12', '1234', N'NAM'),
-('KH008', N'Bùi Thị H', '0921098765', 'buihth@mail.com', N'5 Phan Chu Trinh, Huế', '1997-04-18', '1234', N'NỮ'),
-('KH009', N'Chu Đức I', '0910987654', 'chuduc@mail.com', N'9 Lê Lợi, TP.HCM', '1988-06-28', '1234', N'NAM'),
-('KH010', N'Đinh Thúy K', '0909876543', 'thuyk@mail.com', N'78 Lý Tự Trọng, Hà Nội', '2001-10-30', '1234', N'NỮ');
 
-INSERT INTO NHANVIEN (MANV, HOTEN, CHUCVU, SODT, EMAIL, LUONG,MATKHAU, NGAYVAOLAM) VALUES
-('NV001', N'Lê Văn T', N'Giám đốc', '0900111222', 'letv@comp.com', 30000000.00, '1234', '2018-01-01'),
-('NV002', N'Trần Thị U', N'Quản lý', '0911222333', 'tranuv@comp.com', 15000000.00, '1234', '2019-03-15'),
-('NV003', N'Hoàng Văn V', N'Trưởng phòng', '0988777666', 'hoangvw@comp.com', 12000000.00, '1234', '2020-05-20'),
-('NV004', N'Phạm Thị X', N'Nhân viên bán hàng', '0977666555', 'phamxy@comp.com', 8000000.00, '1234', '2021-08-10'),
-('NV005', N'Đỗ Đức Y', N'Kế toán', '0966555444', 'doduy@comp.com', 10000000.00, '1234', '2022-01-05'),
-('NV006', N'Bùi Minh Z', N'Nhân viên bán hàng', '0944333222', 'buimz@comp.com', 8000000.00, '1234', '2022-11-25'),
-('NV007', N'Chu Anh M', N'Nhân viên bán hàng', '0933222111', 'chuam@comp.com', 9000000.00, '1234', '2023-02-14'),
-('NV008', N'Đinh Thị N', N'Nhân viên bán hàng', '0922111000', 'dinhnt@comp.com', 8500000.00, '1234', '2023-06-01'),
-('NV009', N'Nguyễn P', N'Nhân viên bán hàng', '0955444333', 'nguyenp@comp.com', 8000000.00, '1234', '2024-01-20'),
-('NV010', N'Lại Q', N'Nhân viên bán hàng', '0999888777', 'laiq@comp.com', 8000000.00, '1234', '2024-05-15');
 
-INSERT INTO NHACUNGCAP (MANCC, TENNCC, SODT, EMAIL, DIACHI) VALUES
-('NCC01', N'Công ty TNHH Laptop HP', '0901000111', 'hplaptop@ncc.com', N'1A Cộng Hòa, TP.HCM'),
-('NCC02', N'Nhà Phân Phối Dell Việt Nam', '0912000222', 'dellvn@ncc.com', N'2B Phạm Văn Đồng, Hà Nội'),
-('NCC03', N'ASUS Official Store', '0987000333', 'asusshop@ncc.com', N'3C Lê Hồng Phong, Đà Nẵng'),
-('NCC04', N'Samsung Laptop Miền Nam', '0976000444', 'samsungmn@ncc.com', N'4D Hùng Vương, Cần Thơ'),
-('NCC05', N'Acer Authorized Reseller', '0965000555', 'acer@ncc.com', N'5E Nguyễn Trãi, Hải Phòng'),
-('NCC06', N'Lenovo Chính Hãng', '0943000666', 'lenovo@ncc.com', N'6F Trần Phú, Huế'),
-('NCC07', N'MSI Gaming VN', '0932000777', 'msigaming@ncc.com', N'7G Nguyễn Văn Cừ, TP.HCM'),
-('NCC08', N'Apple Authorized Distributor', '0921000888', 'apple@ncc.com', N'8H Bà Triệu, Hà Nội'),
-('NCC09', N'Microsoft Surface VN', '0910000999', 'microsoft@ncc.com', N'9I Trần Hưng Đạo, Đà Nẵng'),
-('NCC10', N'Fujitsu PC & Laptop', '0909000100', 'fujitsu@ncc.com', N'10K Quang Trung, Hà Nội');
+---------------------------------------------------------
+-- KHÁCH HÀNG
+---------------------------------------------------------
+INSERT INTO KHACHHANG (HOTEN, SODT, EMAIL, DIACHI, NGAYSINH, MATKHAU, GIOITINH)
+VALUES
+(N'Nguyễn Văn A', '0901234567', 'anva@mail.com', N'108 Láng Hạ, Hà Nội', '1995-05-15', '123456', N'NAM'),
+(N'Trần Thị B', '0987654321', 'thibtran@mail.com', N'12 Trần Phú, Đà Nẵng', '1998-08-22', '123456', N'NỮ'),
+(N'Lê Minh C', '0912345678', 'minhc.le@mail.com', N'59 Nguyễn Huệ, TP.HCM', '2000-11-30', '123456', N'NAM');
 
-INSERT INTO LOAI_LAPTOP (MALOAI, TENLOAI) VALUES
-('LOA01', N'HP Spectre'),
-('LOA02', N'Dell XPS'),
-('LOA03', N'ASUS ROG'),
-('LOA04', N'Samsung Galaxy Book'),
-('LOA05', N'Acer Predator'),
-('LOA06', N'Lenovo ThinkPad'),
-('LOA07', N'MSI Bravo'),
-('LOA08', N'MacBook Air'),
-('LOA09', N'Microsoft Surface Laptop'),
-('LOA10', N'Fujitsu Lifebook');
+---------------------------------------------------------
+-- NHÂN VIÊN
+---------------------------------------------------------
+INSERT INTO NHANVIEN (HOTEN, CHUCVU, SODT, EMAIL, LUONG, MATKHAU)
+VALUES
+(N'Nguyễn Văn Quản', N'Quản lý', '0909123456', 'quan.nguyen@mail.com', 15000000, '123456'),
+(N'Trần Thị Bán', N'Nhân viên bán hàng', '0911223344', 'ban.tran@mail.com', 10000000, '123456'),
+(N'Lê Minh Kho', N'Kế toán', '0922334455', 'kho.le@mail.com', 12000000, '123456');
 
-INSERT INTO LAPTOP (MALAPTOP, TENLAPTOP, GIA, CAUHINH, MALOAI, MANCC) VALUES
-('LT001', N'HP Spectre x360', 35000000.00, N'Core i7, 16GB RAM, 1TB SSD', 'LOA01', 'NCC01'),
-('LT002', N'Dell XPS 13 (2024)', 32000000.00, N'Core i5, 8GB RAM, 512GB SSD', 'LOA02', 'NCC02'),
-('LT003', N'ASUS ROG Zephyrus G14', 40000000.00, N'Ryzen 9, 32GB RAM, RTX 4080', 'LOA03', 'NCC03'),
-('LT004', N'Samsung Galaxy Book4 Pro', 28000000.00, N'Core Ultra 7, 16GB RAM, 1TB SSD', 'LOA04', 'NCC04'),
-('LT005', N'Acer Predator Helios', 55000000.00, N'Core i9, 64GB RAM, RTX 4090', 'LOA05', 'NCC05'),
-('LT006', N'Lenovo ThinkPad X1 Carbon', 25000000.00, N'Core i7, 16GB RAM, 512GB SSD', 'LOA06', 'NCC06'),
-('LT007', N'MSI Bravo 15', 18000000.00, N'Ryzen 7, 16GB RAM, RTX 3050', 'LOA07', 'NCC07'),
-('LT008', N'Apple MacBook Air M3 15-inch', 30000000.00, N'Apple M3, 8GB RAM, 512GB SSD', 'LOA08', 'NCC08'),
-('LT009', N'Microsoft Surface Laptop 6', 29000000.00, N'Core Ultra 5, 16GB RAM, 512GB SSD', 'LOA09', 'NCC09'),
-('LT010', N'Fujitsu Lifebook U9311', 22000000.00, N'Core i7, 16GB RAM, 512GB SSD', 'LOA10', 'NCC10');
+---------------------------------------------------------
+-- NHÀ CUNG CẤP
+---------------------------------------------------------
+INSERT INTO NHACUNGCAP (TENNCC, SODT, EMAIL, DIACHI)
+VALUES
+(N'Công ty ASUS Việt Nam', '0281234567', 'support@asus.vn', N'12 Nguyễn Văn Linh, TP.HCM'),
+(N'Công ty Dell Việt Nam', '0289876543', 'contact@dell.vn', N'23 Nguyễn Thị Minh Khai, Hà Nội'),
+(N'Công ty Acer Việt Nam', '0289988776', 'sales@acer.vn', N'45 Lý Thường Kiệt, Đà Nẵng');
 
-INSERT INTO KHO (MALAPTOP, SOLUONG) VALUES
-('LT001', 15),
-('LT002', 20),
-('LT003', 10),
-('LT004', 25),
-('LT005', 5),
-('LT006', 30),
-('LT007', 40),
-('LT008', 18),
-('LT009', 12),
-('LT010', 8);
+---------------------------------------------------------
+-- LOẠI LAPTOP
+---------------------------------------------------------
+INSERT INTO LOAI_LAPTOP (TENLOAI)
+VALUES
+(N'Văn phòng'),
+(N'Gaming'),
+(N'Đồ họa'),
+(N'Cao cấp');
 
---- (Lưu ý: Cột TONGTIEN sẽ được cập nhật sau khi nhập dữ liệu CT_HOADON)
-INSERT INTO HOADON (MAHD, NGAYLAP, MAKH, MANV, TONGTIEN, TRANGTHAI_THANHTOAN) VALUES
-('HD001', '2024-09-01', 'KH001', 'NV004', 35000000.00, N'ĐÃ THANH TOÁN'),
-('HD002', '2024-09-02', 'KH003', 'NV006', 72000000.00, N'CHƯA THANH TOÁN'),
-('HD003', '2024-09-03', 'KH002', 'NV004', 40000000.00, N'ĐÃ THANH TOÁN'),
-('HD004', '2024-09-05', 'KH005', 'NV007', 55000000.00, N'ĐÃ THANH TOÁN'),
-('HD005', '2024-09-07', 'KH008', 'NV008', 18000000.00, N'CHƯA THANH TOÁN'),
-('HD006', '2024-09-10', 'KH004', 'NV006', 30000000.00, N'ĐÃ THANH TOÁN'),
-('HD007', '2024-09-15', 'KH009', 'NV009', 32000000.00, N'ĐÃ THANH TOÁN'),
-('HD008', '2024-09-18', 'KH006', 'NV007', 57000000.00, N'CHƯA THANH TOÁN'),
-('HD009', '2024-09-20', 'KH010', 'NV004', 29000000.00, N'ĐÃ THANH TOÁN'),
-('HD010', '2024-09-22', 'KH007', 'NV010', 44000000.00, N'ĐÃ THANH TOÁN');
+---------------------------------------------------------
+-- LAPTOP
+---------------------------------------------------------
+INSERT INTO LAPTOP (TENLAPTOP, GIA, CAUHINH, MALOAI, MANCC)
+VALUES
+(N'ASUS Vivobook 15', 15500000, N'CPU i5, RAM 8GB, SSD 512GB', 1, 1),
+(N'Dell Inspiron 14', 16500000, N'i5, RAM 16GB, SSD 512GB', 1, 2),
+(N'Acer Nitro 5', 25000000, N'RTX 3050, i5, RAM 16GB', 2, 3),
+(N'ASUS ROG Strix', 42000000, N'RTX 4070, i9, RAM 32GB', 2, 1),
+(N'MacBook Air M2', 32000000, N'Chip M2, SSD 512GB, pin 18 tiếng', 4, 1);
 
---- (Lưu ý: Cột THANHTIEN là cột tính toán và không cần nhập.)
-INSERT INTO CT_HOADON (MAHD, MALAPTOP, SOLUONG, DONGIA) VALUES
-('HD001', 'LT001', 1, 35000000.00),
-('HD002', 'LT002', 2, 32000000.00),
-('HD002', 'LT006', 1, 8000000.00), -- Tổng HD002: 72,000,000
-('HD003', 'LT003', 1, 40000000.00),
-('HD004', 'LT005', 1, 55000000.00),
-('HD005', 'LT007', 1, 18000000.00),
-('HD006', 'LT008', 1, 30000000.00),
-('HD007', 'LT002', 1, 32000000.00),
-('HD008', 'LT004', 1, 28000000.00),
-('HD008', 'LT010', 1, 29000000.00), -- Tổng HD008: 57,000,000
-('HD009', 'LT009', 1, 29000000.00),
-('HD010', 'LT001', 1, 35000000.00),
-('HD010', 'LT006', 1, 9000000.00); -- Tổng HD010: 44,000,000
+---------------------------------------------------------
+-- KHO
+---------------------------------------------------------
+INSERT INTO KHO (MALAPTOP, SOLUONG)
+VALUES
+(1, 15),
+(2, 8),
+(3, 5),
+(4, 3),
+(5, 4);
 
-INSERT INTO BAOHANH (MABH, MALAPTOP, THOIHAN_THANG, DIEUKIEN) VALUES
-('BH001', 'LT001', 12, N'Bảo hành phần cứng, không bao gồm lỗi người dùng'),
-('BH002', 'LT002', 24, N'Bảo hành toàn diện 2 năm'),
-('BH003', 'LT003', 36, N'Bảo hành 3 năm quốc tế'),
-('BH004', 'LT004', 12, N'Bảo hành tiêu chuẩn 1 năm'),
-('BH005', 'LT005', 24, N'Bảo hành V.I.P 2 năm'),
-('BH006', 'LT006', 12, N'Bảo hành tại chỗ (On-site) 1 năm'),
-('BH007', 'LT007', 12, N'Bảo hành tiêu chuẩn'),
-('BH008', 'LT008', 12, N'Bảo hành Apple toàn cầu'),
-('BH009', 'LT009', 24, N'Bảo hành nâng cao 2 năm'),
-('BH010', 'LT010', 36, N'Bảo hành 3 năm chính hãng');
+---------------------------------------------------------
+-- HÓA ĐƠN
+---------------------------------------------------------
+INSERT INTO HOADON (NGAYLAP, MAKH, MANV, TONGTIEN, TRANGTHAI_THANHTOAN)
+VALUES
+('2024-03-10', 1, 2, 15500000, N'ĐÃ THANH TOÁN'),
+('2024-04-15', 2, 2, 41500000, N'CHƯA THANH TOÁN'),
+('2024-06-01', 3, 1, 32000000, N'ĐÃ THANH TOÁN');
 
---- (Lưu ý: Bảng này có khóa chính là MAHD, nên chỉ có thể chứa dữ liệu cho các hóa đơn đã được tạo và 
--- có trạng thái 'ĐÃ THANH TOÁN'. Do chỉ có 7 hóa đơn đã thanh toán, nên chỉ có 7 bản ghi cho bảng này để đảm bảo ràng buộc khóa chính.)
-INSERT INTO THANHTOAN (MAHD, HINHTHUC, SOTIEN, NGAYTHANHTOAN) VALUES
-('HD001', N'CHUYỂN KHOẢN', 35000000.00, '2024-09-01'),
-('HD003', N'TIỀN MẶT', 40000000.00, '2024-09-03'),
-('HD004', N'THẺ TÍN DỤNG', 55000000.00, '2024-09-05'),
-('HD006', N'CHUYỂN KHOẢN', 30000000.00, '2024-09-10'),
-('HD007', N'THẺ TÍN DỤNG', 32000000.00, '2024-09-15'),
-('HD009', N'TIỀN MẶT', 29000000.00, '2024-09-20'),
-('HD010', N'CHUYỂN KHOẢN', 44000000.00, '2024-09-22');
+---------------------------------------------------------
+-- CHI TIẾT HÓA ĐƠN
+---------------------------------------------------------
+INSERT INTO CT_HOADON (MAHD, MALAPTOP, SOLUONG, DONGIA)
+VALUES
+(1, 1, 1, 15500000),
+(2, 3, 1, 25000000),
+(2, 4, 1, 16500000),
+(3, 5, 1, 32000000);
+
+---------------------------------------------------------
+-- BẢO HÀNH
+---------------------------------------------------------
+INSERT INTO BAOHANH (MALAPTOP, THOIHAN_THANG, DIEUKIEN)
+VALUES
+(1, 12, N'Bảo hành chính hãng 1 năm'),
+(2, 24, N'Bảo hành phần cứng 2 năm'),
+(3, 12, N'Bảo hành 1 năm cho linh kiện'),
+(4, 36, N'Bảo hành 3 năm chính hãng'),
+(5, 24, N'Bảo hành 2 năm Apple');
+
+---------------------------------------------------------
+-- THANH TOÁN
+---------------------------------------------------------
+INSERT INTO THANHTOAN (MAHD, HINHTHUC, SOTIEN)
+VALUES
+(1, N'TIỀN MẶT', 15500000),
+(2, N'CHUYỂN KHOẢN', 41500000),
+(3, N'THẺ TÍN DỤNG', 32000000);
+
+---------------------------------------------------------
+-- PHÂN QUYỀN
+---------------------------------------------------------
+INSERT INTO PhanQuyen (TenQuyen)
+VALUES
+(N'Thêm sản phẩm'),
+(N'Xóa sản phẩm'),
+(N'Sửa sản phẩm'),
+(N'Xem hóa đơn'),
+(N'Quản lý tài khoản');
+
+---------------------------------------------------------
+-- CẤP QUYỀN
+---------------------------------------------------------
+INSERT INTO CapQuyen (TenDN, MaQuyen)
+VALUES
+(N'admin', 1),
+(N'admin', 2),
+(N'admin', 3),
+(N'admin', 4),
+(N'nhanvien', 4);
+
+
 
 
 ALTER TABLE LAPTOP
@@ -243,43 +262,43 @@ ADD HINHANH NVARCHAR(255);
 
 UPDATE LAPTOP
 SET HINHANH = 'HP360.jpg'
-WHERE MALAPTOP = 'LT001';
+WHERE MALAPTOP = '1';
 
 UPDATE LAPTOP
 SET HINHANH = 'DELL13.jpg'
-WHERE MALAPTOP = 'LT002';
+WHERE MALAPTOP = '2';
 
 UPDATE LAPTOP
 SET HINHANH = 'ASUS14.jpg'
-WHERE MALAPTOP = 'LT003';
+WHERE MALAPTOP = '3';
 
 UPDATE LAPTOP
 SET HINHANH = 'SS4.jpg'
-WHERE MALAPTOP = 'LT004';
+WHERE MALAPTOP = '4';
 
 UPDATE LAPTOP
 SET HINHANH = 'HELIOS.jpg'
-WHERE MALAPTOP = 'LT005';
+WHERE MALAPTOP = '5';
 
 UPDATE LAPTOP
 SET HINHANH = 'X1.jpg'
-WHERE MALAPTOP = 'LT006';
+WHERE MALAPTOP = '6';
 
 UPDATE LAPTOP
 SET HINHANH = 'MSI15.jpg'
-WHERE MALAPTOP = 'LT007';
+WHERE MALAPTOP = '7';
 
 UPDATE LAPTOP
 SET HINHANH = 'M3.jpg'
-WHERE MALAPTOP = 'LT008';
+WHERE MALAPTOP = '8';
 
 UPDATE LAPTOP
 SET HINHANH = 'SURFACE6.jpg'
-WHERE MALAPTOP = 'LT009';
+WHERE MALAPTOP = '9';
 
 UPDATE LAPTOP
 SET HINHANH = 'U9311.jpg'
-WHERE MALAPTOP = 'LT010';
+WHERE MALAPTOP = '10';
 
 
 SELECT * FROM KHACHHANG
@@ -360,4 +379,6 @@ SELECT LT.TENLAPTOP, BH.THOIHAN_THANG
 FROM BAOHANH BH
 JOIN LAPTOP LT ON BH.MALAPTOP = LT.MALAPTOP
 WHERE BH.THOIHAN_THANG > (SELECT AVG(THOIHAN_THANG) FROM BAOHANH);
+
+
 

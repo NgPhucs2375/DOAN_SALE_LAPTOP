@@ -13,6 +13,8 @@ namespace DOAN_SALE_LAPTOP.Models
         public string SDTNV { get; set; }
         public string EmailNV   { get; set; }
         public decimal LuongNV { get; set; }
+
+        public string MatKhauNV { get; set; }
         public DateTime DayStartWork { get; set; }
 
     }

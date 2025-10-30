@@ -7,16 +7,28 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 
-
-
-
-
 namespace DOAN_SALE_LAPTOP.Controllers
 {
     public class HomeController : Controller
     {
-
         DB db = new DB();
+
+        // Ensure in-memory lists are populated for lookups (laptop, customer, employee)
+        public HomeController()
+        {
+            try
+            {
+                db.Lap_ListLaptop();
+                db.Lap_ListKhachHang();
+                db.Lap_ListNhanVien();
+            }
+            catch
+            {
+                // optionally log
+            }
+        }
+
+        // Actions cho mọi người
         public ActionResult Index()
         {
             var laptop = db.dsLaptop;
@@ -35,7 +47,6 @@ namespace DOAN_SALE_LAPTOP.Controllers
             return View(laptop);
         }
 
-
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -49,31 +60,68 @@ namespace DOAN_SALE_LAPTOP.Controllers
 
             return View();
         }
+
         [HttpGet]
-        public ActionResult register() 
+        public ActionResult register()
         {
             return View();
         }
+
         [HttpPost]
-        public ActionResult register(string HoTen,string Email,string Password,string SDT)
+        public ActionResult register(string HoTen, string Email, string Password, string SDT)
         {
-            using (SqlConnection con = new SqlConnection("Data Source = LAPTOP-CV633IP1; database = QL_Laptop; User ID = sa;Password = 123"))
+            try
             {
-                string sql = "Insert into KHACHHANG (HOTEN,EMAIL,MATKHAU,SODT) VALUES (@hoten,@email,@matkhau,@sodt)";
-                SqlCommand cmd = new SqlCommand(sql, con);
-                cmd.Parameters.AddWithValue("@hoten",HoTen);
-                cmd.Parameters.AddWithValue("@email", Email);
-                cmd.Parameters.AddWithValue("@matkhau", Password);
-                cmd.Parameters.AddWithValue("@sodt", string.IsNullOrEmpty(SDT) ? (object)DBNull.Value : SDT);
+                // Validate đầu vào
+                if (string.IsNullOrWhiteSpace(HoTen) || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+                {
+                    ViewBag.Error = "Vui lòng điền đầy đủ thông tin bắt buộc";
+                    return View();
+                }
 
+                using (SqlConnection con = new SqlConnection("Data Source = MSI; database = QL_LAPTOP; User ID = sa;Password = 123456"))
+                {
+                    con.Open();
 
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                    // Kiểm tra email đã tồn tại chưa
+                    string checkEmail = "SELECT COUNT(*) FROM KHACHHANG WHERE EMAIL = @email";
+                    using (SqlCommand cmdCheck = new SqlCommand(checkEmail, con))
+                    {
+                        cmdCheck.Parameters.AddWithValue("@email", Email.Trim());
+                        int count = (int)cmdCheck.ExecuteScalar();
+                        if (count > 0)
+                        {
+                            ViewBag.Error = "Email này đã được đăng ký!";
+                            return View();
+                        }
+                    }
 
+                    // Insert khách hàng mới
+                    string sql = @"INSERT INTO KHACHHANG (HOTEN, EMAIL, MATKHAU, SODT) 
+                                   VALUES (@hoten, @email, @matkhau, @sodt)";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@hoten", HoTen.Trim());
+                        cmd.Parameters.AddWithValue("@email", Email.Trim());
+                        cmd.Parameters.AddWithValue("@matkhau", Password.Trim());
+                        cmd.Parameters.AddWithValue("@sodt", string.IsNullOrWhiteSpace(SDT) ? (object)DBNull.Value : SDT.Trim());
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Refresh danh sách khách hàng trong DB class
+                    db.Lap_ListKhachHang();
+
+                    TempData["SuccessMessage"] = "Đăng ký thành công! Hãy đăng nhập ngay.";
+                    return RedirectToAction("Login");
+                }
             }
-            ViewBag.Message = "Đăng ký thành công! Hãy đăng nhập ngay.";
-            return RedirectToAction("Login");        
+            catch (Exception)
+            {
+                ViewBag.Error = "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại sau.";
+                return View();
+            }
         }
 
         [HttpGet]
@@ -81,346 +129,361 @@ namespace DOAN_SALE_LAPTOP.Controllers
         {
             return View();
         }
-        //[HttpPost]
-        //public ActionResult Login(string HoTen,string Email,string Password)
-        //{
-        //    var KH = db.dsKhachHang.FirstOrDefault(kh=>kh.FullNameKH == HoTen && kh.EmailKH == Email && kh.MatKhauKH == Password );
-        //    if(KH != null)
-        //    {
-        //        Session["KHACHHANG"] = KH; //save
-        //        ViewBag.Message = "Đăng nhập thành công!";
-        //        return RedirectToAction("Index","Home");
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Message = "Sai thông tin vui lòng kiểm tra lại thông tin!!!";
-        //        return View();
-        //    }
-        //}
-
-
-        //test !!! đăng nhập không cần mật khẩu vì chưa có thuộc tính mật khẩu trong data
 
         [HttpPost]
-        public ActionResult Login(string Email)
+        public ActionResult Login(string Email, string Password)
         {
-            // Chỉ cần Email để đăng nhập, không cần mật khẩu
-            var KH = db.dsKhachHang.FirstOrDefault(kh => kh.EmailKH == Email);
-            if (KH != null)
+            try
             {
-                Session["KHACHHANG"] = KH; //save
-                TempData["SuccessMessage"] = "Đăng nhập thành công!";
-                return RedirectToAction("Index", "Home");
+                Email = Email?.Trim();
+                Password = Password?.Trim();
+
+                if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+                {
+                    ViewBag.Error = "Vui lòng nhập đầy đủ email và mật khẩu";
+                    return View();
+                }
+
+                // Đảm bảo dữ liệu mới nhất
+                db.Lap_ListKhachHang();
+                db.Lap_ListNhanVien();
+
+                // Kiểm tra khách hàng
+                var khachHang = db.dsKhachHang.FirstOrDefault(kh =>
+                    kh.EmailKH != null && kh.EmailKH.Equals(Email, StringComparison.OrdinalIgnoreCase));
+
+                if (khachHang != null && string.Equals(khachHang.MatKhauKH, Password, StringComparison.Ordinal))
+                {
+                    Session["USER"] = khachHang;
+                    Session["ROLE"] = "CUSTOMER";
+                    Session["KHACHHANG"] = khachHang;
+
+                    TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Kiểm tra nhân viên
+                var nhanVien = db.dsNhanVien.FirstOrDefault(nv =>
+                    nv.EmailNV != null && nv.EmailNV.Equals(Email, StringComparison.OrdinalIgnoreCase));
+
+                if (nhanVien != null && string.Equals(nhanVien.MatKhauNV, Password, StringComparison.Ordinal))
+                {
+                    Session["USER"] = nhanVien;
+                    Session["ROLE"] = nhanVien.ChucVuNV == "Admin" ? "ADMIN" : "STAFF";
+
+                    TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+
+                ViewBag.Error = "Email hoặc mật khẩu không chính xác";
+                return View();
             }
-            else
+            catch (Exception)
             {
-                ViewBag.Message = "Email không tồn tại! Vui lòng kiểm tra lại hoặc đăng ký tài khoản mới.";
+                ViewBag.Error = "Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại sau.";
                 return View();
             }
         }
 
         public ActionResult Logout()
         {
-            Session["KHACHHANG"] = null;
+            Session.Clear();
             return RedirectToAction("Login");
         }
 
+       // Plan:
+        // - Remove call to GetGioHang() since cart logic moved to GioHangController.
+        // - Redirect to GioHangController.Index to handle cart retrieval and view rendering.
+        // - Keep authorization attribute unchanged.
 
-        // Tính năng giỏ hàng
-        // ========== GIỎ HÀNG ==========
-
+        [CustomAuthorize("CUSTOMER")]
         public ActionResult GioHang()
         {
-            var gioHang = GetGioHang();
-            return View(gioHang);
+            return RedirectToAction("Index", "GioHang");
         }
 
         [HttpPost]
-        public ActionResult ThemVaoGioHang(string id)
+        public ActionResult ThemVaoGio(string id)
         {
-            var laptop = db.dsLaptop.FirstOrDefault(l => l.IDLaptop == id);
-            if (laptop != null)
-            {
-                var gioHang = GetGioHang();
-                var existingItem = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
-
-                if (existingItem != null)
-                {
-                    existingItem.Quantity++;
-                }
-                else
-                {
-                    gioHang.Items.Add(new GioHangItem
-                    {
-                        IDLaptop = laptop.IDLaptop,
-                        NameLaptop = laptop.NameLaptop,
-                        PriceLaptop = laptop.PriceLaptop,
-                        GraphLaptop = laptop.GraphLaptop,
-                        HinhAnh = laptop.HinhAnh,
-                        Quantity = 1
-                    });
-                }
-
-                SaveGioHang(gioHang);
-                TempData["SuccessMessage"] = "Đã thêm sản phẩm vào giỏ hàng!";
-            }
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult MuaNgay(string id)
-        {
-            var laptop = db.dsLaptop.FirstOrDefault(l => l.IDLaptop == id);
-            if (laptop != null)
-            {
-                var gioHang = GetGioHang();
-                gioHang.Items.Clear();
-
-                gioHang.Items.Add(new GioHangItem
-                {
-                    IDLaptop = laptop.IDLaptop,
-                    NameLaptop = laptop.NameLaptop,
-                    PriceLaptop = laptop.PriceLaptop,
-                    GraphLaptop = laptop.GraphLaptop,
-                    HinhAnh = laptop.HinhAnh,
-                    Quantity = 1
-                });
-
-                SaveGioHang(gioHang);
-                return RedirectToAction("ThanhToan");
-            }
-
-            return RedirectToAction("Index");
-        }
-        [HttpPost]
-        public ActionResult CapNhatSoLuong(string id, int quantity)
-        {
-            try
-            {
-                var gioHang = GetGioHang();
-                var item = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
-
-                if (item != null)
-                {
-                    if (quantity <= 0)
-                    {
-                        gioHang.Items.Remove(item);
-                    }
-                    else
-                    {
-                        item.Quantity = quantity;
-                    }
-                    SaveGioHang(gioHang);
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    totalAmount = gioHang.TotalAmount.ToString("N0"),
-                    itemTotal = item?.TotalPrice.ToString("N0"),
-                    totalItems = gioHang.TotalItems
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, error = ex.Message });
-            }
-        }
-        [HttpPost]
-        public ActionResult XoaKhoiGioHang(string id)
-        {
-            var gioHang = GetGioHang();
-            var item = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
-
-            if (item != null)
-            {
-                gioHang.Items.Remove(item);
-                SaveGioHang(gioHang);
-                TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi giỏ hàng!";
-            }
-
-            return RedirectToAction("GioHang");
-        }
-
-        [HttpPost]
-        public ActionResult XoaGioHang()
-        {
-            var gioHang = GetGioHang();
-            gioHang.Items.Clear();
-            SaveGioHang(gioHang);
-            TempData["SuccessMessage"] = "Đã xóa toàn bộ giỏ hàng!";
-
-            return RedirectToAction("GioHang");
+            return RedirectToAction("ThemVaoGio", "GioHang", new { id });
         }
 
 
+        // Chuyển sang controller GioHangController để dễ quản lý hơn
 
-        // ========== THANH TOÁN ==========
+        //[HttpPost]
+        //public ActionResult ThemVaoGioHang(string id)
+        //{
+        //    var laptop = db.dsLaptop.FirstOrDefault(l => l.IDLaptop == id);
+        //    if (laptop != null)
+        //    {
+        //        var gioHang = GetGioHang();
+        //        var existingItem = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
 
-        public ActionResult ThanhToan()
-        {
-            // Kiểm tra đăng nhập
-            if (Session["KHACHHANG"] == null)
-            {
-                TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt hàng!";
-                return RedirectToAction("Login");
-            }
+        //        if (existingItem != null)
+        //        {
+        //            existingItem.Quantity++;
+        //        }
+        //        else
+        //        {
+        //            gioHang.Items.Add(new GioHangItem
+        //            {
+        //                IDLaptop = laptop.IDLaptop,
+        //                NameLaptop = laptop.NameLaptop,
+        //                PriceLaptop = laptop.PriceLaptop,
+        //                GraphLaptop = laptop.GraphLaptop,
+        //                HinhAnh = laptop.HinhAnh,
+        //                Quantity = 1
+        //            });
+        //        }
 
-            var gioHang = GetGioHang();
-            if (!gioHang.Items.Any())
-            {
-                TempData["ErrorMessage"] = "Giỏ hàng trống!";
-                return RedirectToAction("GioHang");
-            }
+        //        SaveGioHang(gioHang);
+        //        TempData["SuccessMessage"] = "Đã thêm sản phẩm vào giỏ hàng!";
+        //    }
 
-            var khachHang = Session["KHACHHANG"] as KhachHang;
-            ViewBag.KhachHang = khachHang;
+        //    return RedirectToAction("Index");
+        //}
 
-            return View(gioHang);
-        }
+        //[HttpPost]
+        //public ActionResult MuaNgay(string id)
+        //{
+        //    var laptop = db.dsLaptop.FirstOrDefault(l => l.IDLaptop == id);
+        //    if (laptop != null)
+        //    {
+        //        var gioHang = GetGioHang();
+        //        gioHang.Items.Clear();
 
-        [HttpPost]
-        public ActionResult ThanhToan(string diaChiGiaoHang, string ghiChu)
-        {
-            try
-            {
-                // Kiểm tra đăng nhập
-                if (Session["KHACHHANG"] == null)
-                {
-                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt hàng!";
-                    return RedirectToAction("Login");
-                }
+        //        gioHang.Items.Add(new GioHangItem
+        //        {
+        //            IDLaptop = laptop.IDLaptop,
+        //            NameLaptop = laptop.NameLaptop,
+        //            PriceLaptop = laptop.PriceLaptop,
+        //            GraphLaptop = laptop.GraphLaptop,
+        //            HinhAnh = laptop.HinhAnh,
+        //            Quantity = 1
+        //        });
 
-                var gioHang = GetGioHang();
-                if (gioHang == null || !gioHang.Items.Any())
-                {
-                    TempData["ErrorMessage"] = "Giỏ hàng trống!";
-                    return RedirectToAction("GioHang");
-                }
+        //        SaveGioHang(gioHang);
+        //        return RedirectToAction("ThanhToan");
+        //    }
 
-                var khachHang = Session["KHACHHANG"] as KhachHang;
+        //    return RedirectToAction("Index");
+        //}
 
-                if (string.IsNullOrEmpty(diaChiGiaoHang))
-                {
-                    TempData["ErrorMessage"] = "Vui lòng nhập địa chỉ giao hàng!";
-                    return View(gioHang);
-                }
+        //[HttpPost]
+        //public ActionResult CapNhatSoLuong(string id, int quantity)
+        //{
+        //    try
+        //    {
+        //        var gioHang = GetGioHang();
+        //        var item = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
 
-                // Tạo hóa đơn
-                var hoaDon = new HoaDon
-                {
-                    DayCreate = DateTime.Now,
-                    IDKH = khachHang.IDKhacHang,
-                    IDNV = "NV001", // Mã nhân viên mặc định
-                    Total_Money = gioHang.TotalAmount,
-                    State_TT = "Chờ xác nhận"
-                };
+        //        if (item != null)
+        //        {
+        //            if (quantity <= 0)
+        //            {
+        //                gioHang.Items.Remove(item);
+        //            }
+        //            else
+        //            {
+        //                item.Quantity = quantity;
+        //            }
+        //            SaveGioHang(gioHang);
+        //        }
 
-                // Lưu hóa đơn vào database
-                string maHoaDon = TaoHoaDon(hoaDon);
+        //        return Json(new
+        //        {
+        //            success = true,
+        //            totalAmount = gioHang.TotalAmount.ToString("N0"),
+        //            itemTotal = item?.TotalPrice.ToString("N0"),
+        //            totalItems = gioHang.TotalItems
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, error = ex.Message });
+        //    }
+        //}
 
-                // Lưu chi tiết hóa đơn
-                foreach (var item in gioHang.Items)
-                {
-                    var ctHoaDon = new CTHoaDon
-                    {
-                        IDHoaDon = maHoaDon,
-                        IDLaptop = item.IDLaptop,
-                        SLCT_HD = item.Quantity,
-                        DongGiaCT = item.PriceLaptop
-                    };
-                    ThemChiTietHoaDon(ctHoaDon);
-                }
+        //[HttpPost]
+        //public ActionResult XoaKhoiGioHang(string id)
+        //{
+        //    var gioHang = GetGioHang();
+        //    var item = gioHang.Items.FirstOrDefault(i => i.IDLaptop == id);
 
-                // Xóa giỏ hàng sau khi đặt hàng thành công
-                ClearGioHang();
+        //    if (item != null)
+        //    {
+        //        gioHang.Items.Remove(item);
+        //        SaveGioHang(gioHang);
+        //        TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi giỏ hàng!";
+        //    }
 
-                TempData["SuccessMessage"] = $"Đặt hàng thành công! Mã hóa đơn: {maHoaDon}";
-                return RedirectToAction("DatHangThanhCong", new { id = maHoaDon });
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Lỗi khi đặt hàng: " + ex.Message;
-                var gioHang = GetGioHang();
-                return View(gioHang);
-            }
-        }
+        //    return RedirectToAction("GioHang");
+        //}
 
-        public ActionResult DatHangThanhCong(string id)
-        {
-            ViewBag.MaHoaDon = id;
-            return View();
-        }
+        //[HttpPost]
+        //public ActionResult XoaGioHang()
+        //{
+        //    var gioHang = GetGioHang();
+        //    gioHang.Items.Clear();
+        //    SaveGioHang(gioHang);
+        //    TempData["SuccessMessage"] = "Đã xóa toàn bộ giỏ hàng!";
 
-        // ========== PHƯƠNG THỨC HỖ TRỢ ==========
+        //    return RedirectToAction("GioHang");
+        //}
 
-        private string TaoHoaDon(HoaDon hoaDon)
-        {
-            using (SqlConnection con = new SqlConnection("Data Source = LAPTOP-CV633IP1; database = QL_Laptop; User ID = sa;Password = 123"))
-            {
-                string maHoaDon = "HD" + DateTime.Now.ToString("yy");
+        //[CustomAuthorize("CUSTOMER")]
+        //public ActionResult ThanhToan()
+        //{
+        //    if (Session["KHACHHANG"] == null)
+        //    {
+        //        TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt hàng!";
+        //        return RedirectToAction("Login");
+        //    }
 
-                string sql = @"INSERT INTO HOADON (MAHD, NGAYLAP, MAKH, MANV, TONGTIEN)
-               VALUES (@mahd, @ngaylap, @makh, @manv, @tongtien)";
+        //    var gioHang = GetGioHang();
+        //    if (!gioHang.Items.Any())
+        //    {
+        //        TempData["ErrorMessage"] = "Giỏ hàng trống!";
+        //        return RedirectToAction("GioHang");
+        //    }
 
-               
+        //    var khachHang = Session["KHACHHANG"] as KhachHang;
+        //    ViewBag.KhachHang = khachHang;
 
-                SqlCommand cmd = new SqlCommand(sql, con);
-                cmd.Parameters.AddWithValue("@mahd", maHoaDon);
-                cmd.Parameters.AddWithValue("@ngaylap", hoaDon.DayCreate);
-                cmd.Parameters.AddWithValue("@makh", hoaDon.IDKH);
-                cmd.Parameters.AddWithValue("@manv", hoaDon.IDNV);
-                cmd.Parameters.AddWithValue("@tongtien", hoaDon.Total_Money);
-   
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+        //    return View(gioHang);
+        //}
 
-                return maHoaDon;
-            }
-        }
+        //[HttpPost]
+        //public ActionResult ThanhToan(string diaChiGiaoHang, string ghiChu)
+        //{
+        //    try
+        //    {
+        //        if (Session["KHACHHANG"] == null)
+        //        {
+        //            TempData["ErrorMessage"] = "Vui lòng đăng nhập để đặt hàng!";
+        //            return RedirectToAction("Login");
+        //        }
 
-        private void ThemChiTietHoaDon(CTHoaDon ctHoaDon)
-        {
-            using (SqlConnection con = new SqlConnection("Data Source = LAPTOP-CV633IP1; database = QL_Laptop; User ID = sa;Password = 123"))
-            {
-                string sql = @"INSERT INTO CT_HOADON (MAHD, MALAPTOP, SOLUONG, DONGIA) 
-                             VALUES (@mahd, @malaptop, @soluong, @dongia)";
+        //        var gioHang = GetGioHang();
+        //        if (gioHang == null || !gioHang.Items.Any())
+        //        {
+        //            TempData["ErrorMessage"] = "Giỏ hàng trống!";
+        //            return RedirectToAction("GioHang");
+        //        }
 
-                SqlCommand cmd = new SqlCommand(sql, con);
-                cmd.Parameters.AddWithValue("@mahd", ctHoaDon.IDHoaDon);
-                cmd.Parameters.AddWithValue("@malaptop", ctHoaDon.IDLaptop);
-                cmd.Parameters.AddWithValue("@soluong", ctHoaDon.SLCT_HD);
-                cmd.Parameters.AddWithValue("@dongia", ctHoaDon.DongGiaCT);
+        //        var khachHang = Session["KHACHHANG"] as KhachHang;
 
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-        }
+        //        if (string.IsNullOrEmpty(diaChiGiaoHang))
+        //        {
+        //            TempData["ErrorMessage"] = "Vui lòng nhập địa chỉ giao hàng!";
+        //            return View(gioHang);
+        //        }
 
-        private GioHang GetGioHang()
-        {
-            var gioHang = Session["GioHang"] as GioHang;
-            if (gioHang == null)
-            {
-                gioHang = new GioHang();
-                Session["GioHang"] = gioHang;
-            }
-            return gioHang;
-        }
+        //        var hoaDon = new HoaDon
+        //        {
+        //            DayCreate = DateTime.Now,
+        //            IDKH = khachHang.IDKhacHang,
+        //            IDNV = "NV001",
+        //            Total_Money = gioHang.TotalAmount,
+        //            State_TT = "Chờ xác nhận"
+        //        };
 
-        private void SaveGioHang(GioHang gioHang)
-        {
-            Session["GioHang"] = gioHang;
-        }
+        //        string maHoaDon = TaoHoaDon(hoaDon);
 
-        private void ClearGioHang()
-        {
-            Session["GioHang"] = new GioHang();
-        }
+        //        foreach (var item in gioHang.Items)
+        //        {
+        //            var ctHoaDon = new CTHoaDon
+        //            {
+        //                IDHoaDon = maHoaDon,
+        //                IDLaptop = item.IDLaptop,
+        //                SLCT_HD = item.Quantity,
+        //                DongGiaCT = item.PriceLaptop
+        //            };
+        //            ThemChiTietHoaDon(ctHoaDon);
+        //        }
 
+        //        ClearGioHang();
 
+        //        TempData["SuccessMessage"] = $"Đặt hàng thành công! Mã hóa đơn: {maHoaDon}";
+        //        return RedirectToAction("DatHangThanhCong", new { id = maHoaDon });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TempData["ErrorMessage"] = "Lỗi khi đặt hàng: " + ex.Message;
+        //        var gioHang = GetGioHang();
+        //        return View(gioHang);
+        //    }
+        //}
+
+        //public ActionResult DatHangThanhCong(string id)
+        //{
+        //    ViewBag.MaHoaDon = id;
+        //    return View();
+        //}
+
+        //private string TaoHoaDon(HoaDon hoaDon)
+        //{
+        //    using (SqlConnection con = new SqlConnection("Data Source = MSI; database = QL_LAPTOP; User ID = sa;Password = 123456"))
+        //    {
+        //        string maHoaDon = "HD" + DateTime.Now.ToString("yy");
+
+        //        string sql = @"INSERT INTO HOADON (MAHD, NGAYLAP, MAKH, MANV, TONGTIEN)
+        //                       VALUES (@mahd, @ngaylap, @makh, @manv, @tongtien)";
+
+        //        SqlCommand cmd = new SqlCommand(sql, con);
+        //        cmd.Parameters.AddWithValue("@mahd", maHoaDon);
+        //        cmd.Parameters.AddWithValue("@ngaylap", hoaDon.DayCreate);
+        //        cmd.Parameters.AddWithValue("@makh", hoaDon.IDKH);
+        //        cmd.Parameters.AddWithValue("@manv", hoaDon.IDNV);
+        //        cmd.Parameters.AddWithValue("@tongtien", hoaDon.Total_Money);
+
+        //        con.Open();
+        //        cmd.ExecuteNonQuery();
+        //        con.Close();
+
+        //        return maHoaDon;
+        //    }
+        //}
+
+        //private void ThemChiTietHoaDon(CTHoaDon ctHoaDon)
+        //{
+        //    using (SqlConnection con = new SqlConnection("Data Source = MSI; database = QL_LAPTOP; User ID = sa;Password = 123456"))
+        //    {
+        //        string sql = @"INSERT INTO CT_HOADON (MAHD, MALAPTOP, SOLUONG, DONGIA) 
+        //                       VALUES (@mahd, @malaptop, @soluong, @dongia)";
+
+        //        SqlCommand cmd = new SqlCommand(sql, con);
+        //        cmd.Parameters.AddWithValue("@mahd", ctHoaDon.IDHoaDon);
+        //        cmd.Parameters.AddWithValue("@malaptop", ctHoaDon.IDLaptop);
+        //        cmd.Parameters.AddWithValue("@soluong", ctHoaDon.SLCT_HD);
+        //        cmd.Parameters.AddWithValue("@dongia", ctHoaDon.DongGiaCT);
+
+        //        con.Open();
+        //        cmd.ExecuteNonQuery();
+        //        con.Close();
+        //    }
+        //}
+
+        //private GioHang GetGioHang()
+        //{
+        //    var gioHang = Session["GioHang"] as GioHang;
+        //    if (gioHang == null)
+        //    {
+        //        gioHang = new GioHang();
+        //        Session["GioHang"] = gioHang;
+        //    }
+        //    return gioHang;
+        //}
+
+        //private void SaveGioHang(GioHang gioHang)
+        //{
+        //    Session["GioHang"] = gioHang;
+        //}
+
+        //private void ClearGioHang()
+        //{
+        //    Session["GioHang"] = new GioHang();
+        //}
     }
 }

@@ -1,0 +1,58 @@
+﻿@model DOAN_SALE_LAPTOP.Models.GioHang
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Giỏ hàng của bạn</h2>
+
+@if (!Model.Items.Any())
+{
+    <p>Giỏ hàng trống.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tên Laptop</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.NameLaptop</td>
+                    <td>@string.Format("{0:N0}₫", item.PriceLaptop)</td>
+                    <td>
+                        <form action="@Url.Action("CapNhat","GioHang")" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.IDLaptop" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" style="width:60px;" />
+                            <button type="submit" class="btn btn-sm btn-success">Cập nhật</button>
+                        </form>
+                    </td>
+                    <td>@string.Format("{0:N0}₫", item.TotalPrice)</td>
+                    <td>
+                        <form action="@Url.Action("XoaKhoiGioHang","GioHang")" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.IDLaptop" />
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="text-end">
+        Tổng cộng: @string.Format("{0:N0}₫", Model.TotalAmount)
+    </h4>
+
+    <a href="@Url.Action("Index","Home")" class="btn btn-primary">Tiếp tục mua hàng</a>
+    <form action="@Url.Action("XoaGioHang","GioHang")" method="post" class="d-inline">
+        <button type="submit" class="btn btn-warning">Xóa toàn bộ giỏ</button>
+    </form>
+}

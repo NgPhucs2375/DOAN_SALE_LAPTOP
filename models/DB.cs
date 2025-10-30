@@ -9,7 +9,9 @@ namespace DOAN_SALE_LAPTOP.Models
 {
     public class DB
     {
-        static string strcon = "Data Source=LAPTOP-CV633IP1;Initial Catalog=QL_Laptop;User ID=sa;Password=123;";
+        //static string strcon = "Data Source=LAPTOP-CV633IP1;Initial Catalog=QL_Laptop;User ID=sa;Password=123;";
+        static string strcon = "Data Source=MSI;Database=QL_LAPTOP;User ID=sa;Password=123456;";
+
         SqlConnection con = new SqlConnection(strcon);
         public List<Laptop> dsLaptop = new List<Laptop>();
         public List<NhanVien> dsNhanVien = new List<NhanVien>();
@@ -71,6 +73,8 @@ namespace DOAN_SALE_LAPTOP.Models
 
         public void Lap_ListKhachHang()
         {
+            dsKhachHang.Clear();
+
             SqlDataAdapter da = new SqlDataAdapter("Select * From KHACHHANG", con);
             DataTable datatable = new DataTable();
             da.Fill(datatable);
@@ -84,6 +88,7 @@ namespace DOAN_SALE_LAPTOP.Models
                 t.DayBorn= DateTime.Parse(dr["NGAYSINH"].ToString());
                 t.DiaChiKH = dr["DIACHI"].ToString();
                 t.SexKH = dr["GIOITINH"].ToString();
+                t.MatKhauKH = dr["MATKHAU"].ToString();
                 dsKhachHang.Add(t);
             }
 

@@ -34,16 +34,22 @@
                     <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg px-4 me-2">
                         <i class="fa-solid fa-arrow-left"></i> Quay lại
                     </a>
-           
-                    <div class="col-6 btn btn-success">
-                        @using (Html.BeginForm("MuaNgay", "Home", FormMethod.Post))
-                        {
-                            @Html.Hidden("id", Model.IDLaptop)
-                            <button type="submit" class="btn btn-primary btn-sm btn-block">
-                                <i class="fas fa-bolt"></i> Mua ngay
-                            </button>
-                        }
-                    </div>
+                    @using (Html.BeginForm("ThemVaoGio", "GioHang", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", Model.IDLaptop)
+                        <button type="submit" class="btn btn-warning btn-lg px-4 me-2">
+                            <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+                        </button>
+                    }
+
+                    @using (Html.BeginForm("MuaNgay", "GioHang", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", Model.IDLaptop)
+                        <button type="submit" class="btn btn-primary btn-sm btn-block">
+                            <i class="fas fa-bolt"></i> Mua ngay
+                        </button>
+                    }
+
                 </div>
             </div>
         </div>
