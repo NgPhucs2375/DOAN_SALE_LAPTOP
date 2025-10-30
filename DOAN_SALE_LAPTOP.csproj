@@ -201,6 +201,7 @@
     <Content Include="Views\Home\ThanhToan.cshtml" />
     <Content Include="Views\Home\DatHangThanhCong.cshtml" />
     <Content Include="Views\GioHang\Index.cshtml" />
+    <Content Include="Views\Shared\_RelatedProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

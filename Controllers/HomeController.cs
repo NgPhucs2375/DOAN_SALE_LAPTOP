@@ -44,6 +44,20 @@ namespace DOAN_SALE_LAPTOP.Controllers
             if (laptop == null)
                 return HttpNotFound();
 
+            // Lấy danh sách sản phẩm liên quan theo cùng loại (IDLoai), loại trừ sản phẩm hiện tại, giới hạn 4
+            try
+            {
+                var related = db.dsLaptop
+                    .Where(l => l.IDLoai == laptop.IDLoai && l.IDLaptop != id)
+                    .Take(4)
+                    .ToList();
+                ViewBag.RelatedProducts = related;
+            }
+            catch
+            {
+                ViewBag.RelatedProducts = new List<Laptop>();
+            }
+
             return View(laptop);
         }
 

@@ -54,6 +54,19 @@
             </div>
         </div>
     </div>
+
+    <div class="related-products mt-5">
+        <h3 class="fw-bold text-center mb-4 text-primary">
+            <i class="fa-solid fa-laptop-house"></i> Sản phẩm liên quan
+        </h3>
+
+        <div class="row">
+            @{ 
+                var relatedProducts = ViewBag.RelatedProducts as IEnumerable<DOAN_SALE_LAPTOP.Models.Laptop>;
+            }
+            @Html.Partial("_RelatedProducts", relatedProducts)
+        </div>
+    </div>
 </div>
 
 <style>
