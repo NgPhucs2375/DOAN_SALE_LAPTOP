@@ -50,7 +50,7 @@
                     </nav>
                 </div>
             </div>
-        
+
             <div class="filter-group">
                 <div class="filter-group-title">
                     <span><i class="fa-solid fa-microchip"></i> Lọc Theo CPU</span>
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        
+
         <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
 
             <div class="sidebar-promo-card">
@@ -202,7 +202,23 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-<script src="~/Scripts/js/Site.js"></script>
+    <script src="~/Scripts/js/Site.js"></script>
+
+    <div class="chat-bubble-button" id="chat-toggle-button">
+        <i class="fa-solid fa-comments fa-2x"></i>
+    </div>
+
+    <div class="chat-iframe-container" id="chat-iframe-window">
+        <div class="chat-iframe-header">
+
+            <button id="chat-close-button">&times;</button>
+        </div>
+        <iframe src="https://www.chatbase.co/chatbot-iframe/WDZFpp7MVPpaofJryZ8XK"
+                width="100%"
+                style="height: 100%; border: none;"
+                frameborder="0"></iframe>
+    </div>
+
 
 </body>
 </html>

@@ -63,3 +63,15 @@ window.addEventListener('load', function () {
         }
     }
 });
+
+$(document).ready(function () {
+    // Khi bấm vào nút bong bóng
+    $('#chat-toggle-button').on('click', function () {
+        $('#chat-iframe-window').toggleClass('show');
+    });
+
+    // Khi bấm vào nút X (đóng)
+    $('#chat-close-button').on('click', function () {
+        $('#chat-iframe-window').removeClass('show');
+    });
+});
