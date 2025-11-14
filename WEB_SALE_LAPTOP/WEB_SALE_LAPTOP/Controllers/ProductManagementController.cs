@@ -1,54 +1,87 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Data.Entity; // <-- Đã có
 using WEB_SALE_LAPTOP.Models;
 
 namespace WEB_SALE_LAPTOP.Controllers
 {
-    public class ProductManagementController : Controller
+    // Kế thừa BaseAdminController đã tự động bảo vệ và gán Layout
+    public class ProductManagementController : BaseAdminController
     {
-        private QL_LAPTOP db = new QL_LAPTOP();
+        // (BaseAdminController đã cung cấp 'db', không cần khai báo lại)
 
-        // (Hàm OnActionExecuting (Bảo mật) của bạn đã rất tốt, giữ nguyên)
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        // GET: Index
+        public ActionResult Index(string search, int? page, int? brandId, int? categoryId)
         {
-            if (Session["AdminUser"] == null)
+            var viewModel = new ProductManagementViewModel();
+
+            // 2. Tải (load) dữ liệu lọc (Filters) (Giữ nguyên, đã tốt)
+            var brandsList = db.HANGs.ToDictionary(h => h.MAHANG, h => h.TENHANG);
+            brandsList.Add(0, "Tất cả Hãng");
+            viewModel.Brands = new SelectList(brandsList, "Key", "Value", brandId);
+
+            var categoriesList = db.LOAI_LAPTOP.ToDictionary(l => l.MALOAI, l => l.TENLOAI);
+            categoriesList.Add(0, "Tất cả Loại");
+            viewModel.Categories = new SelectList(categoriesList, "Key", "Value", categoryId);
+
+            // 3. Bắt đầu Truy vấn (Query) "gốc" (base)
+            // SỬA LỖI LINQ: Xóa .OrderBy() khỏi đây
+            var laptops = db.LAPTOPs
+                            .Include(l => l.HANG)
+                            .Include(l => l.LOAI_LAPTOP)
+                            .AsQueryable(); // <-- Biến nó thành IQueryable
+
+            // 4. "TIẾN HÓA": Tính toán Thống kê (Giữ nguyên, đã tốt)
+            // (Tạm thời tải (load) tất cả để đếm)
+            var allProducts = laptops.OrderBy(l => l.TENLAPTOP).ToList();
+            viewModel.TongSoSanPham = allProducts.Count();
+            viewModel.SanPhamDangBan = allProducts.Count(p => p.TRANGTHAI == true);
+            viewModel.SanPhamDaAn = allProducts.Count(p => p.TRANGTHAI == false);
+
+            // 5. "TIẾN HÓA": Áp dụng (Apply) Lọc (Filters) (Giữ nguyên, đã tốt)
+            if (!string.IsNullOrEmpty(search))
             {
-                filterContext.Result = new RedirectToRouteResult(
-                    new System.Web.Routing.RouteValueDictionary(
-                        new { controller = "AdminAccount", action = "Login" }
-                    )
-                );
+                laptops = laptops.Where(l => l.TENLAPTOP.Contains(search) || l.CAUHINH.Contains(search));
+                viewModel.CurrentSearch = search;
             }
-            base.OnActionExecuting(filterContext);
+            if (brandId.HasValue && brandId.Value > 0)
+            {
+                laptops = laptops.Where(l => l.MAHANG == brandId.Value);
+                viewModel.CurrentBrandId = brandId.Value;
+            }
+            if (categoryId.HasValue && categoryId.Value > 0)
+            {
+                laptops = laptops.Where(l => l.MALOAI == categoryId.Value);
+                viewModel.CurrentCategoryId = categoryId.Value;
+            }
+
+            // 6. "TIẾN HÓA": Thực hiện Phân trang (Pagination)
+            int pageNumber = (page ?? 1);
+            int pageSize = 10;
+
+            // SỬA LỖI LINQ: Thêm .OrderBy() VÀO CUỐI CÙNG
+            // (Để "biến" (convert) IQueryable -> IOrderedQueryable)
+            viewModel.Products = laptops.OrderBy(l => l.TENLAPTOP).ToPagedList(pageNumber, pageSize);
+
+            return View(viewModel);
         }
 
-        // (Hàm Index (GET) của bạn đã rất tốt, giữ nguyên)
-        // Làm phân quyền để admmin mới truy cập được   
-        public ActionResult Index()
-        {
-            ViewBag.Layout = "~/Views/Shared/_AdminLayout.cshtml"; // <-- GÁN LAYOUT MỚI
-            var laptops = db.LAPTOPs.Include(l => l.HANG).Include(l => l.LOAI_LAPTOP);
-            return View(laptops.ToList());
-        }
-
-        // (Hàm Create (GET) của bạn đã rất tốt, giữ nguyên)
+        // GET: Create
         public ActionResult Create()
         {
-            ViewBag.Layout = "~/Views/Shared/_AdminLayout.cshtml"; // <-- GÁN LAYOUT MỚI
+            // KHÔNG CẦN GÁN ViewBag.Layout ở đây nữa
             ViewBag.MALOAI = new SelectList(db.LOAI_LAPTOP, "MALOAI", "TENLOAI");
             ViewBag.MAHANG = new SelectList(db.HANGs, "MAHANG", "TENHANG");
             return View();
         }
 
-        // ===================================================================
-        // CREATE (POST) - ĐÃ "TIẾN HÓA" SANG EF
-        // ===================================================================
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TENLAPTOP,MOTA,CAUHINH,GIA_GOC,GIA_BAN,SOLUONG_TON,MALOAI,MAHANG,TRANGTHAI")] LAPTOP laptop,
@@ -62,20 +95,16 @@ namespace WEB_SALE_LAPTOP.Controllers
                 laptop.HINHANH2 = SaveImage(HINHANH2_File);
                 laptop.HINHANH3 = SaveImage(HINHANH3_File);
 
-                // === SỬA LỖI: DÙNG CÚ PHÁP EF ===
-                db.LAPTOPs.Add(laptop);     // Thay vì InsertOnSubmit
-                db.SaveChanges();           // Thay vì SubmitChanges
-                // ================================
-
+                db.LAPTOPs.Add(laptop);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             ViewBag.MALOAI = new SelectList(db.LOAI_LAPTOP, "MALOAI", "TENLOAI", laptop.MALOAI);
             ViewBag.MAHANG = new SelectList(db.HANGs, "MAHANG", "TENHANG", laptop.MAHANG);
             return View(laptop);
         }
 
-        // (Hàm Edit (GET) của bạn đã rất tốt, giữ nguyên)
+        // GET: Edit
         public ActionResult Edit(int? id)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
@@ -86,9 +115,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             return View(laptop);
         }
 
-        // ===================================================================
-        // EDIT (POST) - ĐÃ "TIẾN HÓA" SANG EF
-        // ===================================================================
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
@@ -98,7 +125,6 @@ namespace WEB_SALE_LAPTOP.Controllers
         {
             if (ModelState.IsValid)
             {
-                // (Logic SaveImage của bạn đã tốt, giữ nguyên)
                 string newImg0 = SaveImage(HINHANH0_File);
                 if (newImg0 != null) laptop.HINHANH0 = newImg0;
                 string newImg1 = SaveImage(HINHANH1_File);
@@ -108,20 +134,16 @@ namespace WEB_SALE_LAPTOP.Controllers
                 string newImg3 = SaveImage(HINHANH3_File);
                 if (newImg3 != null) laptop.HINHANH3 = newImg3;
 
-                // === SỬA LỖI: DÙNG CÚ PHÁP EF ===
-                db.Entry(laptop).State = EntityState.Modified; // Thay vì UpdateOnSubmit
-                db.SaveChanges();                                // Thay vì SubmitChanges
-                // ================================
-
+                db.Entry(laptop).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             ViewBag.MALOAI = new SelectList(db.LOAI_LAPTOP, "MALOAI", "TENLOAI", laptop.MALOAI);
             ViewBag.MAHANG = new SelectList(db.HANGs, "MAHANG", "TENHANG", laptop.MAHANG);
             return View(laptop);
         }
 
-        // (Hàm Delete (GET) của bạn đã rất tốt, giữ nguyên)
+        // GET: Delete
         public ActionResult Delete(int? id)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
@@ -131,27 +153,20 @@ namespace WEB_SALE_LAPTOP.Controllers
             return View(laptop);
         }
 
-        // ===================================================================
-        // DELETE (POST) - ĐÃ "TIẾN HÓA" SANG EF
-        // ===================================================================
+        // POST: Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             LAPTOP laptop = db.LAPTOPs.Find(id);
-
             try
             {
-                // === SỬA LỖI: DÙNG CÚ PHÁP EF ===
-                db.LAPTOPs.Remove(laptop);  // Thay vì DeleteOnSubmit
-                db.SaveChanges();           // Thay vì SubmitChanges
-                // ================================
+                db.LAPTOPs.Remove(laptop);
+                db.SaveChanges();
             }
             catch (Exception ex)
             {
                 ViewBag.Error = "Không thể xóa sản phẩm này vì đã tồn tại trong hóa đơn!";
-
-                // (Logic catch của bạn đã dùng EF, giữ nguyên)
                 db.Entry(laptop).Reference(l => l.HANG).Load();
                 db.Entry(laptop).Reference(l => l.LOAI_LAPTOP).Load();
                 return View(laptop);
@@ -159,29 +174,24 @@ namespace WEB_SALE_LAPTOP.Controllers
             return RedirectToAction("Index");
         }
 
-        // (Hàm Dispose của bạn đã rất tốt, giữ nguyên)
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing) { db.Dispose(); }
-            base.Dispose(disposing);
-        }
-
-        // (Hàm SaveImage của bạn đã rất tốt, giữ nguyên)
+        // (Hàm SaveImage - Giữ nguyên)
         private string SaveImage(HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
             {
                 var fileName = Path.GetFileName(file.FileName);
-                // Sửa đường dẫn nếu cần
                 var path = Path.Combine(Server.MapPath("~/Content/images/"), fileName);
-
-                // (Kiểm tra và tạo thư mục nếu chưa có)
                 Directory.CreateDirectory(Server.MapPath("~/Content/images/"));
-
                 file.SaveAs(path);
                 return fileName;
             }
             return null;
+        }
+
+
+        public ProductManagementController() : base(maQuyenCanCo: 3)
+        {
+            // Để trống
         }
     }
 }

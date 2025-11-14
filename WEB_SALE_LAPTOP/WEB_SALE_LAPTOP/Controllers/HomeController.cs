@@ -212,5 +212,20 @@ namespace WEB_SALE_LAPTOP.Controllers
 
             return View("Index", ketQua);
         }
+        [HttpPost]
+        public ActionResult SubscribeNewsletter(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập email." });
+            }
+
+            // (Logic tương lai: Bạn sẽ lưu email này vào CSDL)
+            // db.NEWSLETTER_SUBS.Add(new NEWSLETTER_SUB { Email = email });
+            // db.SaveChanges();
+
+            // Tạm thời, chúng ta chỉ trả về "Thành công"
+            return Json(new { success = true, message = "Đăng ký thành công! Cảm ơn bạn." });
+        }
     }
 }

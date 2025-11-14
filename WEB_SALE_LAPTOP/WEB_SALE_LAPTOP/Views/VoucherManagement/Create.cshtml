@@ -1,0 +1,85 @@
+﻿@model WEB_SALE_LAPTOP.Models.VOUCHER
+@{
+    ViewBag.Title = "Tạo Voucher Mới";
+}
+
+@using (Html.BeginForm("Create", "VoucherManagement", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="page-header">
+        <h2 class="section-title">@ViewBag.Title</h2>
+        <button type="submit" class="btn-primary-admin">
+            <i class="fa-solid fa-save"></i>
+            <span>Lưu Voucher</span>
+        </button>
+    </div>
+
+    <div class="product-section">
+        <div class="contact-page-wrapper">
+
+            <div class="admin-form-col">
+                <h4 class.="admin-form-subtitle">Thông tin Cơ bản</h4>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MAVOUCHER, "Mã Voucher* (Ví dụ: SALE100K)")
+                    @Html.EditorFor(model => model.MAVOUCHER, new { htmlAttributes = new { @class = "form-group-input" } })
+                    @Html.ValidationMessageFor(model => model.MAVOUCHER, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TEN_VOUCHER, "Tên Voucher (Mô tả)*")
+                    @Html.EditorFor(model => model.TEN_VOUCHER, new { htmlAttributes = new { @class = "form-group-input" } })
+                    @Html.ValidationMessageFor(model => model.TEN_VOUCHER, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="admin-form-col">
+                <h4 class.="admin-form-subtitle">Giá trị & Điều kiện</h4>
+
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LOAI_GIAMGIA, "Loại Giảm giá*")
+                        @Html.DropDownListFor(model => model.LOAI_GIAMGIA, new SelectList(
+                            new[] { "PHANTRAM", "TIENMAT" }),
+                            "--- Chọn loại ---", new { @class = "form-group-input" })
+                        @Html.ValidationMessageFor(model => model.LOAI_GIAMGIA, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.GIATRI, "Giá trị* (Số tiền hoặc %)")
+                        @Html.EditorFor(model => model.GIATRI, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                        @Html.ValidationMessageFor(model => model.GIATRI, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class.="form-row-2col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.GIAM_TOIDA, "Giảm Tối Đa (Nếu là %)")
+                        @Html.EditorFor(model => model.GIAM_TOIDA, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    </div>
+                    <div class.="form-group">
+                        @Html.LabelFor(model => model.DONHANG_TOITHIEU, "Đơn hàng Tối thiểu")
+                        @Html.EditorFor(model => model.DONHANG_TOITHIEU, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    </div>
+                </div>
+
+                <div class.="form-row-2col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NGAYBATDAU, "Ngày Bắt đầu*")
+                        @Html.EditorFor(model => model.NGAYBATDAU, new { htmlAttributes = new { @class = "form-group-input", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.NGAYBATDAU, "", new { @class = "text-danger" })
+                    </div>
+                    <div class.="form-group">
+                        @Html.LabelFor(model => model.NGAYKETTHUC, "Ngày Kết thúc*")
+                        @Html.EditorFor(model => model.NGAYKETTHUC, new { htmlAttributes = new { @class = "form-group-input", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.NGAYKETTHUC, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class.="form-group">
+                    @Html.LabelFor(model => model.SOLUONG_DUNG, "Tổng Số lượng Dùng*")
+                    @Html.EditorFor(model => model.SOLUONG_DUNG, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    @Html.ValidationMessageFor(model => model.SOLUONG_DUNG, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+}

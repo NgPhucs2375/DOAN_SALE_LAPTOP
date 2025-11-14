@@ -52,6 +52,12 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -130,14 +136,19 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminAccountController.cs" />
+    <Compile Include="Controllers\BaseAdminController.cs" />
     <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CustomerManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrderManagementController.cs" />
     <Compile Include="Controllers\ProductManagementController.cs" />
+    <Compile Include="Controllers\VoucherManagementController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\CT_HOADON.cs" />
+    <Compile Include="Models\CustomerProfileViewModel.cs" />
     <Compile Include="Models\HANG.cs" />
     <Compile Include="Models\HOADON.cs" />
     <Compile Include="Models\KHACHHANG.cs" />
@@ -145,7 +156,9 @@
     <Compile Include="Models\LAPTOP.cs" />
     <Compile Include="Models\LOAI_LAPTOP.cs" />
     <Compile Include="Models\NHANVIEN.cs" />
+    <Compile Include="Models\OrderManagementViewModel.cs" />
     <Compile Include="Models\PHANQUYEN.cs" />
+    <Compile Include="Models\ProductManagementViewModel.cs" />
     <Compile Include="Models\QL_LAPTOP.cs" />
     <Compile Include="Models\THANHTOAN.cs" />
     <Compile Include="Models\VOUCHER.cs" />
@@ -324,6 +337,7 @@
     <Content Include="Content\images\MSI_Titan_18_HX_0.jpg" />
     <Content Include="Content\images\MSI_Titan_18_HX_1.jpg" />
     <Content Include="Content\images\MSI_Titan_18_HX_3.jpg" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -376,9 +390,16 @@
     <Content Include="Views\Cart\OrderSuccess.cshtml" />
     <Content Include="Views\Home\_DSMenu_Hang.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\OrderManagement\Index.cshtml" />
+    <Content Include="Views\Account\Profile.cshtml" />
+    <Content Include="Views\CustomerManagement\Index.cshtml" />
+    <Content Include="Views\VoucherManagement\Index.cshtml" />
+    <Content Include="Views\VoucherManagement\Create.cshtml" />
+    <Content Include="Views\VoucherManagement\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\BaseAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

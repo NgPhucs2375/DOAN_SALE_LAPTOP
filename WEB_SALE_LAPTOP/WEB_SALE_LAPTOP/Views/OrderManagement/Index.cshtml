@@ -1,0 +1,122 @@
+﻿@model WEB_SALE_LAPTOP.Models.OrderManagementViewModel
+@{
+    ViewBag.Title = "Tổng quan Đơn hàng";
+    // Layout đã được gán tự động
+}
+
+@helper RenderStatusBadge(string status)
+{
+    string badgeClass = "status-pending"; // Vàng (Mặc định)
+    if (status == "Đang giao") { badgeClass = "status-shipping"; }
+    else if (status == "Hoàn thành") { badgeClass = "status-completed"; }
+    else if (status == "Đã hủy") { badgeClass = "status-cancelled"; }
+
+    <span class="status @badgeClass">@status</span>
+}
+<div class="stat-card-grid">
+    <div class="stat-card">
+        <div class="stat-icon icon-revenue"><i class="fa-solid fa-dollar-sign"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Tổng Doanh Thu (Đã hoàn thành)</span>
+            <span class="stat-value">@Model.TongDoanhThu.ToString("N0") ₫</span>
+        </div>
+    </div>
+    <a href="@Url.Action("Index", new { status = "Chờ xử lý" })"
+       class="stat-card @(Model.CurrentFilter == "Chờ xử lý" ? "active" : "")">
+        <div class="stat-icon icon-pending"><i class="fa-solid fa-clock"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Đơn Chờ Xử Lý</span>
+            <span class="stat-value">@Model.DonChoXuLy</span>
+        </div>
+    </a>
+    <a href="@Url.Action("Index", new { status = "Đang giao" })"
+       class="stat-card @(Model.CurrentFilter == "Đang giao" ? "active" : "")">
+        <div class="stat-icon icon-shipping"><i class="fa-solid fa-truck-fast"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Đơn Đang Giao</span>
+            <span class="stat-value">@Model.DonDangGiao</span>
+        </div>
+    </a>
+    <a href="@Url.Action("Index")"
+       class="stat-card @(string.IsNullOrEmpty(Model.CurrentFilter) ? "active" : "")">
+        <div class="stat-icon icon-total"><i class="fa-solid fa-file-invoice"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Tổng Số Đơn Hàng</span>
+            <span class="stat-value">@Model.TongDonHang</span>
+        </div>
+    </a>
+</div>
+
+<div class="page-header" style="margin-top: 2rem;">
+    <h2 class="section-title">
+        @if (string.IsNullOrEmpty(Model.CurrentFilter))
+        {
+            <span>Tất cả Đơn hàng</span>
+        }
+        else
+        {
+            <span>Đang lọc: @Model.CurrentFilter</span>
+        }
+    </h2>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Mã HĐ</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Số SP</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Hoadons)
+            {
+                <tr>
+                    <td><strong>#@item.MAHD</strong></td>
+                    <td>@(item.KHACHHANG != null ? item.KHACHHANG.HOTEN : "Khách vãng lai")</td>
+                    <td>
+                        @(item.NGAYLAP.HasValue ? item.NGAYLAP.Value.ToString("dd/MM/yyyy HH:mm") : "...")
+                    </td>
+                    <td>@item.CT_HOADON.Sum(c => c.SOLUONG.GetValueOrDefault(0)) SP</td>
+                    <td style="color: var(--color-accent); font-weight: bold;">
+                        @String.Format("{0:N0}", item.TONG_THANHTOAN) ₫
+                    </td>
+                    <td>
+                        @RenderStatusBadge(item.TRANGTHAI)
+                    </td>
+
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Details", new { id=item.MAHD })" class="btn-action btn-edit" title="Xem chi tiết">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+
+                        @if (item.TRANGTHAI == "Chờ xử lý")
+                        {
+                            using (Html.BeginForm("UpdateStatus", "OrderManagement", FormMethod.Post))
+                            {
+                                @Html.Hidden("maHD", item.MAHD)
+                                @Html.Hidden("newStatus", "Đang giao")
+                                <button type="submit" class="btn-action btn-shipping" title="Duyệt (Giao hàng)">
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                </button>
+                            }
+                            using (Html.BeginForm("UpdateStatus", "OrderManagement", FormMethod.Post))
+                            {
+                                @Html.Hidden("maHD", item.MAHD)
+                                @Html.Hidden("newStatus", "Đã hủy")
+                                <button type="submit" class="btn-action btn-delete" title="Hủy đơn">
+                                    <i class="fa-solid fa-times-circle"></i>
+                                </button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

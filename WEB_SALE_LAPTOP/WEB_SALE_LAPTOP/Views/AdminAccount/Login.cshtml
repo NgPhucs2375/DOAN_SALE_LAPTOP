@@ -5,7 +5,7 @@
 
 <h2 class="section-title">Trang Quản Trị</h2>
 
-<div class.="product-section" style="max-width: 600px; margin: 0 auto;">
+<div class="product-section" style="max-width: 600px; margin: 0 auto;">
     <div class="contact-form-container">
 
         @using (Html.BeginForm("Login", "AdminAccount", FormMethod.Post, new { @class = "contact-form" }))
@@ -20,7 +20,7 @@
                 <div class="voucher-message error" style="margin-bottom: 1rem;">@ViewBag.Error</div>
             }
 
-            <div class.="form-group">
+            <div class="form-group">
                 <label for="TENDN">Tên đăng nhập (TENDN)*</label>
                 <input type="text" id="TENDN" name="TENDN" required class="form-group-input" />
             </div>

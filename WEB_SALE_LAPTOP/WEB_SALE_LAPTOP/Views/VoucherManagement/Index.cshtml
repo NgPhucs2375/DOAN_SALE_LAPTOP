@@ -1,0 +1,75 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.VOUCHER>
+@{
+    ViewBag.Title = "Quản lý Voucher";
+}
+
+@helper RenderVoucherStatus(DateTime expiryDate, int used, int total)
+{
+    if (DateTime.Now > expiryDate)
+    {
+        <span class.="status status-cancelled">Đã hết hạn</span>
+    }
+    else if (used >= total)
+    {
+        <span class="status status-pending">Hết lượt dùng</span>
+    }
+    else
+    {
+        <span class="status status-completed">Đang hoạt động</span>
+    }
+}
+<div class="page-header">
+    <h2 class="section-title">@ViewBag.Title</h2>
+    <a href="@Url.Action("Create")" class="btn-primary-admin" style="text-decoration: none;">
+        <i class="fa-solid fa-plus"></i>
+        <span>Tạo Voucher Mới</span>
+    </a>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Mã Voucher</th>
+                <th>Tên / Mô tả</th>
+                <th>Giá trị</th>
+                <th>Lượt dùng</th>
+                <th>Ngày hết hạn</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.MAVOUCHER</strong></td>
+                    <td title="@item.TEN_VOUCHER">@item.TEN_VOUCHER</td>
+                    <td>
+                        @if (item.LOAI_GIAMGIA == "PHANTRAM")
+                        {
+                            <span>@item.GIATRI% (Tối đa @item.GIAM_TOIDA.Value.ToString("N0")đ)</span>
+                        }
+                        else
+                        {
+                            <span style="color: var(--color-accent); font-weight: bold;">@item.GIATRI.ToString("N0")đ</span>
+                        }
+                    </td>
+                    <td>@item.DA_DUNG / @item.SOLUONG_DUNG</td>
+                    <td>@item.NGAYKETTHUC.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @RenderVoucherStatus(item.NGAYKETTHUC, item.DA_DUNG.Value, item.SOLUONG_DUNG.Value)
+                    </td>
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id=item.MAVOUCHER })" class="btn-action btn-edit" title="Sửa">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id=item.MAVOUCHER })" class="btn-action btn-delete" title="Xóa">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

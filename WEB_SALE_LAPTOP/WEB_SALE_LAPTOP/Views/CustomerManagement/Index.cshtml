@@ -1,0 +1,41 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.KHACHHANG>
+@{
+    ViewBag.Title = "Quản lý Khách hàng";
+    // Layout đã được gán tự động
+}
+
+<div class="page-header">
+    <h2 class="section-title">@ViewBag.Title</h2>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Mã KH</th>
+                <th>Họ Tên</th>
+                <th>Email</th>
+                <th>Số Điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>#@item.MAKH</strong></td>
+                    <td>@item.HOTEN</td>
+                    <td>@item.EMAIL</td>
+                    <td>@item.SODT</td>
+                    <td title="@item.DIACHI" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @item.DIACHI
+                    </td>
+                    <td>
+                        @(item.NGAYTAO.HasValue ? item.NGAYTAO.Value.ToString("dd/MM/yyyy") : "...")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WEB_SALE_LAPTOP.Models;
-
+using System.Data.Entity;
 namespace WEB_SALE_LAPTOP.Controllers
 {
     public class AccountController : Controller
@@ -115,5 +115,77 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
             base.Dispose(disposing);
         }
+        public ActionResult Profile()
+        {
+            // 1. Bảo vệ (Secure)
+            if (Session["UserCustomer"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // 2. Lấy ID Khách hàng
+            var customer = Session["UserCustomer"] as KHACHHANG;
+            int khachHangID = customer.MAKH;
+
+            // 3. Tạo "Bộ não" (Brain) ViewModel
+            var viewModel = new CustomerProfileViewModel
+            {
+                // 4. Lấy thông tin khách hàng (mới nhất từ CSDL)
+                CustomerInfo = db.KHACHHANGs.Find(khachHangID),
+
+                // 5. "TIẾN HÓA": Lấy Lịch sử Đơn hàng (Nội dung mới)
+                OrderHistory = db.HOADONs
+                                .Where(h => h.MAKH == khachHangID)
+                                .OrderByDescending(h => h.NGAYLAP)
+                                .Take(10) // (Giới hạn 10 đơn hàng gần nhất)
+                                .ToList()
+            };
+
+            return View(viewModel); // <-- Trả về ViewModel "Pro"
+        }
+
+        [HttpPost]
+        public ActionResult UpdateProfile(KHACHHANG customerData)
+        {
+            // 1. Bảo vệ (Secure)
+            if (Session["UserCustomer"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            try
+            {
+                // 2. Tìm khách hàng trong CSDL
+                var customerInDb = db.KHACHHANGs.Find(customerData.MAKH);
+                if (customerInDb == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // 3. Cập nhật các trường (fields) được phép
+                customerInDb.HOTEN = customerData.HOTEN;
+                customerInDb.SODT = customerData.SODT;
+                customerInDb.DIACHI = customerData.DIACHI;
+                // (Không cho phép đổi Email hoặc Mật khẩu ở đây)
+
+                // 4. Lưu vào CSDL
+                db.SaveChanges();
+
+                // 5. "TIẾN HÓA": Cập nhật lại Session
+                Session["UserCustomer"] = customerInDb;
+                Session["UserName"] = customerInDb.HOTEN;
+            }
+            catch (Exception ex)
+            {
+                // (Xử lý lỗi)
+            }
+
+            // 6. Quay lại trang Profile
+            return RedirectToAction("Profile");
+        }
+
+
+   
+
     }
 }

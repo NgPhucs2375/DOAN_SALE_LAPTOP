@@ -14,10 +14,9 @@ namespace WEB_SALE_LAPTOP.Controllers
     {
         private QL_LAPTOP db = new QL_LAPTOP();
 
-        // (Hàm Login (GET & POST) của bạn đã rất tốt, giữ nguyên)
         public ActionResult Login()
         {
-            return View("AdminLogin"); // <-- Sửa ở đây
+            return View("Login"); // <-- Sửa ở đây
         }
 
         [HttpPost]
@@ -38,10 +37,18 @@ namespace WEB_SALE_LAPTOP.Controllers
                 "SELECT COUNT(*) FROM CAPQUYEN WHERE MANV = {0} AND MAQUYEN = 1", nv.MANV
             ).FirstOrDefault() > 0;
 
-            if (isAdmin)
+            if (isAdmin) // (Hoặc bạn có thể xóa check 'isAdmin' nếu muốn NV nào cũng vào được)
             {
+                // LẤY DANH SÁCH QUYỀN CỦA NHÂN VIÊN
+                List<int> dsQuyen = db.Database.SqlQuery<int>(
+                                 "SELECT MAQUYEN FROM CAPQUYEN WHERE MANV = {0}", nv.MANV
+                             ).ToList();
+
+                // LƯU VÀO SESSION
                 Session["AdminUser"] = nv;
                 Session["AdminName"] = nv.HOTEN;
+                Session["AdminQuyen"] = dsQuyen; // <-- QUAN TRỌNG NHẤT
+
                 return RedirectToAction("Index", "ProductManagement");
             }
             else

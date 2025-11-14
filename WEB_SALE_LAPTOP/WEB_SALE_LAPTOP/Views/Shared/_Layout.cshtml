@@ -20,42 +20,26 @@
             </a>
             <i class="fa-solid fa-angles-left collapse-icon"></i>
         </div>
-
         <div class="sidebar-content">
             <div class="filter-group active">
-                <div class="filter-group-title">
-                    <span><i class="fa-solid fa-tags"></i> Danh Mục Sản Phẩm</span>
-                    <i class="fa-solid fa-chevron-down arrow"></i>
-                </div>
-                <div class="filter-group-content">
-                    @{ Html.RenderAction("DSMenu_Hang", "Home"); }
-                </div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-tags"></i> Danh Mục Sản Phẩm</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+                <div class="filter-group-content">@{ Html.RenderAction("DSMenu_Hang", "Home"); }</div>
             </div>
-
             <div class="filter-group">
-                <div class="filter-group-title">
-                    <span><i class="fa-solid fa-dollar-sign"></i> Lọc Theo Giá</span>
-                    <i class="fa-solid fa-chevron-down arrow"></i>
-                </div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-dollar-sign"></i> Lọc Theo Giá</span><i class="fa-solid fa-chevron-down arrow"></i></div>
                 <div class="filter-group-content">
                     <nav class="sidebar-menu filter-menu">
                         <ul>
                             <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = (decimal?)null, maxGia = 10000000 })">Dưới 10 triệu</a></li>
-
                             <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 10000000, maxGia = 15000000 })">Từ 10 - 15 triệu</a></li>
                             <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 15000000, maxGia = 20000000 })">Từ 15 - 20 triệu</a></li>
-
                             <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 20000000, maxGia = (decimal?)null })">Trên 20 triệu</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
-        
             <div class="filter-group">
-                <div class="filter-group-title">
-                    <span><i class="fa-solid fa-microchip"></i> Lọc Theo CPU</span>
-                    <i class="fa-solid fa-chevron-down arrow"></i>
-                </div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-microchip"></i> Lọc Theo CPU</span><i class="fa-solid fa-chevron-down arrow"></i></div>
                 <div class="filter-group-content">
                     <nav class="sidebar-menu filter-menu">
                         <ul>
@@ -68,21 +52,17 @@
                 </div>
             </div>
         </div>
-        
-        <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
 
+        <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
             <div class="sidebar-promo-card">
                 <div class="promo-badge">Giảm Sốc</div>
                 <h4 class="promo-title">Nhập 'HELLOVN'</h4>
                 <p class="promo-desc">Giảm ngay 10% cho đơn hàng đầu tiên của bạn!</p>
-                <a href="#" class="promo-link">Tìm hiểu ngay &raquo;</a>
             </div>
-
         </a>
     </aside>
 
     <div class="main-content-wrapper">
-
         <header class="main-header">
             <div class="header-top-bar">
                 <div class="container-fluid">
@@ -91,12 +71,13 @@
                         <ul>
                             @if (Session["AdminUser"] != null)
                             {
-                                <li><a href="#"><i class="fa-solid fa-user-shield"></i> Chào @Session["AdminName"]</a></li>
-                                <li>@Html.ActionLink("Quản lý", "Index", "ProductManagement", null, new { @class = "nav-link" })</li>
+                                <li><a href="@Url.Action("Index", "ProductManagement")"><i class="fa-solid fa-user-shield"></i> Chào @Session["AdminName"] (Quản lý)</a></li>
+                                <li>@Html.ActionLink("Đăng xuất", "Logout", "AdminAccount", null, new { @class = "nav-link" })</li>
                             }
                             else if (Session["UserCustomer"] != null)
                             {
-                                <li><a href="#"><i class="fa-solid fa-user"></i> Chào @Session["UserName"]</a></li>
+                                <li><a href="@Url.Action("Profile", "Account")"><i class="fa-solid fa-user"></i> Chào @Session["UserName"]</a></li>
+                                <li>@Html.ActionLink("Đăng xuất", "Logout", "Account", null, new { @class = "nav-link" })</li>
                             }
                             else
                             {
@@ -110,11 +91,9 @@
 
             <div class="header-main">
                 <div class="container-fluid header-main-content">
-
                     <nav class="main-nav">
                         <ul>
                             <li>@Html.ActionLink("Trang Chủ", "Index", "Home")</li>
-
                             <li class="main-nav-dropdown">
                                 <a href="#">Sản Phẩm <i class="fa-solid fa-chevron-down arrow-small"></i></a>
                                 <ul class="main-nav-dropdown-menu">
@@ -124,11 +103,9 @@
                                     <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Đồ họa - Kỹ thuật" })">Đồ họa - Kỹ thuật</a></li>
                                 </ul>
                             </li>
-
-                            <li><a href="@Url.Action("About","Home")">Liên Hệ</a></li>
+                            <li>@Html.ActionLink("Liên Hệ", "Contact", "Home")</li>
                         </ul>
                     </nav>
-
                     <div class="search-container">
                         @using (Html.BeginForm("TimKiem", "Home", FormMethod.Get, new { @class = "search-form" }))
                         {
@@ -136,7 +113,6 @@
                             <input class="search-box" type="search" name="tuKhoa" placeholder="Tìm kiếm laptop, CPU, RAM..." value="@ViewBag.TuKhoa">
                         }
                     </div>
-
                     <div class="header-actions">
                         <a class="cart-button" href="@Url.Action("Index", "Cart")">
                             <i class="fa-solid fa-cart-shopping"></i>
@@ -157,10 +133,11 @@
                 <div class="footer-newsletter">
                     <h3>Đăng ký nhận tin</h3>
                     <p>Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Email của bạn...">
-                        <button type="submit">Đăng ký</button>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Email của bạn..." id="newsletterEmailInput" required>
+                        <button type="submit" id="newsletterSubmitButton">Đăng ký</button>
                     </form>
+                    <div id="newsletterMessage" style="color: white; margin-top: 1rem; display: none;"></div>
                 </div>
 
                 <div class="footer-content">
@@ -189,7 +166,13 @@
                 </div>
 
                 <div class="footer-bottom">
-                    <p>&copy; @DateTime.Now.Year Laptop Pro. Đã đăng ký bản quyền.</p>
+                    <p>
+                        &copy; @DateTime.Now.Year Laptop Pro. Đã đăng ký bản quyền.
+
+                        <a href="@Url.Action("Login", "AdminAccount")" class="admin-secret-link">
+                            <i class="fa-solid fa-lock"></i>
+                        </a>
+                    </p>
                     <div class="payment-icons">
                         <i class="fa-brands fa-cc-visa fa-2x"></i>
                         <i class="fa-brands fa-cc-mastercard fa-2x"></i>
@@ -198,11 +181,11 @@
                 </div>
             </div>
         </footer>
-    </div> @Scripts.Render("~/bundles/jquery")
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-
 <script src="~/Scripts/js/Site.js"></script>
-
 </body>
 </html>

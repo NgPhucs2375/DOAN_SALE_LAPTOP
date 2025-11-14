@@ -1,69 +1,134 @@
-﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.LAPTOP>
+﻿@model WEB_SALE_LAPTOP.Models.ProductManagementViewModel
+@using PagedList.Mvc; 
 
-@{
-    ViewBag.Title = "Quản lý Sản phẩm";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Đảm bảo bạn dùng Layout chung
-    string imagePathPrefix = "/Content/images/";
-}
+ @{ ViewBag.Title = "Quản lý Sản phẩm"; }
 
-<div class="container-fluid mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-light">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0">@ViewBag.Title</h2>
-                @Html.ActionLink(" Tạo sản phẩm mới", "Create", "ProductManagement", null, new { @class = "btn btn-success" })
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Ảnh</th>
-                            <th>Tên Laptop</th>
-                            <th>Hãng</th>
-                            <th>Loại</th>
-                            <th>Giá bán</th>
-                            <th>Tồn kho</th>
-                            <th>Trạng thái</th>
-                            <th style="width: 150px;">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <img src="@Url.Content(imagePathPrefix + (item.HINHANH0 ?? "default-image.png"))"
-                                         alt="Ảnh @item.TENLAPTOP"
-                                         style="width: 80px; height: 80px; object-fit: contain; border-radius: 4px;" />
-                                </td>
-                                <td>@Html.DisplayFor(modelItem => item.TENLAPTOP)</td>
-                                <td>@Html.DisplayFor(modelItem => item.HANG.TENHANG)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LOAI_LAPTOP.TENLOAI)</td>
-                                <td>@item.GIA_BAN.ToString("N0")đ</td>
-                                <td>@Html.DisplayFor(modelItem => item.SOLUONG_TON)</td>
-                                <td>
-                                    @if (item.TRANGTHAI == true)
-                                    {
-                                        <span class="badge bg-success">Đang kinh doanh</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">Ngừng kinh doanh</span>
-                                    }
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        @Html.ActionLink("Sửa", "Edit", new { id = item.MALAPTOP }, new { @class = "btn btn-sm btn-primary" })
-                                        @Html.ActionLink("Xóa", "Delete", new { id = item.MALAPTOP }, new { @class = "btn btn-sm btn-danger" })
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+<div class="stat-card-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon icon-total"><i class="fa-solid fa-box-archive"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Tổng số Sản phẩm</span>
+            <span class="stat-value">@Model.TongSoSanPham</span>
         </div>
     </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-revenue"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Đang bán</span>
+            <span class="stat-value">@Model.SanPhamDangBan</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-pending"><i class="fa-solid fa-eye-slash"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Đã ẩn</span>
+            <span class="stat-value">@Model.SanPhamDaAn</span>
+        </div>
+    </div>
+</div>
+
+<div class="page-header" style="margin-top: 2rem;">
+    <h2 class="section-title">Danh sách Sản phẩm</h2>
+    <a href="@Url.Action("Create")" class="btn-primary-admin" style="text-decoration: none;">
+        <i class="fa-solid fa-plus"></i>
+        <span>Thêm Mới</span>
+    </a>
+</div>
+
+@using (Html.BeginForm("Index", "ProductManagement", FormMethod.Get, new { @class = "admin-filter-bar" }))
+{
+    <div class="filter-group">
+        <i class="fa-solid fa-search"></i>
+        @Html.TextBox("search", Model.CurrentSearch, new { @class = "filter-input", placeholder = "Tìm theo tên, cấu hình..." })
+    </div>
+    <div class="filter-group">
+        <i class="fa-solid fa-tag"></i>
+        @Html.DropDownList("brandId", Model.Brands, new { @class = "filter-select" })
+    </div>
+    <div class="filter-group">
+        <i class="fa-solid fa-list"></i>
+        @Html.DropDownList("categoryId", Model.Categories, new { @class = "filter-select" })
+    </div>
+    <button type="submit" class="btn-primary-admin" style="padding: 10px 15px;">
+        <i class="fa-solid fa-filter"></i> Lọc
+    </button>
+}
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Sản Phẩm</th>
+                <th>Hãng</th>
+                <th>Loại</th>
+                <th>Giá Bán</th>
+                <th>Tồn kho</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td class="product-info-cell">
+                        <img src="~/Content/images/@item.HINHANH0" alt="@item.TENLAPTOP" class="table-product-img" />
+                        <div class="product-info-text">
+                            <strong>@Html.DisplayFor(modelItem => item.TENLAPTOP)</strong>
+                            <small>ID: @item.MALAPTOP</small>
+                        </div>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.HANG.TENHANG)</td>
+                    <td>@Html.DisplayFor(modelItem => item.LOAI_LAPTOP.TENLOAI)</td>
+
+                    <td style="color: var(--color-accent); font-weight: bold;">
+                        @String.Format("{0:N0}", item.GIA_BAN) ₫
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.SOLUONG_TON)</td>
+                    <td>
+                        @if (item.TRANGTHAI == true)
+                        {
+                            <span class="status status-active">Đang bán</span>
+                        }
+                        else
+                        {
+                            <span class="status status-inactive">Đã ẩn</span>
+                        }
+                    </td>
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id=item.MALAPTOP })" class="btn-action btn-edit" title="Sửa">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id=item.MALAPTOP })" class="btn-action btn-delete" title="Xóa">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination-container">
+    @Html.PagedListPager(Model.Products, page => Url.Action("Index",
+        new { page,
+            search = Model.CurrentSearch,
+            brandId = Model.CurrentBrandId,
+            categoryId = Model.CurrentCategoryId
+        }),
+        new PagedListRenderOptions
+        {
+            // SỬA LỖI 3: Xóa thuộc tính 'PageClasses' không hợp lệ
+            LiElementClasses = new[] { "page-item" },
+            // PageClasses = new[] { "page-link" }, <-- DÒNG NÀY GÂY LỖI
+            DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded,
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+            EllipsesFormat = "...",
+            LinkToFirstPageFormat = "« Đầu",
+            LinkToPreviousPageFormat = "‹ Trước",
+            LinkToNextPageFormat = "Sau ›",
+            LinkToLastPageFormat = "Cuối »"
+        })
 </div>

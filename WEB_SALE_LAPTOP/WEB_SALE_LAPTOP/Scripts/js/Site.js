@@ -1,18 +1,17 @@
-﻿// Chờ cho toàn bộ nội dung trang được tải xong
-window.addEventListener('load', function () {
+﻿// ===== KHỐI 1: JAVASCRIPT "THUẦN" (VANILLA JS) =====
+// (Chạy ngay khi HTML được "vẽ" (render) xong, rất nhanh)
+document.addEventListener('DOMContentLoaded', function () {
 
-    console.log("site.js (v2 - Tiến hóa) đã tải!");
+    console.log("site.js (v3 - Vanilla) đã tải!");
 
+    // ===== 1. LOGIC ẨN/HIỆN SIDEBAR (Sửa lỗi) =====
     const logoButton = document.querySelector('.logo-container');
     const body = document.body;
     const sidebarStateKey = 'sidebarCollapsedState'; // Chìa khóa để lưu
 
     if (logoButton) {
 
-        // ===== 1. LOGIC ẨN/HIỆN SIDEBAR (Sửa lỗi 4) =====
-
         // A. KIỂM TRA TRẠNG THÁI KHI TẢI TRANG
-        // Kiểm tra xem trình duyệt có "nhớ" trạng thái thu nhỏ từ lần trước không
         if (localStorage.getItem(sidebarStateKey) === 'true') {
             body.classList.add('sidebar-collapsed');
         }
@@ -21,18 +20,14 @@ window.addEventListener('load', function () {
         logoButton.addEventListener('click', function () {
             body.classList.toggle('sidebar-collapsed');
 
-            // LƯU TRẠNG THÁI MỚI vào bộ nhớ trình duyệt
-            if (body.classList.contains('sidebar-collapsed')) {
-                localStorage.setItem(sidebarStateKey, 'true');
-            } else {
-                localStorage.setItem(sidebarStateKey, 'false');
-            }
+            // LƯU TRẠNG THÁI MỚI (Code "tiến hóa" gọn hơn)
+            localStorage.setItem(sidebarStateKey, body.classList.contains('sidebar-collapsed'));
         });
     } else {
         console.error("Lỗi: Không tìm thấy '.logo-container'");
     }
 
-    // ===== 2. LOGIC ACCORDION CHO SIDEBAR (Sửa lỗi 2 - Giữ nguyên) =====
+    // ===== 2. LOGIC ACCORDION CHO SIDEBAR (Giữ nguyên) =====
     const filterGroups = document.querySelectorAll('.filter-group-title');
 
     filterGroups.forEach(groupTitle => {
@@ -61,5 +56,60 @@ window.addEventListener('load', function () {
                 content.style.maxHeight = content.scrollHeight + 'px';
             }, 100);
         }
+    }
+});
+
+
+// ===== KHỐI 2: JQUERY (AJAX) =====
+// (Chạy khi "bộ não" (brain) jQuery đã sẵn sàng, an toàn 100%)
+$(document).ready(function () {
+
+    console.log("site.js (v3 - jQuery) đã sẵn sàng!");
+
+    // ===== 3. LOGIC "TIẾN HÓA" CHO FORM NEWSLETTER (AJAX) =====
+    const newsletterForm = $('#newsletterForm');
+    const emailInput = $('#newsletterEmailInput');
+    const submitButton = $('#newsletterSubmitButton');
+    const messageDiv = $('#newsletterMessage');
+
+    if (newsletterForm.length > 0) {
+
+        newsletterForm.on('submit', function (e) {
+
+            e.preventDefault(); // Ngăn trang web tải lại (reload)
+
+            const email = emailInput.val();
+            if (!email) return;
+
+            submitButton.text('Đang xử lý...');
+            submitButton.prop('disabled', true);
+
+            $.ajax({
+                url: '/Home/SubscribeNewsletter', // Gọi Action
+                type: 'POST',
+                data: { email: email },
+                success: function (response) {
+                    if (response.success) {
+                        messageDiv.text(response.message);
+                        messageDiv.css('color', 'var(--bg-main)'); // Màu Be
+                        emailInput.hide();
+                        submitButton.hide();
+                    } else {
+                        messageDiv.text(response.message);
+                        messageDiv.css('color', 'var(--color-accent)'); // Màu Đỏ
+                        submitButton.text('Đăng ký');
+                        submitButton.prop('disabled', false);
+                    }
+                    messageDiv.show();
+                },
+                error: function () {
+                    messageDiv.text('Đã xảy ra lỗi. Vui lòng thử lại.');
+                    messageDiv.css('color', 'var(--color-accent)');
+                    messageDiv.show();
+                    submitButton.text('Đăng ký');
+                    submitButton.prop('disabled', false);
+                }
+            });
+        });
     }
 });

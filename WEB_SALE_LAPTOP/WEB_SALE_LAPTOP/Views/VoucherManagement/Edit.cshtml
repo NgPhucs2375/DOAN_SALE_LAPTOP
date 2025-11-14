@@ -1,0 +1,119 @@
+﻿@model WEB_SALE_LAPTOP.Models.VOUCHER
+@{
+    ViewBag.Title = "Chỉnh sửa Sản phẩm";
+    // Layout đã được gán tự động
+}
+
+@using (Html.BeginForm("Edit", "ProductManagement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.MALAPTOP)
+
+    @Html.HiddenFor(model => model.HINHANH0)
+    @Html.HiddenFor(model => model.HINHANH1)
+    @Html.HiddenFor(model => model.HINHANH2)
+    @Html.HiddenFor(model => model.HINHANH3)
+
+    <div class="page-header">
+        <h2 class="section-title">@ViewBag.Title</h2>
+        <button type="submit" class="btn-primary-admin">
+            <i class="fa-solid fa-save"></i>
+            <span>Lưu Thay đổi</span>
+        </button>
+    </div>
+
+    <div class="product-section">
+        <div class="contact-page-wrapper">
+
+            <div class="admin-form-col">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TENLAPTOP, "Tên Laptop*")
+                    @Html.EditorFor(model => model.TENLAPTOP, new { htmlAttributes = new { @class = "form-group-input" } })
+                    @Html.ValidationMessageFor(model => model.TENLAPTOP, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MOTA, "Mô tả")
+                    @Html.TextAreaFor(model => model.MOTA, 10, 30, new { @class = "form-group-input" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CAUHINH, "Cấu hình (Tóm tắt)")
+                    @Html.EditorFor(model => model.CAUHINH, new { htmlAttributes = new { @class = "form-group-input" } })
+                </div>
+
+                <hr style="margin: 1.5rem 0;" />
+
+                <h4 class.="admin-form-subtitle">Cập nhật ảnh</h4>
+                <div class="image-upload-grid" style="margin-bottom: 1rem;">
+                    <img src="~/Content/images/@Model.HINHANH0" class="table-product-img" style="border: 2px solid var(--color-primary);" />
+                    <img src="~/Content/images/@Model.HINHANH1" class.="table-product-img" />
+                    <img src="~/Content/images/@Model.HINHANH2" class.="table-product-img" />
+                    <img src="~/Content/images/@Model.HINHANH3" class.="table-product-img" />
+                </div>
+                <div class="image-upload-grid">
+                    <div class="form-group">
+                        <label for="HINHANH0_File">Tải lên Ảnh 0</label>
+                        <input type="file" name="HINHANH0_File" id="HINHANH0_File" class="image-upload-input" />
+                    </div>
+                    <div class="form-group">
+                        <label for="HINHANH1_File">Tải lên Ảnh 1</label>
+                        <input type="file" name="HINHANH1_File" id="HINHANH1_File" class="image-upload-input" />
+                    </div>
+                    <div class="form-group">
+                        <label for="HINHANH2_File">Tải lên Ảnh 2</label>
+                        <input type="file" name="HINHANH2_File" id="HINHANH2_File" class="image-upload-input" />
+                    </div>
+                    <div class="form-group">
+                        <label for="HINHANH3_File">Tải lên Ảnh 3</label>
+                        <input type="file" name="HINHANH3_File" id="HINHANH3_File" class="image-upload-input" />
+                    </div>
+                </div>
+            </div>
+
+            <div class.="admin-form-col">
+                <h4 class="admin-form-subtitle">Giá & Tồn Kho</h4>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GIA_GOC, "Giá Gốc*")
+                    @Html.EditorFor(model => model.GIA_GOC, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    @Html.ValidationMessageFor(model => model.GIA_GOC, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GIA_BAN, "Giá Bán (Khuyến mãi)*")
+                    @Html.EditorFor(model => model.GIA_BAN, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    @Html.ValidationMessageFor(model => model.GIA_BAN, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SOLUONG_TON, "Số Lượng Tồn Kho*")
+                    @Html.EditorFor(model => model.SOLUONG_TON, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    @Html.ValidationMessageFor(model => model.SOLUONG_TON, "", new { @class = "text-danger" })
+                </div>
+
+                <hr style="margin: 1.5rem 0;" />
+
+                <h4 class="admin-form-subtitle">Phân Loại</h4>
+                <div class.="form-group">
+                    @Html.LabelFor(model => model.MAHANG, "Hãng sản xuất*")
+                    @Html.DropDownList("MAHANG", null, "--- Chọn Hãng ---", new { @class = "form-group-input" })
+                    @Html.ValidationMessageFor(model => model.MAHANG, "", new { @class = "text-danger" })
+                </div>
+
+                <div class.="form-group">
+                    @Html.LabelFor(model => model.MALOAI, "Loại Laptop*")
+                    @Html.DropDownList("MALOAI", null, "--- Chọn Loại ---", new { @class = "form-group-input" })
+                    @Html.ValidationMessageFor(model => model.MALOAI, "", new { @class = "text-danger" })
+                </div>
+
+                <div class.="form-group">
+                    @Html.LabelFor(model => model.TRANGTHAI, "Trạng thái")
+                    <div class.="checkbox-wrapper">
+                        @Html.CheckBoxFor(model => model.TRANGTHAI.GetValueOrDefault(false), new { @class = "form-check-input", id = "TRANGTHAI" })
+                        <label for="TRANGTHAI">Hiển thị (Đang bán)</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}

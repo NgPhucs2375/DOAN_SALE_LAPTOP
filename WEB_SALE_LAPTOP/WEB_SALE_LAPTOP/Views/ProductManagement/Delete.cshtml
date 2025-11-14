@@ -1,58 +1,45 @@
 ﻿@model WEB_SALE_LAPTOP.Models.LAPTOP
-
 @{
     ViewBag.Title = "Xác nhận Xóa";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    string imagePathPrefix = "/Content/images/";
+    // Layout đã được gán tự động
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-sm border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h2 class="mb-0">@ViewBag.Title</h2>
-                </div>
-                <div class="card-body">
-                    <h4 class="text-danger-emphasis">Bạn có chắc chắn muốn xóa sản phẩm này không?</h4>
-                    <p>Hành động này không thể hoàn tác.</p>
-                    <hr />
+<div class="page-header">
+    <h2 class="section-title">@ViewBag.Title</h2>
+</div>
 
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger">@ViewBag.Error</div>
-                    }
+<div class="product-section" style="max-width: 800px;">
 
-                    <div class="text-center mb-3">
-                        <img src="@Url.Content(imagePathPrefix + (Model.HINHANH0 ?? "default-image.png"))"
-                             alt="Ảnh @Model.TENLAPTOP"
-                             style="width: 200px; height: 200px; object-fit: contain; border-radius: 4px;" />
-                    </div>
+    <h3 class="delete-warning"><i class="fa-solid fa-triangle-exclamation"></i> Bạn có chắc chắn muốn xóa sản phẩm này?</h3>
+    <p class="delete-subtext">Hành động này không thể hoàn tác.</p>
 
-                    <dl class="row">
-                        <dt class="col-sm-4">Tên Laptop</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.TENLAPTOP)</dd>
+    @if (ViewBag.Error != null)
+    {
+        <div class="voucher-message error" style="margin-bottom: 1rem;">@ViewBag.Error</div>
+    }
 
-                        <dt class="col-sm-4">Giá bán</dt>
-                        <dd class="col-sm-8">@Model.GIA_BAN.ToString("N0")đ</dd>
+    <hr style="margin: 1.5rem 0;" />
 
-                        <dt class="col-sm-4">Hãng</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.HANG.TENHANG)</dd>
-
-                        <dt class="col-sm-4">Loại</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.LOAI_LAPTOP.TENLOAI)</dd>
-                    </dl>
-
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        <div class="mt-4">
-                            <input type="submit" value="Xác nhận Xóa" class="btn btn-danger" />
-                            @Html.ActionLink("Hủy & Quay lại", "Index", null, new { @class = "btn btn-secondary" })
-                        </div>
-                    }
-                </div>
-            </div>
+    <div class="product-info-cell" style="padding: 1rem; background-color: var(--bg-main); border-radius: 8px;">
+        <img src="~/Content/images/@Model.HINHANH0" alt="@Model.TENLAPTOP" class="table-product-img" />
+        <div class="product-info-text">
+            <strong>@Html.DisplayFor(model => model.TENLAPTOP)</strong>
+            <small>@Html.DisplayFor(model => model.HANG.TENHANG) / @Html.DisplayFor(model => model.LOAI_LAPTOP.TENLOAI)</small>
         </div>
     </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-actions-container">
+
+            <button type="submit" class="cart-button">
+                <i class="fa-solid fa-trash"></i> Xác nhận Xóa
+            </button>
+
+            <a href="@Url.Action("Index")" class="btn-detail" style="text-decoration: none;">
+                Hủy & Quay lại
+            </a>
+        </div>
+    }
 </div>

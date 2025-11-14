@@ -1,83 +1,98 @@
-﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.CartItem>
+﻿@model List<WEB_SALE_LAPTOP.Models.CartItem>
 
 @{
     ViewBag.Title = "Thanh toán đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string imagePathPrefix = "/Content/images/";
 }
 
-<div class="container mt-4">
-    <h2>@ViewBag.Title</h2>
-    <hr />
+<div class="cart-stepper">
+    <div class="step active">
+        <div class="step-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+        <div class="step-label">1. Giỏ hàng</div>
+    </div>
+    <div class="step-divider active"></div> <div class="step active">
+        <div class="step-icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="step-label">2. Thanh toán</div>
+    </div>
+    <div class="step-divider"></div>
 
-    @if (TempData["CheckoutError"] != null)
-    {
-        <div class="alert alert-danger">@TempData["CheckoutError"]</div>
-    }
+    <div class="step">
+        <div class="step-icon"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="step-label">3. Hoàn tất</div>
+    </div>
+</div>
 
-    @using (Html.BeginForm("PlaceOrder", "Cart", FormMethod.Post))
-    {
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h4>Thông tin giao hàng</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Số điện thoại *</label>
-                            <input type="tel" name="SDT_GIAO" class="form-control" value="@ViewBag.SoDT" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Địa chỉ giao hàng *</label>
-                            <textarea name="DIACHI_GIAO" class="form-control" rows="3" required>@ViewBag.DiaChi</textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Họ tên (nếu có)</label>
-                            <input type="text" name="HOTEN_GIAO" class="form-control" value="@ViewBag.HoTen" />
-                        </div>
-                    </div>
-                </div>
+<h2 class="section-title">@ViewBag.Title</h2>
+
+@if (TempData["CheckoutError"] != null)
+{
+    <div class="voucher-message error" style="margin-bottom: 1.5rem;">
+        @TempData["CheckoutError"]
+    </div>
+}
+
+@using (Html.BeginForm("PlaceOrder", "Cart", FormMethod.Post))
+{
+    <div class="cart-page-wrapper">
+
+        <div class="product-section">
+            <h3 class="summary-title" style="text-align: left; margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-truck-fast"></i> Thông tin giao hàng
+            </h3>
+
+            <div class="form-group">
+                <label for="HOTEN_GIAO">Họ tên (nếu có)</label>
+                <input type="text" name="HOTEN_GIAO" class="form-group-input" value="@ViewBag.HoTen" />
             </div>
 
-            <div class="col-lg-6">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h4>Đơn hàng của bạn (@Model.Count() sản phẩm)</h4>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        @foreach (var item in Model)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <img src="@Url.Content(imagePathPrefix + (item.HinhAnh ?? "default-image.png"))" style="width: 50px; height: 50px; object-fit: contain; margin-right: 10px;" />
-                                    @item.TenLaptop (x @item.SoLuong)
-                                </div>
-                                <span>@item.ThanhTien.ToString("N0")đ</span>
-                            </li>
-                        }
-                    </ul>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Tạm tính</span>
-                                <strong>@ViewBag.TongTien.ToString("N0")đ</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between text-danger">
-                                <span>Giảm giá</span>
-                                <strong>-@ViewBag.SoTienGiam.ToString("N0")đ</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between fs-5">
-                                <span>Tổng cộng</span>
-                                <strong class="text-danger">@ViewBag.TongThanhToan.ToString("N0")đ</strong>
-                            </li>
-                        </ul>
-                        <div class="d-grid mt-3">
-                            <button type="submit" class="btn btn-danger btn-lg">XÁC NHẬN ĐẶT HÀNG</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="SDT_GIAO">Số điện thoại *</label>
+                <input type="tel" name="SDT_GIAO" class="form-group-input" value="@ViewBag.SoDT" required />
+            </div>
+
+            <div class="form-group">
+                <label for="DIACHI_GIAO">Địa chỉ giao hàng *</label>
+                <textarea name="DIACHI_GIAO" class="form-group-input" rows="4" required>@ViewBag.DiaChi</textarea>
             </div>
         </div>
-    }
-</div>
+
+        <div class="cart-summary">
+            <h3 class="summary-title">Đơn hàng của bạn</h3>
+
+            <div class="summary-section summary-product-list">
+                @foreach (var item in Model)
+                {
+                    <div class="summary-product-row">
+                        <img src="~/Content/images/@item.HinhAnh" class="summary-product-img" />
+                        <div class="summary-product-info">
+                            <span class="summary-product-name">@item.TenLaptop (x @item.SoLuong)</span>
+                        </div>
+                        <span class="summary-product-total">@item.ThanhTien.ToString("N0") ₫</span>
+                    </div>
+                }
+            </div>
+
+            <div class="summary-section total-calc">
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <strong>@ViewBag.TongTien.ToString("N0") ₫</strong>
+                </div>
+                <div class="summary-row discount">
+                    <span>Giảm giá</span>
+                    <strong>-@ViewBag.SoTienGiam.ToString("N0") ₫</strong>
+                </div>
+                <div class="summary-row final-total">
+                    <span>Tổng cộng</span>
+                    <strong>@ViewBag.TongThanhToan.ToString("N0") ₫</strong>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <button type="submit" class="cart-button btn-checkout">
+                    <i class="fa-solid fa-lock"></i>
+                    XÁC NHẬN ĐẶT HÀNG
+                </button>
+            </div>
+        </div>
+    </div>
+}
