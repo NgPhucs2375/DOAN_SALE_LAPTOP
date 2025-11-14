@@ -1,0 +1,149 @@
+﻿@model List<WEB_SALE_LAPTOP.Models.CartItem>
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="cart-stepper">
+    <div class="step active">
+        <div class="step-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+        <div class="step-label">1. Giỏ hàng</div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step">
+        <div class="step-icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="step-label">2. Thanh toán</div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step">
+        <div class="step-icon"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="step-label">3. Hoàn tất</div>
+    </div>
+</div>
+<h2 class="section-title">Giỏ hàng của bạn</h2>
+
+@if (Model == null || Model.Count == 0)
+{
+    <div class="product-section cart-empty">
+        <i class="fa-solid fa-cart-shopping fa-3x"></i>
+        <p>Giỏ hàng của bạn đang trống.</p>
+        <a href="@Url.Action("Index", "Home")" class="cart-button">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại mua sắm
+        </a>
+    </div>
+}
+else
+{
+    <div class="cart-page-wrapper">
+
+        <div class="cart-items-list">
+            <div class="cart-item-header">
+                <div class="header-product">Sản phẩm</div>
+                <div class="header-price">Đơn giá</div>
+                <div class="header-quantity">Số lượng</div>
+                <div class="header-total">Thành tiền</div>
+                <div class="header-action">Xóa</div>
+            </div>
+
+            @foreach (var item in Model)
+            {
+                <div class="cart-item-row">
+                    <div class="cart-item-product">
+                        <img src="~/Content/images/@item.HinhAnh" alt="@item.TenLaptop" class="cart-item-image" />
+                        <div class="cart-item-info">
+                            <a href="@Url.Action("Details", "Home", new { id = item.MaLaptop })" class="cart-item-name">
+                                @item.TenLaptop
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="cart-item-price">
+                        @String.Format("{0:N0}", item.DonGia) ₫
+                    </div>
+
+                    <div class="cart-item-quantity">
+                        @using (Html.BeginForm("UpdateItem", "Cart", FormMethod.Post))
+                        {
+                            @Html.Hidden("maLaptop", item.MaLaptop)
+                            <input type="number" name="soLuong" value="@item.SoLuong" min="1" max="100" class="quantity-input" />
+                            <button type="submit" class="btn-update-quantity" title="Cập nhật">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        }
+                    </div>
+
+                    <div class="cart-item-total">
+                        @String.Format("{0:N0}", item.ThanhTien) ₫
+                    </div>
+
+                    <div class="cart-item-remove">
+                        <a href="@Url.Action("RemoveItem", "Cart", new { maLaptop = item.MaLaptop })"
+                           class="btn-action btn-delete"
+                           title="Xóa sản phẩm">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="cart-summary">
+            <h3 class="summary-title">Tóm tắt đơn hàng</h3>
+            <div class="trust-badges">
+                <div class="badge-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Thanh toán an toàn</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <span>Giao hàng miễn phí</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>Đổi trả 30 ngày</span>
+                </div>
+            </div>
+
+            <div class="summary-section voucher-form">
+                <h4>Mã giảm giá</h4>
+                @using (Html.BeginForm("ApplyVoucher", "Cart", FormMethod.Post, new { @class = "voucher-apply-form" }))
+                {
+                    <input type="text" name="maVoucher" placeholder="Nhập mã voucher..." class="form-group-input"
+                           value="@ViewBag.MaVoucher" />
+                    <button type="submit" class="btn-apply-voucher">Áp dụng</button>
+                }
+
+                @if (TempData["VoucherError"] != null)
+                {
+                    <div class="voucher-message error">@TempData["VoucherError"]</div>
+                }
+                @if (TempData["VoucherSuccess"] != null)
+                {
+                    <div class="voucher-message success">@TempData["VoucherSuccess"]</div>
+                }
+            </div>
+
+            <div class="summary-section total-calc">
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span>@String.Format("{0:N0}", (decimal)ViewBag.TongTien) D</span>
+                </div>
+                <div class="summary-row discount">
+                    <span>Giảm giá:</span>
+                    <span>- @String.Format("{0:N0}", (decimal)ViewBag.SoTienGiam) ₫</span>
+                </div>
+                <div class="summary-row final-total">
+                    <span>Tổng cộng:</span>
+                    <span>@String.Format("{0:N0}", (decimal)ViewBag.TongThanhToan) ₫</span>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <a href="@Url.Action("Checkout", "Cart")" class="cart-button btn-checkout">
+                    TIẾN HÀNH THANH TOÁN
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.LAPTOP>
+
+@{
+    ViewBag.Title = "TimKiem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (!Model.Any())
+{
+    <p>Không tìm thấy nào phù hợp với từ khóa <strong>"@ViewBag.TuKhoa"</strong>.</p>
+
+    <p>Bạn có thể thử:</p>
+    <ul>
+        <li>Kiểm tra lại lỗi chính tả.</li>
+        <li>Sử dụng từ khóa chung chung hơn.</li>
+        <li>@Html.ActionLink("Sử dụng tìm kiếm nâng cao", "TimKiemNangCao", "Home")</li>
+    </ul>
+}
+else
+{
+    <p>Tìm thấy <strong>@Model.Count()</strong> kết quả phù hợp.</p>
+
+    <main>
+        <div class="container">
+            <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
+            <div class="card-container">
+                @foreach (var s in Model)
+                {
+                    <div class="card">
+                        <div class="card-img-container">
+                            <img src="~/Content/images/@s.HINHANH0" class="card-img">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">@s.TENLAPTOP</h3>
+                            @Html.ActionLink("Chi Tiết", "Details", "Home", new { id = s.MALAPTOP }, new { @class = "btn btn-warning" })
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </main>
+}

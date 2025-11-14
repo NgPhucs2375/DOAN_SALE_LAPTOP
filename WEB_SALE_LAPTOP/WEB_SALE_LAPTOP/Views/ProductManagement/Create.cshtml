@@ -1,0 +1,104 @@
+﻿@model WEB_SALE_LAPTOP.Models.LAPTOP
+
+@{
+    ViewBag.Title = "Tạo sản phẩm mới";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="mb-0">@ViewBag.Title</h2>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "ProductManagement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.TENLAPTOP, "Tên Laptop", htmlAttributes: new { @class = "form-label fw-bold" })
+                            @Html.EditorFor(model => model.TENLAPTOP, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TENLAPTOP, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.CAUHINH, "Cấu hình", htmlAttributes: new { @class = "form-label fw-bold" })
+                            @Html.TextAreaFor(model => model.CAUHINH, 3, 1, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CAUHINH, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(model => model.MOTA, "Mô tả", htmlAttributes: new { @class = "form-label fw-bold" })
+                            @Html.TextAreaFor(model => model.MOTA, 5, 1, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MOTA, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.GIA_GOC, "Giá gốc", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.GIA_GOC, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                @Html.ValidationMessageFor(model => model.GIA_GOC, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.GIA_BAN, "Giá bán", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.GIA_BAN, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                @Html.ValidationMessageFor(model => model.GIA_BAN, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                @Html.LabelFor(model => model.SOLUONG_TON, "Số lượng tồn", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.EditorFor(model => model.SOLUONG_TON, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                @Html.ValidationMessageFor(model => model.SOLUONG_TON, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(model => model.MAHANG, "Hãng sản xuất", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.DropDownList("MAHANG", null, "-- Chọn hãng --", htmlAttributes: new { @class = "form-select" })
+                                @Html.ValidationMessageFor(model => model.MAHANG, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(model => model.MALOAI, "Loại Laptop", htmlAttributes: new { @class = "form-label fw-bold" })
+                                @Html.DropDownList("MALOAI", null, "-- Chọn loại --", htmlAttributes: new { @class = "form-select" })
+                                @Html.ValidationMessageFor(model => model.MALOAI, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="HINHANH0_File">Ảnh đại diện (Ảnh 0)</label>
+                                <input type="file" name="HINHANH0_File" id="HINHANH0_File" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="HINHANH1_File">Ảnh 1</label>
+                                <input type="file" name="HINHANH1_File" id="HINHANH1_File" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="HINHANH2_File">Ảnh 2</label>
+                                <input type="file" name="HINHANH2_File" id="HINHANH2_File" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="HINHANH3_File">Ảnh 3</label>
+                                <input type="file" name="HINHANH3_File" id="HINHANH3_File" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                         
+                            @Html.CheckBox("TRANGTHAI", true, new { @class = "form-check-input" })
+                            @Html.Label("TRANGTHAI", "Kinh doanh", htmlAttributes: new { @class = "form-check-label" })
+                        </div>
+
+                        <div class="mt-4">
+                            <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

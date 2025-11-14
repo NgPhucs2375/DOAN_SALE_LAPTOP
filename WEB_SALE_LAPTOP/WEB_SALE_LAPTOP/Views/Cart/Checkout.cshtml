@@ -1,0 +1,83 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.CartItem>
+
+@{
+    ViewBag.Title = "Thanh toán đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string imagePathPrefix = "/Content/images/";
+}
+
+<div class="container mt-4">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+
+    @if (TempData["CheckoutError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["CheckoutError"]</div>
+    }
+
+    @using (Html.BeginForm("PlaceOrder", "Cart", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Thông tin giao hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại *</label>
+                            <input type="tel" name="SDT_GIAO" class="form-control" value="@ViewBag.SoDT" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa chỉ giao hàng *</label>
+                            <textarea name="DIACHI_GIAO" class="form-control" rows="3" required>@ViewBag.DiaChi</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ tên (nếu có)</label>
+                            <input type="text" name="HOTEN_GIAO" class="form-control" value="@ViewBag.HoTen" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Đơn hàng của bạn (@Model.Count() sản phẩm)</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="@Url.Content(imagePathPrefix + (item.HinhAnh ?? "default-image.png"))" style="width: 50px; height: 50px; object-fit: contain; margin-right: 10px;" />
+                                    @item.TenLaptop (x @item.SoLuong)
+                                </div>
+                                <span>@item.ThanhTien.ToString("N0")đ</span>
+                            </li>
+                        }
+                    </ul>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Tạm tính</span>
+                                <strong>@ViewBag.TongTien.ToString("N0")đ</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between text-danger">
+                                <span>Giảm giá</span>
+                                <strong>-@ViewBag.SoTienGiam.ToString("N0")đ</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between fs-5">
+                                <span>Tổng cộng</span>
+                                <strong class="text-danger">@ViewBag.TongThanhToan.ToString("N0")đ</strong>
+                            </li>
+                        </ul>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-danger btn-lg">XÁC NHẬN ĐẶT HÀNG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

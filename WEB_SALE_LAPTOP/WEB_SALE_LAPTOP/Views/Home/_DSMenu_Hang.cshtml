@@ -1,0 +1,12 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.HANG>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a href="@Url.Action("LaptopsTheoHang", "Home", new { maHang = item.MAHANG })">
+                @item.TENHANG
+            </a>
+        </li>
+    }
+</ul>

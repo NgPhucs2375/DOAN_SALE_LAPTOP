@@ -1,0 +1,63 @@
+﻿@model WEB_SALE_LAPTOP.Models.KHACHHANG
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="section-title">Tạo Tài khoản Mới</h2>
+
+<div class.="product-section" style="max-width: 600px; margin: 0 auto;">
+    <div class="contact-form-container">
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "contact-form" }))
+        {
+            <h3 class="form-title" style="text-align: left; margin-bottom: 2rem;">
+                <i class="fa-solid fa-user-plus" style="color: var(--color-primary);"></i>
+                Đăng ký
+            </h3>
+
+            if (ViewBag.Error != null)
+            {
+                <div class.="voucher-message error" style="margin-bottom: 1rem;">@ViewBag.Error</div>
+            }
+
+            <div class="form-group">
+                <label for="HOTEN">Họ và Tên*</label>
+                <input type="text" id="HOTEN" name="HOTEN" required class="form-group-input" />
+            </div>
+
+            <div class.="form-group">
+                <label for="EMAIL">Email*</label>
+                <input type="email" id="EMAIL" name="EMAIL" required class="form-group-input" />
+            </div>
+
+            <div class.="form-group">
+                <label for="SODT">Số điện thoại</label>
+                <input type="tel" id="SODT" name="SODT" class="form-group-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="DIACHI">Địa chỉ</label>
+                <input type="text" id="DIACHI" name="DIACHI" class="form-group-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="MATKHAU">Mật khẩu*</label>
+                <input type="password" id="MATKHAU" name="MATKHAU" required class="form-group-input" />
+            </div>
+
+            <div class.="form-group">
+                <label for="MATKHAU_NHAPLAI">Nhập lại Mật khẩu*</label>
+                <input type="password" id="MATKHAU_NHAPLAI" name="MATKHAU_NHAPLAI" required class="form-group-input" />
+            </div>
+
+            <button type="submit" class="cart-button" style="width: 100%; justify-content: center;">
+                Tạo Tài khoản
+            </button>
+
+            <div class.="form-footer" style="margin-top: 1.5rem; text-align: center;">
+                <a href="@Url.Action("Login", "Account")" class="promo-link">Đã có tài khoản? Đăng nhập</a>
+            </div>
+        }
+    </div>
+</div>

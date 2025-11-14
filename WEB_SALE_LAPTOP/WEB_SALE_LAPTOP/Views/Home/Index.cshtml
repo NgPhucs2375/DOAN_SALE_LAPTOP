@@ -1,0 +1,79 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.LAPTOP>
+
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="promo-banner">
+    <div class="promo-content">
+        <h2>MacBook Pro M3</h2>
+        <p>Hiệu năng đỉnh cao. Sáng tạo không giới hạn. Giảm giá đặc biệt tuần này.</p>
+        <a href="#" class="btn-promo">Xem Ngay</a>
+    </div>
+    <img src="~/Content/images/Macbook_Pro_14_M2_0.png" alt="MacBook Pro" class="promo-image" />
+</div>
+
+<div class="product-section">
+
+    <h2 class="section-title">
+        @if (ViewBag.TieuDeLoc != null)
+        {
+            <span>@ViewBag.TieuDeLoc</span>
+        }
+        else if (string.IsNullOrEmpty(ViewBag.TuKhoa))
+        {
+            <span>Sản Phẩm Nổi Bật</span>
+        }
+        else
+        {
+            <span>Kết quả tìm kiếm cho: "@ViewBag.TuKhoa"</span>
+        }
+    </h2>
+
+    <div class="card-container">
+        @foreach (var item in Model)
+        {
+            <div class="card">
+
+                @if (item.GIA_BAN < item.GIA_GOC)
+                {
+                    <div class="card-badge">Giảm giá</div>
+                }
+
+                <div class="card-img-container">
+                    <img src="~/Content/images/@item.HINHANH0" class="card-img">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">@item.TENLAPTOP</h3>
+
+                    <div class="card-specs">
+                        <span><i class="fa-solid fa-microchip"></i> @item.CAUHINH</span>
+                    </div>
+
+                    <div class="card-price">
+                        <span class="price-new">@String.Format("{0:N0}", item.GIA_BAN) ₫</span>
+
+                        @if (item.GIA_BAN < item.GIA_GOC)
+                        {
+                            <span class="price-old">@String.Format("{0:N0}", item.GIA_GOC) ₫</span>
+                        }
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="@Url.Action("Details", "Home", new { id = item.MALAPTOP })" class="btn-detail">
+                            Chi tiết
+                        </a>
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                        {
+                            @Html.Hidden("maLaptop", item.MALAPTOP)
+                            <button type="submit" class="btn-add-cart">
+                                <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

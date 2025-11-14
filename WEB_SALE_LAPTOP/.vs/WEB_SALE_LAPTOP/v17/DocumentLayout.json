@@ -1,0 +1,438 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|d:\\web_sale_laptop\\web_sale_laptop\\web_sale_laptop\\web_sale_laptop\\content\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\content\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\controllers\\productmanagementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\controllers\\productmanagementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\adminaccount\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\adminaccount\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\controllers\\adminaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\controllers\\adminaccountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\cart\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\cart\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\scripts\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\scripts\\js\\site.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\cart\\_carticon.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\cart\\_carticon.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\home\\about.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\home\\about.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\models\\cartitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\models\\cartitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\home\\_dsmenu_hang.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\home\\_dsmenu_hang.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\models\\ql_laptop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\models\\ql_laptop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\productmanagement\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\productmanagement\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\home\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\home\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\productmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\productmanagement\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\productmanagement\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\productmanagement\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\productmanagement\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\productmanagement\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\web_sale_laptop\\views\\home\\timkiem.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4085BD68-9E89-4EDA-89E4-9BF6F7CE0249}|WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP.csproj|solutionrelative:web_sale_laptop\\views\\home\\timkiem.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAALwAAAAAAAAAAAAowMIAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T08:23:01.29Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProductManagementController.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\ProductManagementController.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Controllers\\ProductManagementController.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\ProductManagementController.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Controllers\\ProductManagementController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwCoAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T13:19:16.851Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_AdminLayout.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Shared\\_AdminLayout.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Shared\\_AdminLayout.cshtml",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAwDoAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-13T13:17:17.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAALAAAAAAAAAAAAAowLAAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-11T08:45:55.262Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CartItem.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Models\\CartItem.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Models\\CartItem.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Models\\CartItem.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Models\\CartItem.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAuwCMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-12T06:09:40.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CartController.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\CartController.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Controllers\\CartController.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\CartController.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Controllers\\CartController.cs",
+              "ViewState": "AgIAAO8AAAAAAAAAAAAiwAoBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-12T06:10:25.289Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "QL_LAPTOP.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Models\\QL_LAPTOP.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Models\\QL_LAPTOP.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Models\\QL_LAPTOP.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Models\\QL_LAPTOP.cs",
+              "ViewState": "AgIAAKAAAAAAAAAAAAAiwLQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T08:22:54.674Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "style.css",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Content\\css\\style.css",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Content\\css\\style.css",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Content\\css\\style.css",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Content\\css\\style.css",
+              "ViewState": "AgIAAHsDAAAAAAAAAAAEwJIDAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-11-13T11:14:32.226Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Account\\Register.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Account\\Register.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAADoAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:03:24.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminAccountController.cs",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\AdminAccountController.cs",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Controllers\\AdminAccountController.cs",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Controllers\\AdminAccountController.cs",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Controllers\\AdminAccountController.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAowBQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T13:13:12.366Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Cart\\Index.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Cart\\Index.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Cart\\Index.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Cart\\Index.cshtml",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAAAGgAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T06:11:30.897Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Site.js",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Scripts\\js\\Site.js",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Scripts\\js\\Site.js",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Scripts\\js\\Site.js",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Scripts\\js\\Site.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-11-13T08:13:32.955Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Account\\Login.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAlwBIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:04:46.227Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\AdminAccount\\Login.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\AdminAccount\\Login.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\AdminAccount\\Login.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\AdminAccount\\Login.cshtml",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwCUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:23:38.09Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-11T10:27:22.521Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_CartIcon.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Cart\\_CartIcon.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Cart\\_CartIcon.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Cart\\_CartIcon.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Cart\\_CartIcon.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-13T11:32:47.277Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "About.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\About.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Home\\About.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\About.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Home\\About.cshtml",
+              "ViewState": "AgIAABsAAAAAAAAAAAAuwDoAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-13T11:15:43.68Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "_DSMenu_Hang.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\_DSMenu_Hang.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Home\\_DSMenu_Hang.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\_DSMenu_Hang.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Home\\_DSMenu_Hang.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-13T06:44:07.157Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Edit.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Edit.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Edit.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Edit.cshtml",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAAkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:51:46.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Index.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Index.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Index.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:51:03.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Create.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Create.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Create.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:51:28.181Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Delete.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Delete.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\ProductManagement\\Delete.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\ProductManagement\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-12T05:52:09.591Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\Details.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Home\\Details.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\Details.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Home\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKYBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-11T10:34:41.893Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "TimKiem.cshtml",
+              "DocumentMoniker": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\TimKiem.cshtml",
+              "RelativeDocumentMoniker": "WEB_SALE_LAPTOP\\Views\\Home\\TimKiem.cshtml",
+              "ToolTip": "D:\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\WEB_SALE_LAPTOP\\Views\\Home\\TimKiem.cshtml",
+              "RelativeToolTip": "WEB_SALE_LAPTOP\\Views\\Home\\TimKiem.cshtml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-11T16:50:09.978Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 83,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

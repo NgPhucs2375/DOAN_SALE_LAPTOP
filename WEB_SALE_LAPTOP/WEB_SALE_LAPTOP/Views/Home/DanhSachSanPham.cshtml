@@ -1,0 +1,73 @@
+﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.LAPTOP>
+
+@{
+    ViewBag.Title = "Quản lý Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2 class="section-title">Quản lý Sản phẩm</h2>
+
+    <a href="@Url.Action("Create")" class="cart-button" style="text-decoration: none;">
+        <i class="fa-solid fa-plus"></i>
+        <span>Thêm Sản Phẩm Mới</span>
+    </a>
+</div>
+
+<div class="table-container">
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Sản Phẩm</th>
+                <th>Hãng</th>
+                <th>Loại</th>
+                <th>Giá Bán</th>
+                <th>Số Lượng Tồn</th>
+                <th>Trạng Thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="product-info-cell">
+                        <img src="~/Content/images/@item.HINHANH0" alt="@item.TENLAPTOP" class="table-product-img" />
+                        <div class="product-info-text">
+                            <strong>@Html.DisplayFor(modelItem => item.TENLAPTOP)</strong>
+                            <small>ID: @item.MALAPTOP</small>
+                        </div>
+                    </td>
+
+                    <td>@Html.DisplayFor(modelItem => item.HANG.TENHANG)</td>
+                    <td>@Html.DisplayFor(modelItem => item.LOAI_LAPTOP.TENLOAI)</td>
+
+                    <td>@String.Format("{0:N0}", item.GIA_BAN) ₫</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.SOLUONG_TON)</td>
+
+                    <td>
+                        @if (item.TRANGTHAI == true)
+                        {
+                            <span class="status status-active">Đang bán</span>
+                        }
+                        else
+                        {
+                            <span class="status status-inactive">Đã ẩn</span>
+                        }
+                    </td>
+
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id=item.MALAPTOP })" class="btn-action btn-edit" title="Sửa">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id=item.MALAPTOP })" class="btn-action btn-delete" title="Xóa">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

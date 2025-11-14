@@ -1,0 +1,43 @@
+﻿@model WEB_SALE_LAPTOP.Models.KHACHHANG
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="section-title">Đăng nhập Tài khoản</h2>
+
+<div class="product-section" style="max-width: 600px; margin: 0 auto;">
+    <div class="contact-form-container">
+
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "contact-form" }))
+        {
+            <h3 class="form-title" style="text-align: left; margin-bottom: 2rem;">
+                <i class="fa-solid fa-user" style="color: var(--color-primary);"></i>
+                Khách hàng
+            </h3>
+
+            if (ViewBag.Error != null)
+            {
+                <div class.="voucher-message error" style="margin-bottom: 1rem;">@ViewBag.Error</div>
+            }
+
+            <div class="form-group">
+                <label for="EMAIL">Email*</label>
+                <input type="email" id="EMAIL" name="EMAIL" required class="form-group-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="MATKHAU">Mật khẩu*</label>
+                <input type="password" id="MATKHAU" name="MATKHAU" required class="form-group-input" />
+            </div>
+
+            <button type.="submit" class="cart-button" style="width: 100%; justify-content: center;">
+                Đăng nhập
+            </button>
+
+            <div class="form-footer" style="margin-top: 1.5rem; text-align: center;">
+                <a href="@Url.Action("Register", "Account")" class.="promo-link">Chưa có tài khoản? Đăng ký ngay</a>
+            </div>
+        }
+    </div>
+</div>

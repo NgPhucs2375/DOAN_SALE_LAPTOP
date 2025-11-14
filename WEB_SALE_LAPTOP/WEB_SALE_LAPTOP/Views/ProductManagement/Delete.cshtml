@@ -1,0 +1,58 @@
+﻿@model WEB_SALE_LAPTOP.Models.LAPTOP
+
+@{
+    ViewBag.Title = "Xác nhận Xóa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string imagePathPrefix = "/Content/images/";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="mb-0">@ViewBag.Title</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-danger-emphasis">Bạn có chắc chắn muốn xóa sản phẩm này không?</h4>
+                    <p>Hành động này không thể hoàn tác.</p>
+                    <hr />
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+
+                    <div class="text-center mb-3">
+                        <img src="@Url.Content(imagePathPrefix + (Model.HINHANH0 ?? "default-image.png"))"
+                             alt="Ảnh @Model.TENLAPTOP"
+                             style="width: 200px; height: 200px; object-fit: contain; border-radius: 4px;" />
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Tên Laptop</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.TENLAPTOP)</dd>
+
+                        <dt class="col-sm-4">Giá bán</dt>
+                        <dd class="col-sm-8">@Model.GIA_BAN.ToString("N0")đ</dd>
+
+                        <dt class="col-sm-4">Hãng</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.HANG.TENHANG)</dd>
+
+                        <dt class="col-sm-4">Loại</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.LOAI_LAPTOP.TENLOAI)</dd>
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="mt-4">
+                            <input type="submit" value="Xác nhận Xóa" class="btn btn-danger" />
+                            @Html.ActionLink("Hủy & Quay lại", "Index", null, new { @class = "btn btn-secondary" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
