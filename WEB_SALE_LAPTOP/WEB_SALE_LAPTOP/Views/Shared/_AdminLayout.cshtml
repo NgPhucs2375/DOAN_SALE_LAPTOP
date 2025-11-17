@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Admin Panel</title>
 
-    <link href="~/Content/css/style.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css/admin")
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("styles", required: false)
 </head>
 <body>
 
@@ -23,30 +26,49 @@
         <div class="sidebar-content">
             <nav class="sidebar-menu">
                 <ul>
-                    <li>
-                        <a href="@Url.Action("Index", "ProductManagement")">
-                            <i class="fa-solid fa-box-archive"></i>
-                            <span>Quản lý Sản phẩm</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "OrderManagement")">
-                            <i class="fa-solid fa-file-invoice-dollar"></i>
-                            <span>Quản lý Đơn hàng</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "CustomerManagement")">
-                            <i class="fa-solid fa-users"></i>
-                            <span>Quản lý Khách hàng</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "VoucherManagement")">
-                            <i class="fa-solid fa-ticket"></i>
-                            <span>Quản lý Voucher</span>
-                        </a>
-                    </li>
+                    @{
+                        var dsQuyen = Session["AdminQuyen"] as List<int> ?? new List<int>();
+                        // 1 = Admin
+                        // 2 = Bán hàng
+                        // 3 = Quản lý kho
+                    }
+
+                    @if (dsQuyen.Contains(1) || dsQuyen.Contains(3))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "ProductManagement")">
+                                <i class="fa-solid fa-box-archive"></i>
+                                <span>Quản lý Sản phẩm</span>
+                            </a>
+                        </li>
+                    }
+                    @if (dsQuyen.Contains(1) || dsQuyen.Contains(2))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "OrderManagement")">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                                <span>Quản lý Đơn hàng</span>
+                            </a>
+                        </li>
+                    }
+                    @if (dsQuyen.Contains(1))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "CustomerManagement")">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Quản lý Khách hàng</span>
+                            </a>
+                        </li>
+                    }
+                    @if (dsQuyen.Contains(1) || dsQuyen.Contains(2))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "VoucherManagement")">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Quản lý Voucher</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nav>
         </div>
@@ -63,7 +85,7 @@
                     </nav>
 
                     <div class="header-actions">
-                        <a class.="btn-primary-admin" href="@Url.Action("Index", "Home")" target="_blank">
+                        <a class="btn-primary-admin" href="@Url.Action("Index", "Home")" target="_blank">
                             <i class="fa-solid fa-globe"></i>
                             <span>Xem Website</span>
                         </a>
@@ -88,7 +110,9 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+
+    @* @Scripts.Render("~/bundles/bootstrap") *@
+
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/js/Site.js"></script>
 

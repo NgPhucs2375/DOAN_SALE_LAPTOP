@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Laptop Store Pro</title>
 
-    <link href="~/Content/css/style.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css/public")
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("styles", required: false)
 </head>
 <body>
 
@@ -52,7 +54,6 @@
                 </div>
             </div>
         </div>
-
         <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
             <div class="sidebar-promo-card">
                 <div class="promo-badge">Giảm Sốc</div>
@@ -88,7 +89,6 @@
                     </nav>
                 </div>
             </div>
-
             <div class="header-main">
                 <div class="container-fluid header-main-content">
                     <nav class="main-nav">
@@ -139,7 +139,6 @@
                     </form>
                     <div id="newsletterMessage" style="color: white; margin-top: 1rem; display: none;"></div>
                 </div>
-
                 <div class="footer-content">
                     <div class="footer-section">
                         <h3>Thông Tin Liên Hệ</h3>
@@ -164,11 +163,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="footer-bottom">
                     <p>
                         &copy; @DateTime.Now.Year Laptop Pro. Đã đăng ký bản quyền.
-
                         <a href="@Url.Action("Login", "AdminAccount")" class="admin-secret-link">
                             <i class="fa-solid fa-lock"></i>
                         </a>
@@ -184,8 +181,24 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
-<script src="~/Scripts/js/Site.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/Scripts/js/Site.js"></script>
+
+    <div class="chat-bubble-button" id="chat-toggle-button">
+        <i class="fa-solid fa-comments fa-2x"></i>
+    </div>
+
+    <div class="chat-iframe-container" id="chat-iframe-window">
+        <div class="chat-iframe-header">
+            <button id="chat-close-button">&times;</button>
+        </div>
+        <iframe src="https://www.chatbase.co/chatbot-iframe/WDZFpp7MVPpaofJryZ8XK"
+                
+                style="height: 100%; border: none; width:100%"
+                frameborder="0"></iframe>
+    </div>
 </body>
 </html>

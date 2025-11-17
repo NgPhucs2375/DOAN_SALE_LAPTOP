@@ -3,7 +3,9 @@
     ViewBag.Title = "Thông tin Tài khoản";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@section styles {
+    @Styles.Render("~/Content/css/checkout")
+}
 @helper RenderStatusBadge(string status)
 {
     string badgeClass = "status-pending"; // Vàng (Mặc định)

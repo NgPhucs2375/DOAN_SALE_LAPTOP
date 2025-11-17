@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log("site.js (v3 - Vanilla) đã tải!");
 
-    // ===== 1. LOGIC ẨN/HIỆN SIDEBAR (Sửa lỗi) =====
+    // ===== 1. LOGIC ẨN/HIỆN SIDEBAR =====
     const logoButton = document.querySelector('.logo-container');
     const body = document.body;
     const sidebarStateKey = 'sidebarCollapsedState'; // Chìa khóa để lưu
@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
         logoButton.addEventListener('click', function () {
             body.classList.toggle('sidebar-collapsed');
 
-            // LƯU TRẠNG THÁI MỚI (Code "tiến hóa" gọn hơn)
+            // LƯU TRẠNG THÁI MỚI
             localStorage.setItem(sidebarStateKey, body.classList.contains('sidebar-collapsed'));
         });
     } else {
         console.error("Lỗi: Không tìm thấy '.logo-container'");
     }
 
-    // ===== 2. LOGIC ACCORDION CHO SIDEBAR (Giữ nguyên) =====
+    // ===== 2. LOGIC ACCORDION CHO SIDEBAR =====
     const filterGroups = document.querySelectorAll('.filter-group-title');
 
     filterGroups.forEach(groupTitle => {
@@ -66,7 +66,7 @@ $(document).ready(function () {
 
     console.log("site.js (v3 - jQuery) đã sẵn sàng!");
 
-    // ===== 3. LOGIC "TIẾN HÓA" CHO FORM NEWSLETTER (AJAX) =====
+    // ===== 3. LOGIC FORM NEWSLETTER (AJAX) =====
     const newsletterForm = $('#newsletterForm');
     const emailInput = $('#newsletterEmailInput');
     const submitButton = $('#newsletterSubmitButton');
@@ -75,9 +75,7 @@ $(document).ready(function () {
     if (newsletterForm.length > 0) {
 
         newsletterForm.on('submit', function (e) {
-
             e.preventDefault(); // Ngăn trang web tải lại (reload)
-
             const email = emailInput.val();
             if (!email) return;
 
@@ -112,4 +110,18 @@ $(document).ready(function () {
             });
         });
     }
+
+    // ===== 4. LOGIC CHATBOX =====
+    // Khi bấm vào nút bong bóng
+    $('#chat-toggle-button').on('click', function () {
+        $('#chat-iframe-window').toggleClass('show');
+    });
+
+    // Khi bấm vào nút X (đóng)
+    $('#chat-close-button').on('click', function () {
+        $('#chat-iframe-window').removeClass('show');
+    });
+
 });
+
+// === (TOÀN BỘ CODE DEMO SPA ĐÃ BỊ XÓA KHỎI ĐÂY) ===

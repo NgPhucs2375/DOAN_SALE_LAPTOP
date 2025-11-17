@@ -166,6 +166,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("Lỗi khi đăng ký tài khoản: " + ex.Message);
                 ViewBag.Error = "Không thể xóa sản phẩm này vì đã tồn tại trong hóa đơn!";
                 db.Entry(laptop).Reference(l => l.HANG).Load();
                 db.Entry(laptop).Reference(l => l.LOAI_LAPTOP).Load();

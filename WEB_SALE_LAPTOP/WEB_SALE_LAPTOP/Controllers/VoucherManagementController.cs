@@ -104,6 +104,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("Lỗi khi đăng ký tài khoản: " + ex.Message);
                 // Lỗi (nếu Voucher đã được dùng trong Hóa đơn)
                 ViewBag.Error = "Không thể xóa Voucher này vì đã có Hóa đơn sử dụng!";
                 return View(vOUCHER);

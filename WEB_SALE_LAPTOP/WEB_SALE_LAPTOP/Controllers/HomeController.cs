@@ -107,6 +107,8 @@ namespace WEB_SALE_LAPTOP.Controllers
         // ========== CÁC HÀM KHÁC (GIỮ NGUYÊN) ==========
 
         [ChildActionOnly]
+        [OutputCache(Duration = 3600, VaryByParam = "none")] // Cache trong 3600 giây = 1 giờ
+        // chỉ dọi csdl cho menu này 1 lần/giờ chứ ko phải mỗi lần load trang
         public ActionResult DSMenu_Hang()
         {
             var dsHang = data.HANGs.ToList();

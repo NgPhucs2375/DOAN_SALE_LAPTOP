@@ -1,0 +1,422 @@
+﻿/* ===== 9. BỔ SUNG CSS CHO TRANG ADMIN (QUẢN LÝ SẢN PHẨM) ===== */
+
+/* ----- 9.1. Tiêu đề trang & Nút Thêm Mới ----- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+    /* Ghi đè lại .section-title một chút cho trang Admin */
+    .page-header .section-title {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    /* Nút Thêm Mới (dùng chung style .cart-button) */
+    .page-header .cart-button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+/* ----- 9.2. Tùy chỉnh Bảng Dữ Liệu "tiến hóa" ----- */
+/* (Hầu hết style đã có trong .data-table, ta chỉ thêm 1 chút) */
+
+/* Cột thông tin sản phẩm (Ảnh + Tên) */
+.product-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.product-info-text strong {
+    display: block;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.product-info-text small {
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+/* Đảm bảo các cột khác căn giữa theo chiều dọc */
+.data-table td {
+    vertical-align: middle;
+}
+/* ===== 16. CSS "TIẾN HÓA" CHO NÚT BẤM ADMIN ===== */
+
+/* Nút "Tích cực" (Tạo, Sửa, Lưu) - Dùng màu Xanh Navy */
+.btn-primary-admin {
+    background-color: var(--color-primary); /* Nền Xanh Navy */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 25px; /* Bo tròn */
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+    .btn-primary-admin:hover {
+        background-color: #004a6f; /* Xanh đậm hơn */
+        color: white;
+    }
+
+    .btn-primary-admin i {
+        font-size: 0.9em;
+    }
+
+
+/* ----- CSS CHO TRANG DELETE ----- */
+.delete-warning {
+    font-family: var(--font-heading);
+    color: var(--color-accent); /* Màu Đỏ Trầm */
+    font-size: 1.5rem;
+}
+
+.delete-subtext {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.form-actions-container {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* ===== 19. CSS "TIẾN HÓA PLUS" CHO QUẢN LÝ ĐƠN HÀNG ===== */
+
+/* ----- 19.1. Các Huy hiệu (Badge) Trạng thái Động ----- */
+.status { /* Style cơ bản cho badge */
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+    .status.status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    /* Xanh dương (Giống .btn-edit nhưng sáng hơn 1 chút) */
+    .status.status-shipping {
+        background-color: #e6f0ff; /* Nền xanh nhạt */
+        color: #0056b3; /* Chữ xanh đậm */
+    }
+    /* Xanh lá (Giống .status-active) */
+    .status.status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    /* Đỏ (Giống .status-inactive) */
+    .status.status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+/* ----- 19.2. Nút "Duyệt Đơn" (Shipping) mới ----- */
+.action-buttons {
+    /* Đảm bảo các nút <form> nằm ngang */
+    display: flex;
+    gap: 0.5rem;
+}
+/* Các nút cơ bản */
+.btn-action {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-action.btn-edit {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-action.btn-delete {
+        background-color: var(--color-accent);
+        color: white;
+    }
+
+    /* Nút "Duyệt" (Xanh dương) */
+    .btn-action.btn-shipping {
+        padding: 0.25rem 0.75rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #007bff; /* Xanh dương Bootstrap */
+        color: white;
+    }
+
+        .btn-action.btn-shipping:hover {
+            background-color: #0056b3;
+        }
+/* ===== 20. CSS "TIẾN HÓA PRO" (CẤP 3) - STAT CARDS ===== */
+
+.stat-card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cột */
+    gap: 1.5rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Viền "vô hình" (invisible) */
+}
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Style cho trạng thái Active (khi lọc) */
+    .stat-card.active {
+        border-color: var(--color-primary);
+        box-shadow: 0 8px 15px rgba(0, 48, 73, 0.1);
+    }
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+    /* Màu sắc "thân thiện" (friendly) cho icon (Req #2) */
+    .stat-icon.icon-revenue {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .stat-icon.icon-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .stat-icon.icon-shipping {
+        background-color: #e6f0ff;
+        color: #0056b3;
+    }
+
+    .stat-icon.icon-total {
+        background-color: #f0f0f0;
+        color: var(--text-muted);
+    }
+
+.stat-info .stat-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+}
+
+.stat-info .stat-value {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+/* Responsive cho Stat Cards */
+@media(max-width: 1200px) {
+    .stat-card-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 cột trên tablet */
+    }
+}
+
+@media(max-width: 768px) {
+    .stat-card-grid {
+        grid-template-columns: 1fr; /* 1 cột trên mobile */
+    }
+}
+/* ===== 9. BỔ SUNG CSS CHO TRANG ADMIN (PHẦN BỊ MẤT) ===== */
+/* (Code này dành cho trang Quản lý Sản phẩm VÀ Quản lý Đơn hàng) */
+
+/* 1. "Vỏ bọc" (Wrapper) của Bảng (Table) */
+.table-container {
+    background-color: var(--bg-secondary); /* Nền Trắng */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    overflow: hidden; /* Quan trọng để bo tròn góc */
+}
+
+/* 2. Bảng "Tiến hóa" (Table) - ĐÂY LÀ "BẢNG LƯỚI" (GRID) CỦA BẠN */
+.data-table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp viền lại */
+    font-family: var(--font-body); /* Dùng font dễ đọc */
+}
+
+    /* 3. Các ô (Cells) trong Bảng - TẠO KHOẢNG CÁCH "DỄ THỞ" */
+    .data-table th,
+    .data-table td {
+        padding: 1rem; /* Tạo khoảng cách "dễ thở" */
+        text-align: left;
+        border-bottom: 1px solid var(--border-color); /* Viền mỏng */
+        vertical-align: middle; /* Căn giữa theo chiều dọc */
+    }
+
+    /* 4. Tiêu đề (Header) của Bảng (Mã HĐ, Khách hàng...) */
+    .data-table thead th {
+        background-color: var(--bg-main); /* Nền Be (cho "gu" Cổ điển) */
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* 5. Hiệu ứng "Hover" cho các hàng */
+    .data-table tbody tr:hover {
+        background-color: var(--bg-main); /* Nền Be khi di chuột */
+    }
+/* ===== 22. CSS "TIẾN HÓA" CHO FORM VOUCHER ===== */
+
+/* (Dùng cho 2 cột lồng nhau) */
+.form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Sửa lỗi input type="date" không ăn style */
+.form-group input[type="date"] {
+    width: 100% !important;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-body);
+    background-color: var(--bg-main) !important;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+    .form-group input[type="date"]:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        background-color: #fff !important;
+    }
+/* ===== 23. CSS "TIẾN HÓA PRO" (CẤP 3) - FILTER & PAGINATION ===== */
+
+/* ----- 23.1. Thanh Lọc (Filter Bar) ----- */
+.admin-filter-bar {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background-color: var(--bg-secondary); /* Nền Trắng */
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+    .admin-filter-bar .filter-group {
+        display: flex;
+        align-items: center;
+        background-color: var(--bg-main); /* Nền Be */
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        flex-grow: 1; /* Tự động dãn ra */
+    }
+
+        .admin-filter-bar .filter-group i {
+            padding-left: 12px;
+            color: var(--text-muted);
+        }
+
+    .admin-filter-bar .filter-input,
+    .admin-filter-bar .filter-select {
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 10px;
+        font-size: 1rem;
+        background-color: transparent;
+        font-family: var(--font-body);
+    }
+
+/* ----- 23.2. Phân trang (Pagination) ----- */
+.pagination-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+    .pagination-container .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination-container .page-item {
+        margin: 0 3px;
+    }
+        /* Style cho các nút 1, 2, 3... */
+        .pagination-container .page-item a,
+        .pagination-container .page-item span { /* (span dùng cho '...' và trang hiện tại) */
+            display: block;
+            padding: 8px 14px;
+            text-decoration: none;
+            color: var(--color-primary); /* Màu Xanh Navy */
+            background-color: var(--bg-secondary); /* Nền Trắng */
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+            .pagination-container .page-item a:hover {
+                background-color: var(--bg-main);
+                border-color: var(--color-primary);
+            }
+        /* Style cho trang hiện tại */
+        .pagination-container .page-item.active a,
+        .pagination-container .page-item.active span {
+            background-color: var(--color-primary); /* Nền Xanh Navy */
+            color: white;
+            border-color: var(--color-primary);
+        }
+        /* Style cho nút "..." (dấu ba chấm) */
+        .pagination-container .page-item.disabled span.page-link,
+        .pagination-container .page-item.disabled span {
+            color: var(--text-muted);
+            background-color: #f9f9f9;
+        }

@@ -181,6 +181,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\css\site-admin.css" />
+    <Content Include="Content\css\site-checkout.css" />
+    <Content Include="Content\css\site-public.css" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\images\Acer_Predator_Helios_18_0.jpg" />
     <Content Include="Content\images\Acer_Predator_Helios_18_1.jpg" />
@@ -357,7 +360,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\js\script.js" />
     <Content Include="Scripts\js\Site.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />

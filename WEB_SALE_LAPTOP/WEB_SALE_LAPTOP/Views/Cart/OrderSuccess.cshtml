@@ -2,7 +2,9 @@
     ViewBag.Title = "Đặt hàng thành công";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@section styles {
+    @Styles.Render("~/Content/css/checkout")
+}
 <div class="product-section order-success-page">
 
     <div class="success-icon">

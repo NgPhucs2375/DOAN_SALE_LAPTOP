@@ -1,0 +1,466 @@
+﻿/* ===== 12. CSS "TIẾN HÓA" CHO TRANG GIỎ HÀNG ===== */
+
+/* ----- 12.1. Layout chính (2 Cột) ----- */
+.cart-page-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 2/3 cho danh sách, 1/3 cho tóm tắt */
+    gap: 1.5rem;
+}
+
+/* ----- 12.2. Giỏ hàng rỗng ----- */
+.cart-empty {
+    text-align: center;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+    .cart-empty i {
+        color: var(--color-primary);
+    }
+
+    .cart-empty p {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--text-muted);
+    }
+
+    .cart-empty .cart-button { /* Nút đỏ */
+        text-decoration: none;
+    }
+
+/* ----- 12.3. Cột Trái (Danh sách sản phẩm) ----- */
+.cart-items-list {
+    background-color: var(--bg-secondary); /* Nền Trắng */
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.cart-item-header {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr 1.5fr 1.5fr 0.5fr;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.header-quantity, .header-total, .header-price {
+    text-align: center;
+}
+
+.header-action {
+    text-align: right;
+}
+
+.cart-item-row {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr 1.5fr 1.5fr 0.5fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+    .cart-item-row:last-child {
+        border-bottom: none;
+    }
+
+.cart-item-product {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-item-image {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.cart-item-name {
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+    .cart-item-name:hover {
+        color: var(--color-accent);
+    }
+
+.cart-item-price, .cart-item-total {
+    text-align: center;
+    font-weight: 600;
+}
+
+.cart-item-total {
+    color: var(--color-accent); /* Màu Đỏ Trầm */
+}
+
+/* Form cập nhật số lượng */
+.cart-item-quantity {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px 0 0 6px;
+    font-size: 1rem;
+}
+
+.btn-update-quantity {
+    padding: 0 10px;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    background-color: #f9f9f9;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .btn-update-quantity:hover {
+        background-color: #eee;
+    }
+
+    .btn-update-quantity i {
+        color: var(--color-primary);
+    }
+
+.cart-item-remove {
+    text-align: right;
+}
+
+/* ----- 12.4. Cột Phải (Tóm tắt) ----- */
+.cart-summary {
+    background-color: var(--bg-secondary); /* Nền Trắng */
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: fit-content; /* Chỉ cao bằng nội dung */
+    position: sticky; /* Bám theo khi cuộn */
+    top: 120px; /* 120px = chiều cao của header */
+}
+
+.summary-title {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.summary-section {
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.cart-summary div:last-child {
+    border-bottom: none;
+}
+
+.voucher-form h4 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.voucher-apply-form {
+    display: flex;
+}
+
+    .voucher-apply-form .form-group-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px 0 0 6px;
+        outline: none;
+    }
+
+.btn-apply-voucher {
+    border: none;
+    background-color: var(--color-primary); /* Nền Xanh Navy */
+    color: white;
+    padding: 0 15px;
+    border-radius: 0 6px 6px 0;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.voucher-message {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+    .voucher-message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .voucher-message.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+    .summary-row.discount {
+        color: var(--color-accent); /* Màu Đỏ Trầm */
+    }
+
+    .summary-row.final-total {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--color-primary); /* Màu Xanh Navy */
+        margin-top: 1rem;
+    }
+
+.btn-checkout {
+    width: 100%;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    padding: 12px;
+}
+
+.cart-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-muted); /* Màu Xám Mờ (mặc định) */
+    font-weight: 500;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--bg-main); /* Nền Be */
+    border: 2px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.step-label {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.step-divider {
+    flex-grow: 1;
+    height: 2px;
+    background-color: var(--border-color);
+    margin: 0 1rem;
+    margin-top: 25px; /* Căn giữa với icon */
+}
+
+/* Style cho bước "Active" (hiện tại) */
+.step.active .step-icon {
+    background-color: var(--color-primary); /* Nền Xanh Navy */
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.step.active .step-label {
+    color: var(--color-primary); /* Chữ Xanh Navy */
+    font-weight: bold;
+}
+
+/* ----- 13.2. Trust Badges (Trong Summary) ----- */
+.trust-badges {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    text-align: center;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.badge-item {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+    .badge-item i {
+        display: block;
+        font-size: 1.5rem;
+        color: var(--color-primary); /* Màu Xanh Navy */
+        margin-bottom: 5px;
+    }
+/* ===== 15. CSS "TIẾN HÓA" CHO TRANG ORDER SUCCESS ===== */
+
+.order-success-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1.5rem !important; /* Thêm padding */
+}
+
+.success-icon {
+    font-size: 5rem; /* Icon to, rõ */
+    color: var(--color-primary); /* Màu Xanh Navy */
+}
+
+.order-success-page .section-title {
+    font-size: 2.5rem; /* Tiêu đề to */
+}
+
+.success-lead {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.success-message {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+/* ===== 18. CSS "TIẾN HÓA" CHO TRANG CHECKOUT ===== */
+
+/* ----- 18.1. "Tiến hóa" Stepper (Quy trình) ----- */
+/* Làm cho đường kẻ giữa các bước active cũng "sáng" lên */
+.step-divider.active {
+    background-color: var(--color-primary);
+}
+
+/* ----- 18.2. Danh sách sản phẩm (Cột phải) ----- */
+.summary-product-list {
+    max-height: 250px; /* Thêm thanh cuộn nếu nhiều sản phẩm */
+    overflow-y: auto;
+}
+
+.summary-product-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+    .summary-product-row:last-child {
+        margin-bottom: 0;
+    }
+
+.summary-product-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    flex-shrink: 0; /* Không bị bóp méo */
+}
+
+.summary-product-info {
+    flex-grow: 1; /* Đẩy giá tiền sang phải */
+}
+
+.summary-product-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.summary-product-total {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ----- 18.3. Sửa lỗi Form (từ trang Đăng nhập) ----- */
+/* Đảm bảo <textarea> cũng có "gu" (vibe) */
+.form-group textarea.form-group-input {
+    width: 100% !important;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-body);
+    background-color: var(--bg-main) !important;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+    .form-group textarea.form-group-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        background-color: #fff !important;
+    }
+/* ===== 21. CSS "TIẾN HÓA" CHO TRANG PROFILE (LỊCH SỬ ĐƠN HÀNG) ===== */
+
+.order-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.order-history-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr; /* Chia 3 cột (Thông tin | Trạng thái | Giá) */
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-main); /* Nền Be */
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.order-info .order-id {
+    font-weight: 600;
+    color: var(--color-primary);
+    display: block;
+}
+
+.order-info .order-date {
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+.order-status {
+    text-align: center;
+}
+
+.order-total {
+    font-weight: bold;
+    color: var(--color-accent); /* Màu Đỏ Trầm */
+    text-align: right;
+    font-size: 1.1rem;
+}
+
+.order-history-item .btn-action {
+    grid-column: 4 / 5; /* Nằm ở cột 4 */
+    justify-self: end;
+}

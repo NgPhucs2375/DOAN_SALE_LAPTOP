@@ -48,6 +48,19 @@
                     <h3 class="card-title">@item.TENLAPTOP</h3>
 
                     <div class="card-specs">
+
+                        @* Kiểm tra xem HANG có tồn tại không (để tránh lỗi Null) *@
+                        @if (item.HANG != null)
+                        {
+                            <span><i class="fa-solid fa-copyright"></i> @item.HANG.TENHANG</span>
+                        }
+
+                        @* Kiểm tra xem LOAI_LAPTOP có tồn tại không *@
+                        @if (item.LOAI_LAPTOP != null)
+                        {
+                            <span><i class="fa-solid fa-laptop-file"></i> @item.LOAI_LAPTOP.TENLOAI</span>
+                        }
+
                         <span><i class="fa-solid fa-microchip"></i> @item.CAUHINH</span>
                     </div>
 

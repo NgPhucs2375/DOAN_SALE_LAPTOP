@@ -2027,3 +2027,66 @@ body.sidebar-collapsed .main-content-wrapper {
     margin-top: 2rem;
 }
 /* (Tái sử dụng style .section-title, .card-container, .card...) */
+
+/* Nút bong bóng chat */
+.chat-bubble-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #007bff;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Khung chứa Iframe (Mặc định ẩn) */
+.chat-iframe-container {
+    position: fixed;
+    bottom: 100px; /* Sẽ hiện lên trên nút bong bóng */
+    right: 25px;
+    width: 350px;
+    height: 500px; /* Giảm chiều cao cho hợp lý */
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    overflow: hidden;
+    display: none; /* Quan trọng: Mặc định ẩn đi */
+    flex-direction: column;
+    z-index: 1000;
+    background-color: white;
+}
+
+    /* Lớp 'show' để hiện khung chat lên */
+    .chat-iframe-container.show {
+        display: flex;
+    }
+
+/* Phần đầu của khung chat */
+.chat-iframe-header {
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+    .chat-iframe-header button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+/* Iframe bên trong */
+.chat-iframe-container iframe {
+    flex-grow: 1; /* Tự động lấp đầy không gian còn lại */
+}
