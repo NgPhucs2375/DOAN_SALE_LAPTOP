@@ -108,7 +108,7 @@
                 <div class.="form-group">
                     @Html.LabelFor(model => model.TRANGTHAI, "Trạng thái")
                     <div class.="checkbox-wrapper">
-                        @Html.CheckBoxFor(model => model.TRANGTHAI.GetValueOrDefault(false), new { @class = "form-check-input", id = "TRANGTHAI" })
+                        @Html.EditorFor(model => model.TRANGTHAI, new { htmlAttributes = new { @class = "form-check-input", id = "TRANGTHAI" } })
                         <label for="TRANGTHAI">Hiển thị (Đang bán)</label>
                     </div>
                 </div>
