@@ -1185,3 +1185,122 @@ body.sidebar-collapsed .main-content-wrapper {
 .chat-iframe-container iframe {
     flex-grow: 1;
 }
+/* =========================================
+   XỬ LÝ SIDEBAR KHI THU GỌN (COLLAPSED) - BẢN SỬA LỖI
+   ========================================= */
+
+/* 1. Thu hẹp khung sidebar */
+body.sidebar-collapsed .sidebar {
+    width: 80px !important;
+    overflow: visible !important; /* Để hiện tooltip */
+    padding: 1rem 0 !important; /* Giảm padding dọc */
+}
+
+/* 2. Mở rộng nội dung chính */
+body.sidebar-collapsed .main-content-wrapper {
+    margin-left: 80px !important;
+    width: calc(100% - 80px) !important;
+}
+
+/* 3. ẨN CÁC THÀNH PHẦN KHÔNG CẦN THIẾT (Dùng display: none để không chiếm chỗ) */
+body.sidebar-collapsed .logo-text span, /* Chữ "Laptop Pro" */
+body.sidebar-collapsed .sidebar-title, /* Tiêu đề nhóm nếu có */
+body.sidebar-collapsed .sidebar-menu li a span, /* Chữ của menu item */
+body.sidebar-collapsed .collapse-icon, /* Icon mũi tên thu gọn */
+body.sidebar-collapsed .filter-group-title span, /* Chữ "Danh mục", "Giá"... */
+body.sidebar-collapsed .filter-group-title .arrow, /* Mũi tên accordion */
+body.sidebar-collapsed .sidebar-promo-link-wrapper, /* Banner quảng cáo */
+body.sidebar-collapsed .filter-group-content { /* Nội dung accordion mở rộng */
+    display: none !important;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 4. CĂN GIỮA LOGO */
+body.sidebar-collapsed .logo-container {
+    justify-content: center !important;
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+    border: none !important;
+}
+
+body.sidebar-collapsed .logo-text {
+    justify-content: center !important;
+    width: 100%;
+}
+
+    body.sidebar-collapsed .logo-text i {
+        font-size: 2rem !important; /* Icon logo to lên */
+        margin: 0 !important;
+    }
+
+/* 5. CĂN GIỮA CÁC MỤC MENU & BỘ LỌC */
+body.sidebar-collapsed .sidebar-menu li a,
+body.sidebar-collapsed .filter-group-title {
+    justify-content: center !important; /* Căn giữa icon */
+    padding: 15px 0 !important; /* Tăng vùng bấm */
+    text-align: center;
+}
+
+body.sidebar-collapsed .sidebar-menu li {
+    padding: 0 !important; /* Xóa padding của thẻ li */
+}
+
+    /* Icon của menu/bộ lọc to lên và căn giữa */
+    body.sidebar-collapsed .sidebar-menu li a i,
+    body.sidebar-collapsed .filter-group-title i:first-child {
+        margin: 0 !important;
+        font-size: 1.4rem !important;
+        width: 100%; /* Chiếm hết chiều ngang để căn giữa dễ hơn */
+        text-align: center;
+        display: block;
+    }
+
+/* 6. XỬ LÝ ACCORDION (Bộ lọc) KHI THU NHỎ */
+/* Biến title bộ lọc thành nút icon đơn giản */
+body.sidebar-collapsed .filter-group {
+    border: none !important; /* Xóa viền gạch ngang */
+    margin-bottom: 5px;
+}
+
+/* 7. HIỆU ỨNG TOOLTIP (Khi rê chuột vào icon lúc thu nhỏ) */
+body.sidebar-collapsed .sidebar-menu li a,
+body.sidebar-collapsed .filter-group-title {
+    position: relative;
+}
+
+    /* Tooltip cho Menu thường */
+    body.sidebar-collapsed .sidebar-menu li a:hover::after {
+        content: attr(href); /* Tốt nhất nên thêm thuộc tính title="" vào HTML và dùng attr(title) */
+        position: absolute;
+        left: 70px; /* Hiện bên phải sidebar */
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        font-size: 0.8rem;
+        z-index: 9999;
+        pointer-events: none;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Tooltip cho Bộ lọc (Accordion) */
+    body.sidebar-collapsed .filter-group-title:hover::after {
+        content: "Bộ lọc";
+        position: absolute;
+        left: 70px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        font-size: 0.8rem;
+        z-index: 9999;
+        pointer-events: none;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }

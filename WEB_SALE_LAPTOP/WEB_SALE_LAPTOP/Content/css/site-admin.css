@@ -29,22 +29,30 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    max-width: 350px;
 }
 
 .table-product-img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    border: 1px solid var(--border-color);
+    width: 60px; /* Cố định kích thước ảnh */
+    height: 60px;
+    object-fit: contain; /* Giữ tỷ lệ ảnh */
     border-radius: 6px;
-    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    background: #fff;
+    flex-shrink: 0; /* Không cho ảnh bị bóp méo */
 }
-
-.product-info-text strong {
-    display: block;
-    color: var(--color-primary);
-    font-weight: 600;
+.product-info-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
 }
+    .product-info-text strong {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Chỉ hiện tối đa 2 dòng */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.95rem;
+    }
 
 .product-info-text small {
     color: var(--text-muted);
@@ -53,7 +61,22 @@
 
 /* Đảm bảo các cột khác căn giữa theo chiều dọc */
 .data-table td {
-    vertical-align: middle;
+    vertical-align: middle !important; /* Bắt buộc căn giữa dọc */
+    padding: 1rem 0.5rem; /* Điều chỉnh padding cho gọn */
+}
+    /* 2. Xử lý cột "Hành động" (Nút Sửa/Xóa) */
+    .data-table td:last-child {
+        white-space: nowrap; /* Ngăn không cho nút bị xuống dòng */
+        width: 1%; /* Co chiều rộng cột lại vừa khít với nút */
+        text-align: right; /* Căn phải cho đẹp */
+    }
+
+/* 3. Căn chỉnh container chứa nút */
+.action-buttons {
+    display: flex;
+    gap: 8px; /* Khoảng cách giữa 2 nút */
+    justify-content: flex-end; /* Đẩy nút sang phải */
+    align-items: center; /* Căn giữa nút theo chiều dọc */
 }
 /* ===== 16. CSS "TIẾN HÓA" CHO NÚT BẤM ADMIN ===== */
 

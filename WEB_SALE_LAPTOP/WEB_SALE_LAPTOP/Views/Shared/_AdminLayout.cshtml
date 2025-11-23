@@ -1,71 +1,320 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Admin Panel</title>
+    <title>@ViewBag.Title - Quản Trị Laptop Pro</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 
     @Styles.Render("~/Content/css/admin")
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        :root {
+            --admin-bg: #f3f4f6;
+            --sidebar-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.8);
+            --primary-color: #003049;
+            --accent-color: #B3404A;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            background-color: var(--admin-bg);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* 1. SIDEBAR NÂNG CẤP */
+        .sidebar {
+            background: var(--sidebar-bg);
+            box-shadow: var(--shadow-sm);
+            border-right: 1px solid #e5e7eb;
+            z-index: 50;
+        }
+        .logo-container {
+            padding: 1.5rem;
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+        .sidebar-menu li { margin-bottom: 0.5rem; padding: 0 1rem; }
+        .sidebar-menu li a {
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: #f0f9ff;
+            color: var(--primary-color);
+        }
+        .sidebar-menu li a i { width: 20px; text-align: center; font-size: 1.1rem; }
+
+        /* 2. HEADER NÂNG CẤP (GLASSMORPHISM) */
+        .main-header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px); /* Hiệu ứng kính mờ */
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+        .header-main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        /* User Profile Dropdown */
+        .user-profile-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+        .notification-bell:hover { color: var(--primary-color); }
+        .notification-dot {
+            position: absolute;
+            top: -2px; right: -2px;
+            width: 8px; height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 30px;
+            transition: background 0.2s;
+        }
+        .user-dropdown:hover { background: rgba(0,0,0,0.05); }
+        .user-avatar {
+            width: 36px; height: 36px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .user-name { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
+        .user-role { font-size: 0.75rem; color: var(--text-light); }
+
+        /* Dropdown Menu (CSS Only) */
+        .dropdown-wrapper { position: relative; }
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 100%; right: 0;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #f3f4f6;
+            padding: 8px;
+            margin-top: 10px;
+            display: none; /* JS sẽ toggle */
+            animation: slideDown 0.2s ease;
+        }
+        .dropdown-wrapper:hover .dropdown-menu-custom { display: block; }
+
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 15px;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover { background: #f3f4f6; color: var(--primary-color); }
+        .dropdown-item.danger { color: var(--accent-color); }
+        .dropdown-item.danger:hover { background: #fff1f2; }
+
+        /* 3. CONTENT AREA */
+        .page-content {
+            padding: 2rem;
+            max-width: 1400px; /* Giới hạn chiều rộng để dễ đọc trên màn hình to */
+            margin: 0 auto;
+        }
+
+        @@keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body.sidebar-collapsed .sidebar {
+            width: 80px; /* Thu hẹp chiều rộng */
+            overflow: visible; /* Để hiện tooltip nếu cần */
+        }
+
+        /* 2. Điều chỉnh nội dung chính lấp vào chỗ trống */
+        body.sidebar-collapsed .main-content-wrapper {
+            margin-left: 80px; /* Khớp với width sidebar */
+        }
+
+        /* 3. ẨN TOÀN BỘ CHỮ (TEXT) */
+        body.sidebar-collapsed .logo-text span, /* Chữ Laptop Pro */
+        body.sidebar-collapsed .logo-text span.dot, /* Dấu chấm màu */
+        body.sidebar-collapsed .sidebar-menu li a span, /* Chữ menu */
+        body.sidebar-collapsed .sidebar-menu li:first-child, /* Dòng tiêu đề "MENU CHÍNH" */
+        body.sidebar-collapsed .collapse-icon { /* Ẩn nút mũi tên cũ (nếu muốn) */
+            display: none !important;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* 4. CĂN GIỮA CÁC ICON */
+        body.sidebar-collapsed .sidebar-menu li {
+            padding: 0 10px; /* Giảm padding 2 bên */
+        }
+
+            body.sidebar-collapsed .sidebar-menu li a {
+                justify-content: center; /* Căn giữa icon */
+                padding: 15px 0;
+                text-align: center;
+            }
+
+                body.sidebar-collapsed .sidebar-menu li a i {
+                    margin: 0; /* Xóa khoảng cách bên phải icon */
+                    font-size: 1.4rem; /* Icon to hơn một chút cho đẹp */
+                    width: auto;
+                }
+
+        /* 5. XỬ LÝ LOGO CHỈ HIỆN ICON */
+        body.sidebar-collapsed .logo-container {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: center; /* Căn giữa logo */
+        }
+
+        body.sidebar-collapsed .logo-text i {
+            font-size: 2rem; /* Icon khiên to lên */
+            margin: 0;
+        }
+
+        /* 6. HIỆU ỨNG HOVER (Tùy chọn: Hiện tooltip khi rà chuột vào icon) */
+        body.sidebar-collapsed .sidebar-menu li a {
+            position: relative;
+        }
+
+            /* Tạo Tooltip giả khi hover vào icon lúc thu nhỏ */
+            body.sidebar-collapsed .sidebar-menu li a:hover::after {
+                content: attr(href); /* Tạm thời dùng href hoặc cần sửa HTML để dùng title */
+                /* Để hiển thị đẹp hơn, bạn nên thêm thuộc tính title="Tên Menu" vào thẻ <a> trong HTML */
+                /* Sau đó đổi dòng trên thành: content: attr(title); */
+
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                background: #333;
+                color: #fff;
+                padding: 5px 10px;
+                border-radius: 4px;
+                white-space: nowrap;
+                font-size: 0.8rem;
+                margin-left: 10px;
+                z-index: 100;
+                pointer-events: none;
+            }
+    </style>
 
     @RenderSection("styles", required: false)
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="logo-container" role="button" title="Ẩn/hiện menu">
-            <a class="logo-text">
-                <i class="fa-solid fa-user-shield"></i>
-                <span>Admin Panel</span>
+        <div class="logo-container">
+            <a href="@Url.Action("Index", "ProductManagement")" class="logo-text" style="text-decoration: none;">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Laptop Pro<span style="color: var(--accent-color);">.</span></span>
             </a>
-            <i class="fa-solid fa-angles-left collapse-icon"></i>
         </div>
 
         <div class="sidebar-content">
             <nav class="sidebar-menu">
                 <ul>
+                    <li style="margin-bottom: 1rem; padding-left: 15px; font-size: 0.75rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; letter-spacing: 0.5px;">
+                        Menu Chính
+                    </li>
+
                     @{
                         var dsQuyen = Session["AdminQuyen"] as List<int> ?? new List<int>();
-                        // 1 = Admin
-                        // 2 = Bán hàng
-                        // 3 = Quản lý kho
+                        // Logic Active Menu (Đơn giản)
+                        string currentController = ViewContext.RouteData.Values["controller"].ToString();
                     }
 
                     @if (dsQuyen.Contains(1) || dsQuyen.Contains(3))
                     {
                         <li>
-                            <a href="@Url.Action("Index", "ProductManagement")">
-                                <i class="fa-solid fa-box-archive"></i>
-                                <span>Quản lý Sản phẩm</span>
+                            <a href="@Url.Action("Index", "ProductManagement")" class="@(currentController == "ProductManagement" ? "active" : "")">
+                                <i class="fa-solid fa-box"></i>
+                                <span>Sản phẩm</span>
                             </a>
                         </li>
                     }
                     @if (dsQuyen.Contains(1) || dsQuyen.Contains(2))
                     {
                         <li>
-                            <a href="@Url.Action("Index", "OrderManagement")">
-                                <i class="fa-solid fa-file-invoice-dollar"></i>
-                                <span>Quản lý Đơn hàng</span>
+                            <a href="@Url.Action("Index", "OrderManagement")" class="@(currentController == "OrderManagement" ? "active" : "")">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>Đơn hàng</span>
                             </a>
                         </li>
                     }
                     @if (dsQuyen.Contains(1))
                     {
                         <li>
-                            <a href="@Url.Action("Index", "CustomerManagement")">
-                                <i class="fa-solid fa-users"></i>
-                                <span>Quản lý Khách hàng</span>
+                            <a href="@Url.Action("Index", "CustomerManagement")" class="@(currentController == "CustomerManagement" ? "active" : "")">
+                                <i class="fa-solid fa-user-group"></i>
+                                <span>Khách hàng</span>
                             </a>
                         </li>
                     }
                     @if (dsQuyen.Contains(1) || dsQuyen.Contains(2))
                     {
                         <li>
-                            <a href="@Url.Action("Index", "VoucherManagement")">
-                                <i class="fa-solid fa-ticket"></i>
-                                <span>Quản lý Voucher</span>
+                            <a href="@Url.Action("Index", "VoucherManagement")" class="@(currentController == "VoucherManagement" ? "active" : "")">
+                                <i class="fa-solid fa-ticket-simple"></i>
+                                <span>Khuyến mãi</span>
                             </a>
                         </li>
                     }
@@ -77,23 +326,63 @@
     <div class="main-content-wrapper">
 
         <header class="main-header">
-            <div class="header-main">
-                <div class="container-fluid header-main-content">
+            <div class="header-main-content">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="logo-container" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-dark); padding: 0;">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
 
-                    <nav class="main-nav">
-                        <h3 class="admin-page-title">@ViewBag.Title</h3>
-                    </nav>
-
-                    <div class="header-actions">
-                        <a class="btn-primary-admin" href="@Url.Action("Index", "Home")" target="_blank">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>Xem Website</span>
-                        </a>
-                        <a class="cart-button" href="@Url.Action("Logout", "AdminAccount")">
-                            <i class="fa-solid fa-sign-out-alt"></i>
-                            <span>Đăng xuất</span>
-                        </a>
+                    <div>
+                        <span style="color: var(--text-light); font-size: 0.9rem;">Admin / </span>
+                        <h3 class="admin-page-title" style="display: inline;">@ViewBag.Title</h3>
                     </div>
+                </div>
+                <div>
+                    <span style="color: var(--text-light); font-size: 0.9rem;">Admin / </span>
+                    <h3 class="admin-page-title" style="display: inline;">@ViewBag.Title</h3>
+                </div>
+
+                <div class="user-profile-area">
+
+                    <a href="@Url.Action("Index", "Home")" target="_blank" title="Xem trang web" style="color: var(--text-light); font-size: 1.2rem;">
+                        <i class="fa-solid fa-globe"></i>
+                    </a>
+
+                    <div class="notification-bell">
+                        <i class="fa-regular fa-bell" style="font-size: 1.2rem;"></i>
+                        <span class="notification-dot"></span>
+                    </div>
+
+                    <div class="dropdown-wrapper">
+                        <div class="user-dropdown">
+                            <div class="user-avatar">
+                                @{
+                                    string adminName = Session["AdminName"] as string ?? "Admin";
+                                    string initial = !string.IsNullOrEmpty(adminName) ? adminName.Substring(0, 1).ToUpper() : "A";
+                                }
+                                @initial
+                            </div>
+                            <div class="user-info-text">
+                                <span class="user-name">@adminName</span>
+                                <span class="user-role">Quản trị viên</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-light);"></i>
+                        </div>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="#" class="dropdown-item">
+                                <i class="fa-regular fa-user-circle"></i> Hồ sơ cá nhân
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fa-solid fa-gear"></i> Cài đặt
+                            </a>
+                            <div style="border-top: 1px solid #f3f4f6; margin: 5px 0;"></div>
+                            <a href="@Url.Action("Logout", "AdminAccount")" class="dropdown-item danger">
+                                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </header>
@@ -102,16 +391,12 @@
             @RenderBody()
         </main>
 
-        <footer class="main-footer">
-            <div class="footer-bottom" style="background-color: var(--bg-main); border-top: 1px solid var(--border-color);">
-                <p style="color: var(--text-muted);">&copy; @DateTime.Now.Year Laptop Pro Admin Panel.</p>
-            </div>
+        <footer class="main-footer" style="border-top: 1px solid #e5e7eb; margin-top: auto; padding: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.9rem;">
+            <p>&copy; @DateTime.Now.Year <strong>Laptop Pro Admin</strong>. Designed for Professional.</p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-
-    @* @Scripts.Render("~/bundles/bootstrap") *@
 
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/js/Site.js"></script>

@@ -1,14 +1,267 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Laptop Store Pro</title>
 
-    @Styles.Render("~/Content/css/public")
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    @Styles.Render("~/Content/css/public")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     @Scripts.Render("~/bundles/modernizr")
+
+<style>
+        :root {
+            --header-height: 80px;
+            --primary-color: #003049;
+            --accent-color: #B3404A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+            .main-header.hide {
+                transform: translateY(-100%);
+            }
+        .header-main {
+            padding: 1rem 0;
+        }
+
+        .header-main-content {
+            display: flex; /* Dùng Flexbox thay vì Grid */
+            align-items: center;
+            justify-content: space-between; /* Dãn đều các phần tử */
+            gap: 20px;
+            flex-wrap: nowrap; /* Không cho phép xuống dòng */
+        }
+        /* Ẩn khi cuộn xuống */
+
+        /* 2. MEGA MENU */
+        .main-nav-dropdown-menu {
+            min-width: 250px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            position: absolute; /* Đảm bảo menu con không đẩy nội dung */
+            background: white;
+        }
+
+        .main-nav-dropdown:hover .main-nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .main-nav-dropdown-menu li a {
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .main-nav-dropdown-menu li a:hover {
+                background: #f0f9ff;
+                color: var(--primary-color);
+            }
+
+            .main-nav-dropdown-menu li a i {
+                width: 20px;
+                text-align: center;
+                color: var(--accent-color);
+                opacity: 0.7;
+            }
+        .main-nav {
+            flex-shrink: 0;
+        }
+
+            .main-nav ul {
+                display: flex;
+                list-style: none;
+                gap: 20px;
+                margin: 0;
+                padding: 0;
+            }
+
+                .main-nav ul li {
+                    white-space: nowrap;
+                }
+
+                    .main-nav ul li a {
+                        font-size: 1rem;
+                        font-weight: 600;
+                        color: #333;
+                        text-decoration: none;
+                        transition: color 0.3s;
+                    }
+
+                        .main-nav ul li a:hover {
+                            color: var(--accent-color);
+                        }
+        /* 3. SEARCH BAR */
+        .search-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background: #f3f4f6;
+            border: 2px solid transparent;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+            .search-form:focus-within {
+                background: #fff;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 4px rgba(0, 48, 73, 0.1);
+            }
+
+        .search-box {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 0.95rem;
+            background: transparent;
+        }
+
+        .btn-search {
+            border: none;
+            background: transparent;
+            padding: 0 15px;
+            cursor: pointer;
+            color: #666;
+        }
+        .search-container {
+            flex-grow: 1; /* Chiếm khoảng trống còn lại */
+            max-width: 600px; /* Giới hạn chiều rộng tối đa */
+            min-width: 200px;
+        }
+        /* 4. BACK TO TOP BUTTON */
+        #back-to-top {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 990;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+            #back-to-top.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            #back-to-top:hover {
+                transform: translateY(-5px);
+                background: var(--accent-color);
+            }
+        .header-actions {
+            flex-shrink: 0;
+        }
+
+        .cart-button {
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(179, 64, 74, 0.3);
+        }
+
+            .cart-button:hover {
+                background-color: #9a363f;
+                transform: translateY(-2px);
+            }
+
+        /* SIDEBAR IMPROVEMENT */
+        .sidebar {
+            box-shadow: 2px 0 15px rgba(0,0,0,0.03);
+            border-right: none;
+        }
+
+        .sidebar-promo-card {
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), #001d2e);
+        }
+
+
+        /* FOOTER IMPROVEMENT */
+        .main-footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding-top: 4rem;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+            .footer-section h3::after {
+                content: '';
+                position: absolute;
+                bottom: -8px;
+                left: 0;
+                width: 40px;
+                height: 3px;
+                background: var(--accent-color);
+                border-radius: 2px;
+            }
+
+        .footer-section a {
+            color: #94a3b8;
+        }
+
+            .footer-section a:hover {
+                color: #fff;
+                padding-left: 5px;
+            }/* RESPONSIVE CHO HEADER */
+        @@media (max-width: 992px) {
+            .header-main-content { flex-wrap: wrap; gap: 15px; }
+            .main-nav { order: 2; width: 100%; overflow-x: auto; padding-bottom: 5px; } /* Cho phép trượt ngang */
+            .search-container { order: 1; max-width: 100%; }
+            .header-actions { display: none; } /* Ẩn nút giỏ hàng to trên mobile */
+        }
+</style>
 
     @RenderSection("styles", required: false)
 </head>
@@ -16,106 +269,114 @@
 
     <aside class="sidebar">
         <div class="logo-container" role="button" title="Ẩn/hiện menu">
-            <a class="logo-text">
-                <i class="fa-solid fa-laptop"></i>
-                <span>Laptop Pro</span>
+            <a class="logo-text" href="@Url.Action("Index", "Home")">
+                <i class="fa-solid fa-laptop-code" style="color: var(--accent-color);"></i>
+                <span style="font-family: 'Inter', sans-serif;">Laptop Pro<span style="color: var(--accent-color)">.</span></span>
             </a>
-            <i class="fa-solid fa-angles-left collapse-icon"></i>
+            <i class="fa-solid fa-bars-staggered collapse-icon"></i>
         </div>
+
         <div class="sidebar-content">
             <div class="filter-group active">
-                <div class="filter-group-title"><span><i class="fa-solid fa-tags"></i> Danh Mục Sản Phẩm</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-layer-group"></i> Danh Mục</span><i class="fa-solid fa-chevron-down arrow"></i></div>
                 <div class="filter-group-content">@{ Html.RenderAction("DSMenu_Hang", "Home"); }</div>
             </div>
+
             <div class="filter-group">
-                <div class="filter-group-title"><span><i class="fa-solid fa-dollar-sign"></i> Lọc Theo Giá</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-sack-dollar"></i> Mức Giá</span><i class="fa-solid fa-chevron-down arrow"></i></div>
                 <div class="filter-group-content">
                     <nav class="sidebar-menu filter-menu">
                         <ul>
-                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = (decimal?)null, maxGia = 10000000 })">Dưới 10 triệu</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 10000000, maxGia = 15000000 })">Từ 10 - 15 triệu</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 15000000, maxGia = 20000000 })">Từ 15 - 20 triệu</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 20000000, maxGia = (decimal?)null })">Trên 20 triệu</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { maxGia = 10000000 })">Dưới 10 triệu</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 10000000, maxGia = 15000000 })">10 - 15 triệu</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 15000000, maxGia = 20000000 })">15 - 20 triệu</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoGia", "Home", new { minGia = 20000000 })">Trên 20 triệu</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
+
             <div class="filter-group">
-                <div class="filter-group-title"><span><i class="fa-solid fa-microchip"></i> Lọc Theo CPU</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+                <div class="filter-group-title"><span><i class="fa-solid fa-microchip"></i> Cấu Hình</span><i class="fa-solid fa-chevron-down arrow"></i></div>
                 <div class="filter-group-content">
                     <nav class="sidebar-menu filter-menu">
                         <ul>
-                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "i5" })">Intel Core i5</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "i7" })">Intel Core i7</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "ryzen 5" })">AMD Ryzen 5</a></li>
-                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "ryzen 7" })">AMD Ryzen 7</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "i5" })">Core i5 / Ryzen 5</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "i7" })">Core i7 / Ryzen 7</a></li>
+                            <li><a href="@Url.Action("TimKiemTheoCPU", "Home", new { cpuKey = "rtx" })">Card rời RTX</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
         </div>
+
         <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
             <div class="sidebar-promo-card">
-                <div class="promo-badge">Giảm Sốc</div>
-                <h4 class="promo-title">Nhập 'HELLOVN'</h4>
-                <p class="promo-desc">Giảm ngay 10% cho đơn hàng đầu tiên của bạn!</p>
+                <div class="promo-badge">HOT</div>
+                <h4 class="promo-title">Gaming Gear</h4>
+                <p class="promo-desc">Giảm thêm 500k khi mua kèm Laptop Gaming tuần này!</p>
             </div>
         </a>
     </aside>
 
     <div class="main-content-wrapper">
-        <header class="main-header">
-            <div class="header-top-bar">
+
+        <header class="main-header" id="smartHeader">
+            <div class="header-top-bar" style="padding: 5px 0; font-size: 0.8rem;">
                 <div class="container-fluid">
-                    <span><i class="fa-solid fa-bolt"></i> Ưu đãi chớp nhoáng mỗi ngày!</span>
+                    <span><i class="fa-solid fa-bolt text-warning"></i> Flash Sale: Giảm 20% cho phụ kiện đến hết hôm nay!</span>
                     <nav class="top-nav">
-                        <ul>
+                        <ul style="gap: 15px;">
                             @if (Session["AdminUser"] != null)
                             {
-                                <li><a href="@Url.Action("Index", "ProductManagement")"><i class="fa-solid fa-user-shield"></i> Chào @Session["AdminName"] (Quản lý)</a></li>
-                                <li>@Html.ActionLink("Đăng xuất", "Logout", "AdminAccount", null, new { @class = "nav-link" })</li>
+                                <li><a href="@Url.Action("Index", "ProductManagement")"><i class="fa-solid fa-shield-halved"></i> Quản trị</a></li>
                             }
-                            else if (Session["UserCustomer"] != null)
+                            @if (Session["UserCustomer"] != null)
                             {
-                                <li><a href="@Url.Action("Profile", "Account")"><i class="fa-solid fa-user"></i> Chào @Session["UserName"]</a></li>
-                                <li>@Html.ActionLink("Đăng xuất", "Logout", "Account", null, new { @class = "nav-link" })</li>
+                                <li><a href="@Url.Action("Profile", "Account")"><i class="fa-regular fa-user"></i> @Session["UserName"]</a></li>
+                                <li>@Html.ActionLink("Thoát", "Logout", "Account")</li>
                             }
                             else
                             {
-                                <li>@Html.ActionLink("Đăng ký", "Register", "Account", null, new { @class = "nav-link" })</li>
-                                <li>@Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "nav-link" })</li>
+                                <li>@Html.ActionLink("Đăng nhập", "Login", "Account")</li>
+                                <li>@Html.ActionLink("Đăng ký", "Register", "Account")</li>
                             }
                         </ul>
                     </nav>
                 </div>
             </div>
+
             <div class="header-main">
                 <div class="container-fluid header-main-content">
+
                     <nav class="main-nav">
                         <ul>
-                            <li>@Html.ActionLink("Trang Chủ", "Index", "Home")</li>
+                            <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
                             <li class="main-nav-dropdown">
                                 <a href="#">Sản Phẩm <i class="fa-solid fa-chevron-down arrow-small"></i></a>
-                                <ul class="main-nav-dropdown-menu">
-                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })">Laptop Gaming</a></li>
-                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Văn phòng" })">Laptop Văn Phòng</a></li>
-                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Macbook" })">MacBook</a></li>
-                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Đồ họa - Kỹ thuật" })">Đồ họa - Kỹ thuật</a></li>
+                                <ul class="main-nav-dropdown-menu" style="background: white;">
+                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })"><i class="fa-solid fa-gamepad"></i> Gaming</a></li>
+                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Văn phòng" })"><i class="fa-solid fa-briefcase"></i> Văn phòng</a></li>
+                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Macbook" })"><i class="fa-brands fa-apple"></i> MacBook</a></li>
+                                    <li><a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Đồ họa - Kỹ thuật" })"><i class="fa-solid fa-pen-ruler"></i> Đồ họa</a></li>
                                 </ul>
                             </li>
-                            <li>@Html.ActionLink("Liên Hệ", "Contact", "Home")</li>
+                            <li><a href="@Url.Action("About", "Home")">Về Chúng Tôi</a></li>
+                            <li><a href="@Url.Action("Contact", "Home")">Liên Hệ</a></li>
                         </ul>
                     </nav>
+
                     <div class="search-container">
                         @using (Html.BeginForm("TimKiem", "Home", FormMethod.Get, new { @class = "search-form" }))
                         {
                             <button class="btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                            <input class="search-box" type="search" name="tuKhoa" placeholder="Tìm kiếm laptop, CPU, RAM..." value="@ViewBag.TuKhoa">
+                            <input class="search-box" type="search" name="tuKhoa" placeholder="Tìm laptop, phụ kiện..." value="@ViewBag.TuKhoa">
                         }
                     </div>
+
                     <div class="header-actions">
-                        <a class="cart-button" href="@Url.Action("Index", "Cart")">
-                            <i class="fa-solid fa-cart-shopping"></i>
+                        <a class="cart-button" href="@Url.Action("Index", "Cart")" style="box-shadow: 0 4px 10px rgba(179, 64, 74, 0.3);">
+                            <i class="fa-solid fa-bag-shopping"></i>
                             <span>Giỏ hàng</span>
                             @{ Html.RenderAction("_CartIcon", "Cart"); }
                         </a>
@@ -130,75 +391,107 @@
 
         <footer class="main-footer">
             <div class="container-fluid">
-                <div class="footer-newsletter">
-                    <h3>Đăng ký nhận tin</h3>
-                    <p>Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt.</p>
-                    <form class="newsletter-form" id="newsletterForm">
-                        <input type="email" placeholder="Email của bạn..." id="newsletterEmailInput" required>
-                        <button type="submit" id="newsletterSubmitButton">Đăng ký</button>
-                    </form>
-                    <div id="newsletterMessage" style="color: white; margin-top: 1rem; display: none;"></div>
+                <div class="footer-newsletter" style="border-bottom: 1px solid #1e293b; padding-bottom: 3rem;">
+                    <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Đăng ký nhận tin khuyến mãi</h3>
+                        <p style="color: #94a3b8; margin-bottom: 1.5rem;">Nhận ngay voucher giảm giá 10% cho đơn hàng đầu tiên.</p>
+                        <form class="newsletter-form" id="newsletterForm" style="position: relative;">
+                            <input type="email" placeholder="Nhập email của bạn..." id="newsletterEmailInput" required style="padding-right: 100px; border-radius: 30px; background: #1e293b; color: white; border: 1px solid #334155;">
+                            <button type="submit" id="newsletterSubmitButton" style="position: absolute; right: 5px; top: 5px; bottom: 5px; border-radius: 25px; padding: 0 20px;">Đăng ký</button>
+                        </form>
+                        <div id="newsletterMessage" style="margin-top: 10px; display: none;"></div>
+                    </div>
                 </div>
-                <div class="footer-content">
+
+                <div class="footer-content" style="padding-top: 3rem;">
                     <div class="footer-section">
-                        <h3>Thông Tin Liên Hệ</h3>
-                        <p>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</p>
-                        <p>Điện thoại: (0123) 456-789</p>
-                        <p>Email: contact@laptoppro.com</p>
-                    </div>
-                    <div class="footer-section">
-                        <h3>Liên Kết Nhanh</h3>
-                        <a href="#">Chính sách bảo hành</a>
-                        <a href="#">Chính sách đổi trả</a>
-                        <a href="#">Câu hỏi thường gặp</a>
-                        <a href="#">Về chúng tôi</a>
-                    </div>
-                    <div class="footer-section">
-                        <h3>Theo Dõi Chúng Tôi</h3>
-                        <div class="social-icons">
-                            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <h3><i class="fa-solid fa-laptop-code" style="color: var(--accent-color); margin-right: 8px;"></i> Laptop Pro</h3>
+                        <p style="line-height: 1.6; color: #94a3b8;">Hệ thống bán lẻ Laptop chính hãng hàng đầu Việt Nam. Cam kết chất lượng, bảo hành uy tín.</p>
+                        <div class="social-icons" style="margin-top: 1.5rem; justify-content: start;">
+                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
                             <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
                             <a href="#"><i class="fa-brands fa-tiktok"></i></a>
                         </div>
                     </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>
-                        &copy; @DateTime.Now.Year Laptop Pro. Đã đăng ký bản quyền.
-                        <a href="@Url.Action("Login", "AdminAccount")" class="admin-secret-link">
-                            <i class="fa-solid fa-lock"></i>
-                        </a>
-                    </p>
-                    <div class="payment-icons">
-                        <i class="fa-brands fa-cc-visa fa-2x"></i>
-                        <i class="fa-brands fa-cc-mastercard fa-2x"></i>
-                        <i class="fa-solid fa-qrcode fa-2x"></i>
+                    <div class="footer-section">
+                        <h3>Hỗ Trợ Khách Hàng</h3>
+                        <a href="#">Chính sách bảo hành</a>
+                        <a href="#">Chính sách đổi trả</a>
+                        <a href="#">Hướng dẫn mua hàng</a>
+                        <a href="#">Tra cứu đơn hàng</a>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Liên Hệ</h3>
+                        <p><i class="fa-solid fa-location-dot" style="width: 20px;"></i> 123 Đường ABC, Quận 1, TP.HCM</p>
+                        <p><i class="fa-solid fa-phone" style="width: 20px;"></i> 1800 1234 (Miễn phí)</p>
+                        <p><i class="fa-solid fa-envelope" style="width: 20px;"></i> hotro@laptoppro.com</p>
+                        <div style="margin-top: 1rem;">
+                            <img src="https://cdn.webshopapp.com/shops/215775/files/310339998/payment-methods.png" alt="Payment" style="height: 30px; opacity: 0.8;">
+                        </div>
                     </div>
                 </div>
+
+                    <div class="footer-bottom" style="border-top: 1px solid #1e293b; padding: 1.5rem 0; margin-top: 0; background: transparent; display: flex; justify-content: center; align-items: center; gap: 10px;">
+
+                        <p style="font-size: 0.9rem; color: #64748b; margin: 0;">&copy; @DateTime.Now.Year Laptop Pro. All rights reserved.</p>
+
+                        <a href="@Url.Action("Login", "AdminAccount")" title="Dành cho Quản trị viên" style="color: #475569; font-size: 0.8rem; transition: color 0.3s;">
+                            <i class="fa-solid fa-lock"></i>
+                        </a>
+
+                    </div>                
             </div>
         </footer>
     </div>
 
+    <div id="back-to-top" title="Lên đầu trang"><i class="fa-solid fa-arrow-up"></i></div>
+
     @Scripts.Render("~/bundles/jquery")
-    @*@Scripts.Render("~/bundles/bootstrap")*@
-    @RenderSection("scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    @RenderSection("scripts", required: false)
     <script src="~/Scripts/js/Site.js"></script>
+
+    <script>
+        let lastScroll = 0;
+        const header = document.getElementById('smartHeader');
+        const backToTop = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            // 1. Smart Header Logic
+            if (currentScroll > 100 && currentScroll > lastScroll) {
+                header.classList.add('hide'); // Cuộn xuống -> Ẩn
+            } else {
+                header.classList.remove('hide'); // Cuộn lên -> Hiện
+            }
+            lastScroll = currentScroll;
+
+            // 2. Back to Top Logic
+            if (currentScroll > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Click Back to Top
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
 
     <div class="chat-bubble-button" id="chat-toggle-button">
         <i class="fa-solid fa-comments fa-2x"></i>
     </div>
-
     <div class="chat-iframe-container" id="chat-iframe-window">
         <div class="chat-iframe-header">
-            <button id="chat-close-button">&times;</button>
+            <span style="font-weight: 600; color: var(--primary-color);">Hỗ trợ trực tuyến</span>
+            <button id="chat-close-button"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <iframe src="https://www.chatbase.co/chatbot-iframe/WDZFpp7MVPpaofJryZ8XK"
-                
-                style="height: 100%; border: none; width:100%"
-                frameborder="0"></iframe>
+        <iframe src="https://www.chatbase.co/chatbot-iframe/WDZFpp7MVPpaofJryZ8XK" style="width: 100%; height: 100%; border: none;" frameborder="0"></iframe>
     </div>
+
 </body>
 </html>

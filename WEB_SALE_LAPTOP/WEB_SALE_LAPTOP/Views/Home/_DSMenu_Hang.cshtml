@@ -4,7 +4,7 @@
     @foreach (var item in Model)
     {
         <li>
-            <a href="@Url.Action("LaptopsTheoHang", "Home", new { maHang = item.MAHANG })">
+            <a style="text-decoration: none; color:black" href="@Url.Action("LaptopsTheoHang", "Home", new { maHang = item.MAHANG })">
                 @item.TENHANG
             </a>
         </li>

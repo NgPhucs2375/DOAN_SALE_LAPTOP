@@ -1,122 +1,300 @@
 ﻿@model WEB_SALE_LAPTOP.Models.OrderManagementViewModel
 @{
-    ViewBag.Title = "Tổng quan Đơn hàng";
-    // Layout đã được gán tự động
+    ViewBag.Title = "Quản lý Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @helper RenderStatusBadge(string status)
 {
-    string badgeClass = "status-pending"; // Vàng (Mặc định)
-    if (status == "Đang giao") { badgeClass = "status-shipping"; }
-    else if (status == "Hoàn thành") { badgeClass = "status-completed"; }
-    else if (status == "Đã hủy") { badgeClass = "status-cancelled"; }
+    string badgeClass = "badge-warning"; // Mặc định
+    string icon = "fa-clock";
 
-    <span class="status @badgeClass">@status</span>
+    if (status == "Đang giao") { badgeClass = "badge-primary"; icon = "fa-truck-fast"; }
+    else if (status == "Hoàn thành") { badgeClass = "badge-success"; icon = "fa-check-circle"; }
+    else if (status == "Đã hủy") { badgeClass = "badge-danger"; icon = "fa-times-circle"; }
+
+    <span class="status-badge @badgeClass">
+        <i class="fa-solid @icon"></i> @status
+    </span>
 }
+
+<style>
+    /* Stat Cards (Nâng cấp) */
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 5px;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        .stat-card.active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-bottom: 4px solid var(--color-primary);
+        }
+
+    /* Badge Styles */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .badge-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .badge-primary {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .badge-success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .badge-danger {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    /* Filter Bar */
+    .filter-toolbar {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        border: 1px solid #eee;
+        flex-wrap: wrap;
+    }
+
+    .filter-item {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 5px 10px;
+        background: #fff;
+    }
+
+    .filter-input {
+        border: none;
+        outline: none;
+        font-size: 0.9rem;
+        padding: 5px;
+        color: var(--text-dark);
+    }
+
+    .btn-filter {
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+    }
+
+        .btn-filter:hover {
+            background: #002233;
+        }
+
+    /* Table Enhancement */
+    .data-table th {
+        background: #f8f9fa;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        border-top: none;
+    }
+
+    .data-table tr {
+        transition: background 0.2s;
+    }
+
+        .data-table tr:hover {
+            background: #fcfcfc;
+        }
+
+    .customer-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+    }
+
+    .customer-name {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .customer-phone {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+</style>
+
 <div class="stat-card-grid">
     <div class="stat-card">
-        <div class="stat-icon icon-revenue"><i class="fa-solid fa-dollar-sign"></i></div>
+        <div class="stat-icon icon-revenue" style="background: #e0f7fa; color: #006064;"><i class="fa-solid fa-sack-dollar"></i></div>
         <div class="stat-info">
-            <span class="stat-title">Tổng Doanh Thu (Đã hoàn thành)</span>
-            <span class="stat-value">@Model.TongDoanhThu.ToString("N0") ₫</span>
+            <span class="stat-title">Doanh thu thực tế</span>
+            <span class="stat-value" style="color: #006064;">@Model.TongDoanhThu.ToString("N0") ₫</span>
         </div>
     </div>
-    <a href="@Url.Action("Index", new { status = "Chờ xử lý" })"
-       class="stat-card @(Model.CurrentFilter == "Chờ xử lý" ? "active" : "")">
-        <div class="stat-icon icon-pending"><i class="fa-solid fa-clock"></i></div>
+    <a href="@Url.Action("Index", new { status = "Chờ xử lý" })" class="stat-card @(Model.CurrentFilter == "Chờ xử lý" ? "active" : "")">
+        <div class="stat-icon icon-pending"><i class="fa-regular fa-clock"></i></div>
         <div class="stat-info">
-            <span class="stat-title">Đơn Chờ Xử Lý</span>
+            <span class="stat-title">Chờ Xử Lý</span>
             <span class="stat-value">@Model.DonChoXuLy</span>
         </div>
     </a>
-    <a href="@Url.Action("Index", new { status = "Đang giao" })"
-       class="stat-card @(Model.CurrentFilter == "Đang giao" ? "active" : "")">
+    <a href="@Url.Action("Index", new { status = "Đang giao" })" class="stat-card @(Model.CurrentFilter == "Đang giao" ? "active" : "")">
         <div class="stat-icon icon-shipping"><i class="fa-solid fa-truck-fast"></i></div>
         <div class="stat-info">
-            <span class="stat-title">Đơn Đang Giao</span>
+            <span class="stat-title">Đang Giao</span>
             <span class="stat-value">@Model.DonDangGiao</span>
         </div>
     </a>
-    <a href="@Url.Action("Index")"
-       class="stat-card @(string.IsNullOrEmpty(Model.CurrentFilter) ? "active" : "")">
-        <div class="stat-icon icon-total"><i class="fa-solid fa-file-invoice"></i></div>
+    <a href="@Url.Action("Index")" class="stat-card @(string.IsNullOrEmpty(Model.CurrentFilter) ? "active" : "")">
+        <div class="stat-icon icon-total"><i class="fa-solid fa-list"></i></div>
         <div class="stat-info">
-            <span class="stat-title">Tổng Số Đơn Hàng</span>
+            <span class="stat-title">Tổng Đơn</span>
             <span class="stat-value">@Model.TongDonHang</span>
         </div>
     </a>
 </div>
 
-<div class="page-header" style="margin-top: 2rem;">
-    <h2 class="section-title">
-        @if (string.IsNullOrEmpty(Model.CurrentFilter))
-        {
-            <span>Tất cả Đơn hàng</span>
-        }
-        else
-        {
-            <span>Đang lọc: @Model.CurrentFilter</span>
-        }
-    </h2>
+<div class="page-header" style="margin-top: 2rem; margin-bottom: 1rem;">
+    <h2 class="section-title" style="margin: 0; border: none;">Danh sách Đơn hàng</h2>
+</div>
+
+<div class="filter-toolbar">
+    <div class="filter-item" style="flex-grow: 1;">
+        <i class="fa-solid fa-magnifying-glass" style="color: #999;"></i>
+        <input type="text" class="filter-input" placeholder="Tìm theo Mã đơn, Tên khách hàng..." style="width: 100%;">
+    </div>
+
+    <div class="filter-item">
+        <span style="font-size: 0.85rem; color: #666; margin-right: 5px;">Từ:</span>
+        <input type="date" class="filter-input">
+    </div>
+    <div class="filter-item">
+        <span style="font-size: 0.85rem; color: #666; margin-right: 5px;">Đến:</span>
+        <input type="date" class="filter-input">
+    </div>
+
+    <button class="btn-filter"><i class="fa-solid fa-filter"></i> Lọc</button>
+
+    <a href="@Url.Action("Index")" class="btn-action" style="background: #eee; color: #333; padding: 8px 15px; border-radius: 6px; text-decoration: none;">
+        <i class="fa-solid fa-rotate-right"></i>
+    </a>
 </div>
 
 <div class="table-container">
     <table class="data-table">
         <thead>
             <tr>
-                <th>Mã HĐ</th>
+                <th style="width: 50px;"><input type="checkbox"></th>
+                <th style="width: 100px;">Mã HĐ</th>
                 <th>Khách hàng</th>
                 <th>Ngày đặt</th>
-                <th>Số SP</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th></th>
+                <th style="text-align: center;">SL</th>
+                <th style="text-align: right;">Tổng tiền</th>
+                <th style="text-align: center;">Trạng thái</th>
+                <th style="text-align: right;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Hoadons)
+            @if (Model.Hoadons.Count == 0)
             {
                 <tr>
-                    <td><strong>#@item.MAHD</strong></td>
-                    <td>@(item.KHACHHANG != null ? item.KHACHHANG.HOTEN : "Khách vãng lai")</td>
-                    <td>
-                        @(item.NGAYLAP.HasValue ? item.NGAYLAP.Value.ToString("dd/MM/yyyy HH:mm") : "...")
-                    </td>
-                    <td>@item.CT_HOADON.Sum(c => c.SOLUONG.GetValueOrDefault(0)) SP</td>
-                    <td style="color: var(--color-accent); font-weight: bold;">
-                        @String.Format("{0:N0}", item.TONG_THANHTOAN) ₫
-                    </td>
-                    <td>
-                        @RenderStatusBadge(item.TRANGTHAI)
-                    </td>
-
-                    <td class="action-buttons">
-                        <a href="@Url.Action("Details", new { id=item.MAHD })" class="btn-action btn-edit" title="Xem chi tiết">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-
-                        @if (item.TRANGTHAI == "Chờ xử lý")
-                        {
-                            using (Html.BeginForm("UpdateStatus", "OrderManagement", FormMethod.Post))
-                            {
-                                @Html.Hidden("maHD", item.MAHD)
-                                @Html.Hidden("newStatus", "Đang giao")
-                                <button type="submit" class="btn-action btn-shipping" title="Duyệt (Giao hàng)">
-                                    <i class="fa-solid fa-truck-fast"></i>
-                                </button>
-                            }
-                            using (Html.BeginForm("UpdateStatus", "OrderManagement", FormMethod.Post))
-                            {
-                                @Html.Hidden("maHD", item.MAHD)
-                                @Html.Hidden("newStatus", "Đã hủy")
-                                <button type="submit" class="btn-action btn-delete" title="Hủy đơn">
-                                    <i class="fa-solid fa-times-circle"></i>
-                                </button>
-                            }
-                        }
+                    <td colspan="8" style="text-align: center; padding: 3rem;">
+                        <i class="fa-regular fa-folder-open" style="font-size: 3rem; color: #ddd; margin-bottom: 10px; display: block;"></i>
+                        <span style="color: #999;">Không tìm thấy đơn hàng nào.</span>
                     </td>
                 </tr>
             }
+            else
+            {
+                foreach (var item in Model.Hoadons)
+                {
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><strong style="color: var(--color-primary);">#@item.MAHD</strong></td>
+                        <td>
+                            <div class="customer-info">
+                                <span class="customer-name">@(item.KHACHHANG != null ? item.KHACHHANG.HOTEN : "Khách vãng lai")</span>
+                                <span class="customer-phone"><i class="fa-solid fa-phone" style="font-size: 0.7rem;"></i> @item.SDT_GIAO</span>
+                            </div>
+                        </td>
+                        <td style="color: #555;">
+                            @(item.NGAYLAP.HasValue ? item.NGAYLAP.Value.ToString("dd/MM/yyyy") : "...")
+                            <br><small style="color: #999;">@(item.NGAYLAP.HasValue ? item.NGAYLAP.Value.ToString("HH:mm") : "")</small>
+                        </td>
+                        <td style="text-align: center;">
+                            <span style="background: #f0f0f0; padding: 2px 8px; border-radius: 10px; font-size: 0.85rem; font-weight: bold;">
+                                @item.CT_HOADON.Sum(c => c.SOLUONG.GetValueOrDefault(0))
+                            </span>
+                        </td>
+                        <td style="text-align: right; font-weight: bold; color: var(--color-primary);">
+                            @String.Format("{0:N0}", item.TONG_THANHTOAN) ₫
+                        </td>
+                        <td style="text-align: center;">
+                            @RenderStatusBadge(item.TRANGTHAI)
+                        </td>
+
+                        <td class="action-buttons" style="justify-content: flex-end;">
+                            <a href="@Url.Action("Details", new { id=item.MAHD })" class="btn-action btn-edit" style="background: #fff; border: 1px solid #ddd; color: #333;" title="Xem chi tiết">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            @if (item.TRANGTHAI == "Chờ xử lý")
+                            {
+                                using (Html.BeginForm("UpdateStatus", "OrderManagement", FormMethod.Post, new { style = "display:inline;" }))
+                                {
+                                    @Html.Hidden("maHD", item.MAHD)
+                                    @Html.Hidden("newStatus", "Đang giao")
+                                    <button type="submit" class="btn-action btn-shipping" title="Duyệt nhanh">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
+</div>
+
+<div class="pagination-container" style="justify-content: space-between; align-items: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+    <span>Hiển thị <strong>@Model.Hoadons.Count</strong> trên tổng số <strong>@Model.TongDonHang</strong> đơn hàng</span>
+    <ul class="pagination">
+        <li class="page-item disabled"><span class="page-link"><i class="fa-solid fa-angle-left"></i></span></li>
+        <li class="page-item active"><span>1</span></li>
+        <li class="page-item"><a href="#">2</a></li>
+        <li class="page-item"><a href="#">3</a></li>
+        <li class="page-item"><a href="#"><i class="fa-solid fa-angle-right"></i></a></li>
+    </ul>
 </div>

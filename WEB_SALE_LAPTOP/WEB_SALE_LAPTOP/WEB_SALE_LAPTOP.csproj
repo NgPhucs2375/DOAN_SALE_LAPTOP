@@ -398,6 +398,8 @@
     <Content Include="Views\VoucherManagement\Index.cshtml" />
     <Content Include="Views\VoucherManagement\Create.cshtml" />
     <Content Include="Views\VoucherManagement\Edit.cshtml" />
+    <Content Include="Views\OrderManagement\Details.cshtml" />
+    <Content Include="Views\VoucherManagement\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

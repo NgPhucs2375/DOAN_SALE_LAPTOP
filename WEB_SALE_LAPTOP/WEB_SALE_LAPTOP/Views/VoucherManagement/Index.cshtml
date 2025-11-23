@@ -1,28 +1,138 @@
 ﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.VOUCHER>
 @{
-    ViewBag.Title = "Quản lý Voucher";
+    ViewBag.Title = "Quản lý Voucher & Khuyến mãi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // TÍNH TOÁN THỐNG KÊ NHANH (Logic Razor)
+    var totalVouchers = Model.Count();
+    var activeVouchers = Model.Count(v => v.NGAYKETTHUC >= DateTime.Now && v.DA_DUNG < v.SOLUONG_DUNG);
+    var totalRedeemed = Model.Sum(v => v.DA_DUNG.GetValueOrDefault(0));
 }
 
 @helper RenderVoucherStatus(DateTime expiryDate, int used, int total)
 {
     if (DateTime.Now > expiryDate)
     {
-        <span class.="status status-cancelled">Đã hết hạn</span>
+        <span class="status status-cancelled"><i class="fa-regular fa-clock"></i> Đã hết hạn</span>
     }
     else if (used >= total)
     {
-        <span class="status status-pending">Hết lượt dùng</span>
+        <span class="status status-pending"><i class="fa-solid fa-ban"></i> Hết lượt</span>
     }
     else
     {
-        <span class="status status-completed">Đang hoạt động</span>
+        <span class="status status-completed"><i class="fa-solid fa-check-circle"></i> Đang chạy</span>
     }
 }
+
+<style>
+    /* Coupon Code Style */
+    .coupon-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #f8f9fa;
+        border: 2px dashed var(--color-primary);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--color-primary);
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .coupon-badge:hover {
+            background: #e2e6ea;
+            border-style: solid;
+        }
+
+        .coupon-badge:active {
+            transform: scale(0.95);
+        }
+
+    .copy-hint {
+        font-size: 0.7rem;
+        margin-left: 8px;
+        color: #999;
+        font-weight: normal;
+        font-family: var(--font-body);
+    }
+
+    /* Progress Bar */
+    .usage-progress {
+        width: 100px;
+        height: 6px;
+        background: #eee;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+
+    .usage-bar {
+        height: 100%;
+        background: var(--color-accent);
+        border-radius: 3px;
+    }
+
+    .usage-text {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    /* Discount Value */
+    .discount-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--color-accent);
+    }
+
+    .discount-sub {
+        font-size: 0.8rem;
+        color: #888;
+        display: block;
+    }
+</style>
+
+<div class="stat-card-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-icon icon-total"><i class="fa-solid fa-ticket"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Tổng chiến dịch</span>
+            <span class="stat-value">@totalVouchers</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-revenue"><i class="fa-solid fa-bolt"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Đang hoạt động</span>
+            <span class="stat-value" style="color: #28a745;">@activeVouchers</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon icon-shipping"><i class="fa-solid fa-users-viewfinder"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Lượt đã dùng</span>
+            <span class="stat-value" style="color: #0056b3;">@totalRedeemed</span>
+        </div>
+    </div>
+</div>
+
 <div class="page-header">
-    <h2 class="section-title">@ViewBag.Title</h2>
-    <a href="@Url.Action("Create")" class="btn-primary-admin" style="text-decoration: none;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <h2 class="section-title" style="margin: 0; border: none;">Danh sách Voucher</h2>
+        <div class="search-container" style="width: 300px;">
+            <form class="search-form" style="background: white;">
+                <input type="text" class="search-box" placeholder="Tìm mã voucher..." id="voucherSearchInput">
+                <button type="button" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <a href="@Url.Action("Create")" class="btn-primary-admin" style="text-decoration: none; box-shadow: 0 4px 10px rgba(0, 48, 73, 0.2);">
         <i class="fa-solid fa-plus"></i>
-        <span>Tạo Voucher Mới</span>
+        <span>Tạo Chiến Dịch Mới</span>
     </a>
 </div>
 
@@ -30,41 +140,76 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>Mã Voucher</th>
-                <th>Tên / Mô tả</th>
-                <th>Giá trị</th>
-                <th>Lượt dùng</th>
-                <th>Ngày hết hạn</th>
-                <th>Trạng thái</th>
-                <th></th>
+                <th style="width: 20%;">Mã Voucher</th>
+                <th style="width: 25%;">Thông tin ưu đãi</th>
+                <th style="width: 15%;">Giá trị giảm</th>
+                <th style="width: 15%;">Tiến độ sử dụng</th>
+                <th style="width: 15%;">Thời gian</th>
+                <th style="width: 10%;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                // Tính % sử dụng
+                int total = item.SOLUONG_DUNG.GetValueOrDefault(1);
+                int used = item.DA_DUNG.GetValueOrDefault(0);
+                int percent = (int)((double)used / total * 100);
+                string barColor = percent > 80 ? "#dc3545" : (percent > 50 ? "#ffc107" : "#28a745"); // Đỏ nếu sắp hết, Xanh nếu còn nhiều
+
                 <tr>
-                    <td><strong>@item.MAVOUCHER</strong></td>
-                    <td title="@item.TEN_VOUCHER">@item.TEN_VOUCHER</td>
+                    <td>
+                        <div class="coupon-badge" onclick="copyToClipboard('@item.MAVOUCHER')" title="Click để copy">
+                            @item.MAVOUCHER
+                            <i class="fa-regular fa-copy copy-hint"></i>
+                        </div>
+                        <div style="margin-top: 5px;">
+                            @RenderVoucherStatus(item.NGAYKETTHUC, used, total)
+                        </div>
+                    </td>
+
+                    <td>
+                        <strong style="color: var(--text-dark);">@item.TEN_VOUCHER</strong>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">
+                            Đơn tối thiểu: @(item.DONHANG_TOITHIEU.HasValue ? item.DONHANG_TOITHIEU.Value.ToString("N0") : "0")₫
+                        </div>
+                    </td>
+
                     <td>
                         @if (item.LOAI_GIAMGIA == "PHANTRAM")
                         {
-                            <span>@item.GIATRI% (Tối đa @item.GIAM_TOIDA.Value.ToString("N0")đ)</span>
+                            <div class="discount-value">@item.GIATRI.ToString("0")%</div>
+                            if (item.GIAM_TOIDA.HasValue)
+                            {
+                                <span class="discount-sub">Tối đa @item.GIAM_TOIDA.Value.ToString("N0")₫</span>
+                            }
                         }
                         else
                         {
-                            <span style="color: var(--color-accent); font-weight: bold;">@item.GIATRI.ToString("N0")đ</span>
+                            <div class="discount-value">@item.GIATRI.ToString("N0")₫</div>
+                            <span class="discount-sub">Giảm trực tiếp</span>
                         }
                     </td>
-                    <td>@item.DA_DUNG / @item.SOLUONG_DUNG</td>
-                    <td>@item.NGAYKETTHUC.ToString("dd/MM/yyyy")</td>
+
                     <td>
-                        @RenderVoucherStatus(item.NGAYKETTHUC, item.DA_DUNG.Value, item.SOLUONG_DUNG.Value)
+                        <div class="usage-text">
+                            <strong>@used</strong> / @total lượt
+                        </div>
+                        <div class="usage-progress">
+                            <div class="usage-bar" style="width: @percent%; background-color: @barColor;"></div>
+                        </div>
                     </td>
+
+                    <td style="font-size: 0.9rem; color: #555;">
+                        <div><i class="fa-regular fa-calendar-check" style="color: green; width: 20px;"></i> @item.NGAYBATDAU.ToString("dd/MM/yyyy")</div>
+                        <div style="margin-top: 5px;"><i class="fa-regular fa-calendar-xmark" style="color: red; width: 20px;"></i> @item.NGAYKETTHUC.ToString("dd/MM/yyyy")</div>
+                    </td>
+
                     <td class="action-buttons">
-                        <a href="@Url.Action("Edit", new { id=item.MAVOUCHER })" class="btn-action btn-edit" title="Sửa">
+                        <a href="@Url.Action("Edit","", new { id=item.MAVOUCHER })" class="btn-action btn-edit" title="Chỉnh sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                        <a href="@Url.Action("Delete", new { id=item.MAVOUCHER })" class="btn-action btn-delete" title="Xóa">
+                        <a href="@Url.Action("Delete", new { id=item.MAVOUCHER })" class="btn-action btn-delete" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa voucher này không?');">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>
@@ -73,3 +218,29 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Hiệu ứng đơn giản: Alert (hoặc dùng Toast nếu có thư viện)
+            alert("Đã copy mã: " + text);
+        }, function(err) {
+            console.error('Lỗi copy: ', err);
+        });
+    }
+
+    // Script lọc nhanh trên bảng (Client-side simple filter)
+    document.getElementById('voucherSearchInput').addEventListener('keyup', function() {
+        var value = this.value.toLowerCase();
+        var rows = document.querySelectorAll('.data-table tbody tr');
+
+        rows.forEach(function(row) {
+            var text = row.textContent.toLowerCase();
+            if(text.indexOf(value) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+</script>

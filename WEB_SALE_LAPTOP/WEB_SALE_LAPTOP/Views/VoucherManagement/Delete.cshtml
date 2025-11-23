@@ -1,0 +1,80 @@
+﻿@model WEB_SALE_LAPTOP.Models.VOUCHER
+@{
+    ViewBag.Title = "Xác nhận xóa Voucher";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <h2 class="section-title">
+        <a href="@Url.Action("Index")" style="text-decoration: none; color: var(--text-muted); margin-right: 10px;">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        Quay lại danh sách
+    </h2>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+
+    <div class="admin-card" style="width: 100%; max-width: 600px; text-align: center; border-top: 5px solid var(--color-accent);">
+
+        <div style="margin-bottom: 1.5rem;">
+            <div style="width: 80px; height: 80px; background: #fde8e8; color: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 2.5rem;">
+                <i class="fa-regular fa-trash-can"></i>
+            </div>
+        </div>
+
+        <h2 style="margin-bottom: 0.5rem; color: var(--text-dark);">Bạn có chắc chắn muốn xóa?</h2>
+        <p class="delete-subtext">Hành động này sẽ xóa vĩnh viễn chiến dịch khuyến mãi này khỏi hệ thống.</p>
+
+        <div style="background: #f8f9fa; border: 2px dashed #ccc; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                <div>
+                    <span style="font-size: 0.8rem; text-transform: uppercase; color: #999; letter-spacing: 1px;">Mã Voucher</span>
+                    <div style="font-size: 1.8rem; font-weight: bold; color: var(--color-primary); font-family: monospace;">@Model.MAVOUCHER</div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 0.8rem; text-transform: uppercase; color: #999;">Giá trị</span>
+                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--color-accent);">
+                        @if (Model.LOAI_GIAMGIA == "PHANTRAM")
+                        {
+                            <span>-@Model.GIATRI.ToString("0")%</span>
+                        }
+                        else
+                        {
+                            <span>-@Model.GIATRI.ToString("N0")₫</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid #e0e0e0; padding-top: 10px; font-size: 0.95rem; color: #555;">
+                <i class="fa-solid fa-tag" style="margin-right: 5px;"></i> @Model.TEN_VOUCHER
+            </div>
+        </div>
+
+        @if (Model.DA_DUNG > 0)
+        {
+            <div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 1rem; border-radius: 6px; margin-bottom: 2rem; text-align: left; display: flex; gap: 10px;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Cảnh báo rủi ro cao!</strong>
+                    <p style="margin: 0; font-size: 0.9rem;">Voucher này đã được sử dụng <strong>@Model.DA_DUNG lần</strong>. Việc xóa bỏ có thể gây lỗi hiển thị lịch sử đơn hàng cũ.</p>
+                </div>
+            </div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions-container" style="justify-content: center; gap: 15px;">
+                <a href="@Url.Action("Index")" class="btn-primary-admin" style="background-color: #e0e0e0; color: #333; width: 150px; justify-content: center;">
+                    Hủy bỏ
+                </a>
+                <button type="submit" class="btn-primary-admin" style="background-color: var(--color-accent); width: 150px; justify-content: center;">
+                    <i class="fa-solid fa-trash"></i> Xác nhận Xóa
+                </button>
+            </div>
+        }
+    </div>
+</div>

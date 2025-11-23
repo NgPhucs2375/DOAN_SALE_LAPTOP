@@ -1,41 +1,238 @@
 ﻿@model IEnumerable<WEB_SALE_LAPTOP.Models.KHACHHANG>
 @{
-    ViewBag.Title = "Quản lý Khách hàng";
-    // Layout đã được gán tự động
+    ViewBag.Title = "Danh sách Khách hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // LOGIC THỐNG KÊ GIẢ LẬP (Để UI nhìn đẹp)
+    var totalCustomers = Model.Count();
+    var newThisMonth = Model.Count(c => c.NGAYTAO.HasValue && c.NGAYTAO.Value.Month == DateTime.Now.Month && c.NGAYTAO.Value.Year == DateTime.Now.Year);
+
+    // Hàm lấy chữ cái đầu làm Avatar (VD: Nguyen Van A -> NA)
+    string GetInitials(string fullName)
+    {
+        if (string.IsNullOrEmpty(fullName)) return "KH";
+        var parts = fullName.Trim().Split(' ');
+        if (parts.Length == 1) return parts[0].Substring(0, 1).ToUpper();
+        return (parts[0].Substring(0, 1) + parts[parts.Length - 1].Substring(0, 1)).ToUpper();
+    }
+
+    // Hàm random màu nền cho Avatar
+    string GetRandomColor(int id)
+    {
+        string[] colors = { "#007bff", "#6610f2", "#6f42c1", "#e83e8c", "#dc3545", "#fd7e14", "#ffc107", "#28a745", "#20c997", "#17a2b8" };
+        return colors[id % colors.Length];
+    }
 }
 
-<div class="page-header">
-    <h2 class="section-title">@ViewBag.Title</h2>
+<style>
+    /* User Profile Cell */
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+        flex-shrink: 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.95rem;
+    }
+
+    .user-id {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: #f0f0f0;
+        padding: 1px 6px;
+        border-radius: 4px;
+        width: fit-content;
+        margin-top: 3px;
+    }
+
+    /* Contact Actions */
+    .contact-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .contact-link {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+        .contact-link:hover {
+            color: var(--color-primary);
+        }
+
+        .contact-link i {
+            width: 16px;
+            text-align: center;
+        }
+
+    /* Search Bar */
+    .crm-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .search-wrapper {
+        position: relative;
+        width: 300px;
+    }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 10px 15px 10px 35px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+            .search-wrapper input:focus {
+                border-color: var(--color-primary);
+            }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+</style>
+
+<div class="stat-card-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #e3f2fd; color: #0d47a1;"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Tổng Khách hàng</span>
+            <span class="stat-value" style="color: #0d47a1;">@totalCustomers</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #e8f5e9; color: #1b5e20;"><i class="fa-solid fa-user-plus"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Mới tháng này</span>
+            <span class="stat-value" style="color: #1b5e20;">@newThisMonth</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #fff3e0; color: #e65100;"><i class="fa-solid fa-crown"></i></div>
+        <div class="stat-info">
+            <span class="stat-title">Khách hàng VIP</span>
+            <span class="stat-value" style="color: #e65100;">--</span>
+        </div>
+    </div>
+</div>
+
+<div class="crm-header">
+    <h2 class="section-title" style="margin: 0; border: none;">Danh sách Hồ sơ</h2>
+    <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="customerSearch" placeholder="Tìm theo tên, email, sđt...">
+    </div>
 </div>
 
 <div class="table-container">
     <table class="data-table">
         <thead>
             <tr>
-                <th>Mã KH</th>
-                <th>Họ Tên</th>
-                <th>Email</th>
-                <th>Số Điện thoại</th>
-                <th>Địa chỉ</th>
-                <th>Ngày tạo</th>
+                <th style="width: 30%;">Thông tin thành viên</th>
+                <th style="width: 25%;">Liên hệ</th>
+                <th style="width: 30%;">Địa chỉ</th>
+                <th style="width: 15%;">Tham gia ngày</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="customerTableBody">
             @foreach (var item in Model)
             {
                 <tr>
-                    <td><strong>#@item.MAKH</strong></td>
-                    <td>@item.HOTEN</td>
-                    <td>@item.EMAIL</td>
-                    <td>@item.SODT</td>
-                    <td title="@item.DIACHI" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        @item.DIACHI
+                    <td>
+                        <div class="user-profile">
+                            <div class="user-avatar" style="background-color: @GetRandomColor(item.MAKH);">
+                                @GetInitials(item.HOTEN)
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">@item.HOTEN</span>
+                                <span class="user-id">ID: #@item.MAKH</span>
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        @(item.NGAYTAO.HasValue ? item.NGAYTAO.Value.ToString("dd/MM/yyyy") : "...")
+                        <div class="contact-group">
+                            @if (!string.IsNullOrEmpty(item.EMAIL))
+                            {
+                                <a href="mailto:@item.EMAIL" class="contact-link" title="Gửi Email">
+                                    <i class="fa-regular fa-envelope"></i> @item.EMAIL
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(item.SODT))
+                            {
+                                <a href="tel:@item.SODT" class="contact-link" title="Gọi điện">
+                                    <i class="fa-solid fa-phone"></i> @item.SODT
+                                </a>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.9rem; color: #555;">
+                            <i class="fa-solid fa-location-dot" style="margin-top: 3px; color: var(--text-muted);"></i>
+                            <span style="line-height: 1.4;">@(string.IsNullOrEmpty(item.DIACHI) ? "Chưa cập nhật" : item.DIACHI)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.9rem; color: #666;">
+                            <i class="fa-regular fa-calendar" style="margin-right: 5px;"></i>
+                            @(item.NGAYTAO.HasValue ? item.NGAYTAO.Value.ToString("dd/MM/yyyy") : "...")
+                        </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<script>
+    document.getElementById('customerSearch').addEventListener('keyup', function() {
+        var value = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#customerTableBody tr');
+
+        rows.forEach(function(row) {
+            var text = row.innerText.toLowerCase();
+            if(text.indexOf(value) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+</script>
