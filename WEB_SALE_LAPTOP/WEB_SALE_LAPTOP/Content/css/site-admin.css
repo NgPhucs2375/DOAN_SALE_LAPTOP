@@ -1,4 +1,13 @@
-﻿/* ===== 9. BỔ SUNG CSS CHO TRANG ADMIN (QUẢN LÝ SẢN PHẨM) ===== */
+﻿body, h1, h2, h3, h4, h5, h6,
+p, a, span, li, div, label,
+input, button, select, textarea,
+.main-nav ul li a,
+.footer-section h3,
+.sidebar-title,
+.filter-group-title {
+    font-family: 'Inter', sans-serif !important;
+}
+/* ===== 9. BỔ SUNG CSS CHO TRANG ADMIN (QUẢN LÝ SẢN PHẨM) ===== */
 
 /* ----- 9.1. Tiêu đề trang & Nút Thêm Mới ----- */
 .page-header {

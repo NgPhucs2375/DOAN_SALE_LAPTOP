@@ -1,4 +1,13 @@
-﻿/* ===== BẢNG MÀU "TIẾN HÓA" (KHÔNG CÒN NHÀM CHÁN) ===== */
+﻿body, h1, h2, h3, h4, h5, h6,
+p, a, span, li, div, label,
+input, button, select, textarea,
+.main-nav ul li a,
+.footer-section h3,
+.sidebar-title,
+.filter-group-title {
+    font-family: 'Inter', sans-serif !important;
+}
+/* ===== BẢNG MÀU "TIẾN HÓA" (KHÔNG CÒN NHÀM CHÁN) ===== */
 :root {
     --bg-main: #F4F1EA; /* Be Cát (Nền chính) */
     --bg-secondary: #FFFFFF; /* Trắng Tinh (Nền phụ: Card, Sidebar) */
