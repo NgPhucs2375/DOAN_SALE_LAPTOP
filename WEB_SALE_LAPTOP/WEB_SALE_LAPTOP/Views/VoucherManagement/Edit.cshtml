@@ -1,94 +1,102 @@
 ﻿@model WEB_SALE_LAPTOP.Models.VOUCHER
 @{
-    ViewBag.Title = "Chỉnh sửa chiến dịch: " + Model.MAVOUCHER;
+    ViewBag.Title = "Chỉnh sửa: " + Model.MAVOUCHER;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-@using (Html.BeginForm("Edit", "VoucherManagement", FormMethod.Post))
+<div class="page-header-pro animate__animated animate__fadeInDown" style="background: linear-gradient(135deg, #fff 0%, #fff0f0 100%);">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <a href="@Url.Action("Index")" style="color: var(--wine-red); font-size: 1.5rem; transition: 0.3s;">
+            <i class="fa-solid fa-circle-arrow-left"></i>
+        </a>
+        <div>
+            <h2 style="margin:0; color: var(--wine-red); font-weight:800;">🍷 @Model.MAVOUCHER</h2>
+            <p style="margin:5px 0 0; color:#6b7280; font-size:0.9rem;">Cập nhật thông tin chiến dịch</p>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger animate__animated animate__shakeX" style="background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #fecaca;">
+        <i class="fa-solid fa-circle-exclamation"></i> @ViewBag.Error
+    </div>
+}
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     @Html.HiddenFor(model => model.MAVOUCHER)
     @Html.HiddenFor(model => model.DA_DUNG)
 
-    <div class="page-header">
-        <h2 class="section-title">
-            <a href="@Url.Action("Index")" style="text-decoration: none; color: var(--text-muted); margin-right: 10px;">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-            Cập nhật Voucher
-        </h2>
-        <button type="submit" class="btn-primary-admin">
-            <i class="fa-solid fa-save"></i> Lưu Thay Đổi
-        </button>
-    </div>
-
     <div class="form-row-2col" style="grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
 
-        <div class="admin-card">
-            <div class="admin-card-header"><i class="fa-solid fa-ticket"></i> Thông tin khuyến mãi</div>
+        <div class="table-card" style="padding: 30px; background: white;">
+            <h3 style="color: var(--wine-red); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <i class="fa-solid fa-ticket"></i> Chi tiết ưu đãi
+            </h3>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.TEN_VOUCHER, "Tên chiến dịch / Mô tả")
-                @Html.EditorFor(model => model.TEN_VOUCHER, new { htmlAttributes = new { @class = "form-group-input", placeholder = "VD: Sale Tết 2025 - Giảm 10%" } })
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: #374151; margin-bottom: 8px; display: block;">Tên chiến dịch</label>
+                @Html.EditorFor(model => model.TEN_VOUCHER, new { htmlAttributes = new { @class = "form-control-wine", placeholder = "Nhập tên chiến dịch..." } })
                 @Html.ValidationMessageFor(model => model.TEN_VOUCHER, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-row-2col">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.LOAI_GIAMGIA, "Loại giảm giá")
+                    <label style="font-weight: 600; color: #374151;">Loại giảm</label>
                     @Html.DropDownListFor(model => model.LOAI_GIAMGIA, new List<SelectListItem>
                     {
                         new SelectListItem { Text = "Phần trăm (%)", Value = "PHANTRAM" },
                         new SelectListItem { Text = "Tiền mặt (VNĐ)", Value = "TIENMAT" }
-                    }, new { @class = "form-group-input" })
+                    }, new { @class = "form-control-wine", style = "padding: 15px;" })
                 </div>
-
                 <div class="form-group">
-                    @Html.LabelFor(model => model.GIATRI, "Giá trị giảm")
-                    @Html.EditorFor(model => model.GIATRI, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
-                    @Html.ValidationMessageFor(model => model.GIATRI, "", new { @class = "text-danger" })
+                    <label style="font-weight: 600; color: #374151;">Giá trị giảm</label>
+                    @Html.EditorFor(model => model.GIATRI, new { htmlAttributes = new { @class = "form-control-wine", type = "number" } })
                 </div>
             </div>
 
-            <div class="form-row-2col">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DONHANG_TOITHIEU, "Đơn tối thiểu (VNĐ)")
-                    @Html.EditorFor(model => model.DONHANG_TOITHIEU, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    <label style="font-weight: 600; color: #374151;">Đơn tối thiểu</label>
+                    @Html.EditorFor(model => model.DONHANG_TOITHIEU, new { htmlAttributes = new { @class = "form-control-wine", type = "number" } })
                 </div>
-
                 <div class="form-group">
-                    @Html.LabelFor(model => model.GIAM_TOIDA, "Giảm tối đa (VNĐ - Nếu là %)")
-                    @Html.EditorFor(model => model.GIAM_TOIDA, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
+                    <label style="font-weight: 600; color: #374151;">Giảm tối đa</label>
+                    @Html.EditorFor(model => model.GIAM_TOIDA, new { htmlAttributes = new { @class = "form-control-wine", type = "number", placeholder = "Không giới hạn" } })
                 </div>
             </div>
         </div>
 
-        <div class="admin-card">
-            <div class="admin-card-header"><i class="fa-solid fa-gear"></i> Thiết lập giới hạn</div>
+        <div class="table-card" style="padding: 30px; background: white;">
+            <h3 style="color: var(--wine-red); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <i class="fa-solid fa-clock"></i> Thời gian & Slg
+            </h3>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.SOLUONG_DUNG, "Tổng số lượng phát hành")
-                @Html.EditorFor(model => model.SOLUONG_DUNG, new { htmlAttributes = new { @class = "form-group-input", type = "number" } })
-                @Html.ValidationMessageFor(model => model.SOLUONG_DUNG, "", new { @class = "text-danger" })
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: #374151;">Số lượng phát hành</label>
+                @Html.EditorFor(model => model.SOLUONG_DUNG, new { htmlAttributes = new { @class = "form-control-wine", type = "number" } })
             </div>
 
-            <div style="margin-bottom: 1.5rem; background: #f8f9fa; padding: 10px; border-radius: 6px; font-size: 0.9rem;">
-                <span style="color: var(--text-muted);">Đã sử dụng:</span>
-                <strong style="color: var(--color-primary);">@Model.DA_DUNG</strong> lượt
+            <div style="background: #fff1f2; border: 1px dashed var(--wine-red); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <span style="color: var(--wine-red); font-size: 0.9rem;"><i class="fa-solid fa-chart-pie"></i> Đã sử dụng:</span>
+                <strong style="font-size: 1.2rem; color: var(--wine-red);">@Model.DA_DUNG</strong> <span style="font-size: 0.8rem;">lượt</span>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.NGAYBATDAU, "Ngày bắt đầu")
-                @Html.TextBoxFor(model => model.NGAYBATDAU, "{0:yyyy-MM-dd}", new { @class = "form-group-input", type = "date" })
-                @Html.ValidationMessageFor(model => model.NGAYBATDAU, "", new { @class = "text-danger" })
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: #374151;">Ngày bắt đầu</label>
+                @Html.TextBoxFor(model => model.NGAYBATDAU, "{0:yyyy-MM-dd}", new { @class = "form-control-wine", type = "date" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.NGAYKETTHUC, "Ngày kết thúc")
-                @Html.TextBoxFor(model => model.NGAYKETTHUC, "{0:yyyy-MM-dd}", new { @class = "form-group-input", type = "date" })
-                @Html.ValidationMessageFor(model => model.NGAYKETTHUC, "", new { @class = "text-danger" })
+            <div class="form-group" style="margin-bottom: 30px;">
+                <label style="font-weight: 600; color: #374151;">Ngày kết thúc</label>
+                @Html.TextBoxFor(model => model.NGAYKETTHUC, "{0:yyyy-MM-dd}", new { @class = "form-control-wine", type = "date" })
             </div>
+
+            <button type="submit" class="btn-wine" style="width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(114, 47, 55, 0.3);">
+                <i class="fa-solid fa-save"></i> LƯU THAY ĐỔI
+            </button>
         </div>
     </div>
 }

@@ -410,6 +410,18 @@
                         THANH TOÁN NGAY
                     </a>
                 </div>
+                <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 10px;">
+
+                    <a href="@Url.Action("Checkout", "Cart")" class="btn-checkout-now">
+                        THANH TOÁN KHI NHẬN HÀNG (COD)
+                    </a>
+
+                    <a href="@Url.Action("PaymentMomo", "Payment")" class="btn-checkout-now" style="background-color: #a50064; box-shadow: 0 4px 15px rgba(165, 0, 100, 0.3);">
+                        <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="height: 20px; vertical-align: middle; margin-right: 10px; filter: brightness(0) invert(1);">
+                        THANH TOÁN QUA MOMO
+                    </a>
+
+                </div>
             </div>
         </div>
     }

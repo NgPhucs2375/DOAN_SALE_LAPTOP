@@ -9,107 +9,132 @@ using WEB_SALE_LAPTOP.Models;
 
 namespace WEB_SALE_LAPTOP.Controllers
 {
-    // Kế thừa "bộ não" Admin
     public class VoucherManagementController : BaseAdminController
     {
-        // "TIẾN HÓA": Yêu cầu Quyền 2 (Bán hàng) hoặc 1 (Admin)
-        // (Vì nó liên quan đến Bán hàng)
-        public VoucherManagementController() : base(maQuyenCanCo: 2)
-        {
-            // Để trống
-        }
+        // Yêu cầu Quyền 2 (Bán hàng) hoặc 1 (Admin)
+        public VoucherManagementController() : base(maQuyenCanCo: 2) { }
 
-        // GET: VoucherManagement
+        // GET: Index
         public ActionResult Index()
         {
-            return View(db.VOUCHERs.ToList());
+            return View(db.VOUCHERs.OrderByDescending(v => v.NGAYKETTHUC).ToList());
         }
 
-        // GET: VoucherManagement/Create
+        // GET: Create
         public ActionResult Create()
         {
-            return View();
+            // Giá trị mặc định
+            return View(new VOUCHER { NGAYBATDAU = DateTime.Now, NGAYKETTHUC = DateTime.Now.AddDays(30), SOLUONG_DUNG = 100, DA_DUNG = 0 });
         }
 
-        // POST: VoucherManagement/Create
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MAVOUCHER,TEN_VOUCHER,LOAI_GIAMGIA,GIATRI,DONHANG_TOITHIEU,GIAM_TOIDA,NGAYBATDAU,NGAYKETTHUC,SOLUONG_DUNG")] VOUCHER vOUCHER)
+        public ActionResult Create(VOUCHER voucher)
         {
             if (ModelState.IsValid)
             {
-                // Gán (set) giá trị mặc định
-                vOUCHER.DA_DUNG = 0;
-                db.VOUCHERs.Add(vOUCHER);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    // Kiểm tra mã trùng
+                    if (db.VOUCHERs.Any(v => v.MAVOUCHER == voucher.MAVOUCHER))
+                    {
+                        ModelState.AddModelError("MAVOUCHER", "Mã Voucher này đã tồn tại!");
+                        return View(voucher);
+                    }
+
+                    voucher.DA_DUNG = 0; // Luôn reset về 0 khi tạo mới
+                    db.VOUCHERs.Add(voucher);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "Lỗi khi tạo: " + ex.Message;
+                }
             }
-            return View(vOUCHER);
+            return View(voucher);
         }
 
-        // GET: VoucherManagement/Edit/5
-        public ActionResult Edit(string id) // <-- Khóa chính là string
+        // GET: Edit
+        public ActionResult Edit(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VOUCHER vOUCHER = db.VOUCHERs.Find(id);
-            if (vOUCHER == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vOUCHER);
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            VOUCHER voucher = db.VOUCHERs.Find(id);
+            if (voucher == null) return HttpNotFound();
+            return View(voucher);
         }
 
-        // POST: VoucherManagement/Edit/5
+        // POST: Edit (Đã sửa lỗi cập nhật)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MAVOUCHER,TEN_VOUCHER,LOAI_GIAMGIA,GIATRI,DONHANG_TOITHIEU,GIAM_TOIDA,NGAYBATDAU,NGAYKETTHUC,SOLUONG_DUNG,DA_DUNG")] VOUCHER vOUCHER)
+        public ActionResult Edit(VOUCHER voucher)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vOUCHER).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    // Cách cập nhật an toàn nhất: Tìm cái cũ -> Gán giá trị mới -> Lưu
+                    var existingVoucher = db.VOUCHERs.Find(voucher.MAVOUCHER);
+                    if (existingVoucher == null) return HttpNotFound();
+
+                    existingVoucher.TEN_VOUCHER = voucher.TEN_VOUCHER;
+                    existingVoucher.LOAI_GIAMGIA = voucher.LOAI_GIAMGIA;
+                    existingVoucher.GIATRI = voucher.GIATRI;
+                    existingVoucher.DONHANG_TOITHIEU = voucher.DONHANG_TOITHIEU;
+                    existingVoucher.GIAM_TOIDA = voucher.GIAM_TOIDA;
+                    existingVoucher.NGAYBATDAU = voucher.NGAYBATDAU;
+                    existingVoucher.NGAYKETTHUC = voucher.NGAYKETTHUC;
+                    existingVoucher.SOLUONG_DUNG = voucher.SOLUONG_DUNG;
+                    // Không cập nhật DA_DUNG để tránh sai lệch số liệu
+
+                    db.Entry(existingVoucher).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = "Lỗi cập nhật: " + ex.Message;
+                }
             }
-            return View(vOUCHER);
+            return View(voucher);
         }
 
-        // GET: VoucherManagement/Delete/5
+        // GET: Delete
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VOUCHER vOUCHER = db.VOUCHERs.Find(id);
-            if (vOUCHER == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vOUCHER);
+            if (string.IsNullOrEmpty(id)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            VOUCHER voucher = db.VOUCHERs.Find(id);
+            if (voucher == null) return HttpNotFound();
+            return View(voucher);
         }
 
-        // POST: VoucherManagement/Delete/5
+        // POST: Delete (Đã sửa lỗi xóa)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            VOUCHER vOUCHER = db.VOUCHERs.Find(id);
+            VOUCHER voucher = db.VOUCHERs.Find(id);
             try
             {
-                db.VOUCHERs.Remove(vOUCHER);
+                // Kiểm tra thủ công trước khi xóa để báo lỗi rõ ràng
+                bool dangSuDung = db.HOADONs.Any(h => h.MAVOUCHER == id) || db.KHACHHANG_VOUCHER.Any(k => k.MAVOUCHER == id);
+
+                if (dangSuDung)
+                {
+                    ViewBag.Error = "Không thể xóa Voucher này vì đã có lịch sử sử dụng trong Đơn hàng hoặc Ví khách hàng.";
+                    return View(voucher); // Trả về View Delete để hiện lỗi
+                }
+
+                db.VOUCHERs.Remove(voucher);
                 db.SaveChanges();
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Lỗi khi đăng ký tài khoản: " + ex.Message);
-                // Lỗi (nếu Voucher đã được dùng trong Hóa đơn)
-                ViewBag.Error = "Không thể xóa Voucher này vì đã có Hóa đơn sử dụng!";
-                return View(vOUCHER);
+                ViewBag.Error = "Lỗi hệ thống: Không thể xóa Voucher này. (Ràng buộc dữ liệu)";
+                return View(voucher);
             }
-            return RedirectToAction("Index");
         }
     }
 }

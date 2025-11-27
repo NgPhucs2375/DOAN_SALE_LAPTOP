@@ -443,3 +443,245 @@
             color: var(--text-muted);
             background-color: #f9f9f9;
         }
+/* ================================================================== 
+   PHẦN BỔ SUNG CHO GIAO DIỆN QUẢN LÝ LOẠI LAPTOP (PRO MAX)
+   ================================================================== */
+
+/* 1. HEADER & SEARCH BOX MỚI */
+.page-header-pro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+}
+
+.search-box-pro {
+    position: relative;
+    width: 300px;
+}
+
+    .search-box-pro input {
+        width: 100%;
+        padding: 12px 20px 12px 45px;
+        border-radius: 50px;
+        border: 2px solid transparent;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        outline: none; /* Quan trọng để không bị viền xanh mặc định */
+    }
+
+        .search-box-pro input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(179, 64, 74, 0.1);
+        }
+
+    .search-box-pro i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+    }
+
+/* 2. NÚT BẤM STYLE RƯỢU VANG */
+.btn-wine {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #8a2b33 100%); /* Dùng biến màu có sẵn */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 8px 20px -5px rgba(179, 64, 74, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+    .btn-wine:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 30px -5px rgba(179, 64, 74, 0.5);
+        color: white;
+    }
+
+/* 3. BẢNG DỮ LIỆU PRO (Ghi đè style bảng cũ) */
+.table-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    overflow: hidden;
+    padding: 10px;
+}
+
+.pro-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    .pro-table thead th {
+        padding: 15px 20px;
+        color: #64748b;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        border: none;
+        background: transparent; /* Xóa nền xám cũ */
+    }
+
+    .pro-table tbody tr {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .pro-table tbody tr:hover {
+            transform: translateY(-2px) scale(1.005);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+            position: relative;
+        }
+
+    .pro-table td {
+        padding: 15px 20px;
+        border: none;
+        vertical-align: middle;
+    }
+        /* Bo tròn 4 góc cho từng hàng */
+        .pro-table td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .pro-table td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+/* Badge & Action Buttons */
+.badge-wine {
+    background: rgba(179, 64, 74, 0.1);
+    color: var(--color-accent);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.action-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 5px;
+}
+
+.btn-edit-pro {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+    .btn-edit-pro:hover {
+        background: #0284c7;
+        color: white;
+    }
+
+.btn-delete-pro {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+    .btn-delete-pro:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+/* 4. MODAL (POPUP) - QUAN TRỌNG NHẤT */
+.modal-overlay {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-glass {
+    background: rgba(255, 255, 255, 0.95);
+    width: 450px;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: zoomIn 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.6);
+}
+
+.form-control-wine {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #f3f4f6;
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: 0.3s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+    .form-control-wine:focus {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 4px rgba(179, 64, 74, 0.1);
+    }
+
+/* 5. SKELETON LOADING */
+.skeleton {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

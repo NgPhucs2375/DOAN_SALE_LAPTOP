@@ -1,0 +1,413 @@
+﻿@{
+    ViewBag.Title = "Quản lý Loại Sản Phẩm (Pro Max)";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<style>
+    /* --- BẢNG MÀU "WINE & DINE" --- */
+    :root {
+        --wine-red: #722F37; /* Màu rượu vang */
+        --wine-light: #a64d57;
+        --wine-glow: rgba(114, 47, 55, 0.3);
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(255, 255, 255, 0.5);
+    }
+
+    /* --- 1. HEADER & ACTIONS --- */
+    .page-header-pro {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+    }
+
+    .search-box-pro {
+        position: relative;
+        width: 300px;
+    }
+    .search-box-pro input {
+        width: 100%;
+        padding: 12px 20px 12px 45px;
+        border-radius: 50px;
+        border: 2px solid transparent;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+    .search-box-pro input:focus {
+        border-color: var(--wine-red);
+        box-shadow: 0 0 0 4px var(--wine-glow);
+        outline: none;
+    }
+    .search-box-pro i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+    }
+
+    /* Nút Thêm Mới màu Rượu Vang */
+    .btn-wine {
+        background: linear-gradient(135deg, var(--wine-red) 0%, #501b22 100%);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 50px;
+        border: none;
+        font-weight: 600;
+        box-shadow: 0 8px 20px -5px var(--wine-glow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex; align-items: center; gap: 8px;
+        cursor: pointer;
+    }
+    .btn-wine:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 30px -5px var(--wine-glow);
+        background: linear-gradient(135deg, var(--wine-light) 0%, #722F37 100%);
+    }
+
+    /* --- 2. BẢNG DỮ LIỆU (GLASSMORPHISM) --- */
+    .table-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        overflow: hidden;
+        padding: 10px;
+    }
+
+    .pro-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px; /* Khoảng cách giữa các hàng */
+    }
+
+    .pro-table thead th {
+        padding: 15px 20px;
+        color: #64748b;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        border: none;
+    }
+
+    .pro-table tbody tr {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pro-table tbody tr:hover {
+        transform: translateY(-2px) scale(1.005);
+        box-shadow: 0 10px 25px rgba(114, 47, 55, 0.1); /* Bóng màu rượu */
+        z-index: 10;
+        position: relative;
+    }
+
+    .pro-table td {
+        padding: 15px 20px;
+        border: none;
+        vertical-align: middle;
+    }
+
+    .pro-table td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+    .pro-table td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+    /* Badge số lượng */
+    .badge-wine {
+        background: rgba(114, 47, 55, 0.1);
+        color: var(--wine-red);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    /* Nút hành động */
+    .action-btn {
+        width: 35px; height: 35px;
+        border-radius: 50%;
+        border: none;
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 5px;
+    }
+    .btn-edit-pro { background: #e0f2fe; color: #0284c7; }
+    .btn-edit-pro:hover { background: #0284c7; color: white; }
+    .btn-delete-pro { background: #fee2e2; color: #ef4444; }
+    .btn-delete-pro:hover { background: #ef4444; color: white; }
+
+    /* --- 3. MODAL (POPUP) --- */
+    .modal-overlay {
+        display: none;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        justify-content: center; align-items: center;
+    }
+
+    .modal-glass {
+        background: rgba(255, 255, 255, 0.95);
+        width: 450px;
+        padding: 30px;
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: zoomIn 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .form-control-wine {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #f3f4f6;
+        border-radius: 12px;
+        font-size: 1rem;
+        margin-top: 10px;
+        transition: 0.3s;
+    }
+    .form-control-wine:focus {
+        border-color: var(--wine-red);
+        box-shadow: 0 0 0 4px var(--wine-glow);
+        outline: none;
+    }
+
+    /* --- 4. SKELETON LOADING (Hiệu ứng xương) --- */
+    .skeleton {
+        height: 20px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+        margin: 5px 0;
+    }
+    @@keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    @@keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+
+<div class="page-header-pro animate__animated animate__fadeInDown">
+    <div>
+        <h2 style="margin:0; color: var(--primary-color); font-weight:800;">🍷 Quản lý Danh mục Laptop</h2>
+        <p style="margin:5px 0 0; color:#6b7280; font-size:0.9rem;">Quản lý các dòng máy một cách sành điệu</p>
+    </div>
+
+    <div style="display:flex; gap:15px;">
+        <div class="search-box-pro">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm loại máy..." onkeyup="searchTable()">
+        </div>
+        <button class="btn-wine" onclick="openModal(0, '')">
+            <i class="fa-solid fa-plus"></i> Thêm Mới
+        </button>
+    </div>
+</div>
+
+<div class="table-card animate__animated animate__fadeInUp">
+    <table class="pro-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">ID</th>
+                <th style="width: 50%;">Tên Loại Laptop</th>
+                <th style="width: 20%; text-align: center;">Tồn Kho</th>
+                <th style="width: 20%; text-align: right;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            @for (int i = 0; i < 5; i++)
+            {
+                <tr>
+                    <td><div class="skeleton" style="width: 30px;"></div></td>
+                    <td><div class="skeleton" style="width: 150px;"></div></td>
+                    <td><div class="skeleton" style="width: 80px; margin: 0 auto;"></div></td>
+                    <td><div class="skeleton" style="width: 60px; float: right;"></div></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="categoryModal" class="modal-overlay">
+    <div class="modal-glass">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 id="modalTitle" style="margin:0; color:var(--wine-red); font-weight:800; font-size:1.5rem;">Thêm Loại Mới</h3>
+            <button onclick="closeModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#9ca3af;">&times;</button>
+        </div>
+
+        <input type="hidden" id="hiddenId" value="0" />
+
+        <div style="margin-bottom: 25px;">
+            <label style="font-weight: 600; color:#374151;">Tên Loại Laptop</label>
+            <input type="text" id="txtTenLoai" class="form-control-wine" placeholder="Ví dụ: Laptop Gaming..." />
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button onclick="closeModal()" style="padding:12px 25px; border:none; background:#f3f4f6; color:#4b5563; cursor:pointer; border-radius:50px; font-weight:600;">Đóng</button>
+            <button onclick="saveCategory()" class="btn-wine" style="box-shadow:none; padding:12px 30px;">Lưu Lại</button>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var apiUrl = '/CategoryManagement';
+
+        $(document).ready(function () {
+            // Giả lập loading 0.8s cho đẹp rồi mới load thật
+            setTimeout(loadData, 800);
+        });
+
+        // 1. Load danh sách (Hiệu ứng FadeIn)
+        function loadData() {
+            $.ajax({
+                url: apiUrl + '/GetAll',
+                type: 'GET',
+                success: function (res) {
+                    if (res.success) {
+                        var html = '';
+                        if (res.data.length === 0) {
+                            html = '<tr><td colspan="4" style="text-align:center; padding:30px; color:#9ca3af;"><i class="fa-solid fa-box-open fa-3x"></i><br>Chưa có dữ liệu</td></tr>';
+                        } else {
+                            $.each(res.data, function (i, item) {
+                                html += '<tr class="animate__animated animate__fadeIn">';
+                                html += '<td style="font-weight:bold; color:#9ca3af;">#' + item.MaLoai + '</td>';
+                                html += '<td style="font-weight:700; color:#374151; font-size:1rem;">' + item.TenLoai + '</td>';
+                                html += '<td style="text-align:center;"><span class="badge-wine">' + item.SoLuongSP + ' sản phẩm</span></td>';
+                                html += '<td style="text-align:right;">';
+                                html += '<button class="action-btn btn-edit-pro" onclick="openModal(' + item.MaLoai + ', \'' + item.TenLoai + '\')" title="Sửa"><i class="fa-solid fa-pen"></i></button>';
+                                html += '<button class="action-btn btn-delete-pro" onclick="deleteCategory(' + item.MaLoai + ')" title="Xóa"><i class="fa-solid fa-trash"></i></button>';
+                                html += '</td>';
+                                html += '</tr>';
+                            });
+                        }
+                        $('#tableBody').html(html);
+                    }
+                }
+            });
+        }
+
+        // 2. Tìm kiếm nhanh (Client Side)
+        function searchTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("tableBody");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // Cột Tên
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // 3. Modal Logic
+        function openModal(id, name) {
+            $('#hiddenId').val(id);
+            $('#txtTenLoai').val(name);
+
+            if (id == 0) $('#modalTitle').text('Thêm Loại Mới 🍷');
+            else $('#modalTitle').text('Cập nhật Loại 🍷');
+
+            $('#categoryModal').css('display', 'flex');
+            setTimeout(() => $('#txtTenLoai').focus(), 100);
+        }
+
+        function closeModal() {
+            $('#categoryModal').fadeOut(200);
+        }
+
+        // 4. Lưu dữ liệu (Dùng SweetAlert2 thay alert)
+        function saveCategory() {
+            var id = $('#hiddenId').val();
+            var ten = $('#txtTenLoai').val();
+
+            if (!ten.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Vui lòng nhập tên loại!',
+                    confirmButtonColor: '#722F37'
+                });
+                return;
+            }
+
+            var url = (id == 0) ? apiUrl + '/Create' : apiUrl + '/Update';
+            var payload = (id == 0) ? { tenLoai: ten } : { id: id, tenLoai: ten };
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: payload,
+                success: function (res) {
+                    if (res.success) {
+                        closeModal();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: res.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        loadData();
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Lỗi', text: res.message });
+                    }
+                }
+            });
+        }
+
+        // 5. Xóa (Dùng SweetAlert2 Confirm cực đẹp)
+        function deleteCategory(id) {
+            Swal.fire({
+                title: 'Bạn chắc chắn chứ?',
+                text: "Dữ liệu này sẽ không thể khôi phục!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#722F37', // Màu rượu
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Vâng, xóa nó!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: apiUrl + '/Delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire('Đã xóa!', 'Dữ liệu đã bị xóa.', 'success');
+                                loadData();
+                            } else {
+                                Swal.fire('Thất bại', res.message, 'error');
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}

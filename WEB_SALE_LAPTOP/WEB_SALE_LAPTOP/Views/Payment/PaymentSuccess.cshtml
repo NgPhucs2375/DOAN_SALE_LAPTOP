@@ -1,0 +1,10 @@
+﻿@{ 
+    ViewBag.Title = "Thanh toán thành công"; 
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    }
+<div class="order-success-page">
+    <i class="fa-solid fa-circle-check success-icon" style="color: #28a745;"></i>
+    <h2 class="section-title">Giao dịch thành công!</h2>
+    <p class="success-message">@ViewBag.Message</p>
+    <a href="@Url.Action("Index", "Home")" class="btn-primary-admin">Tiếp tục mua sắm</a>
+</div>
