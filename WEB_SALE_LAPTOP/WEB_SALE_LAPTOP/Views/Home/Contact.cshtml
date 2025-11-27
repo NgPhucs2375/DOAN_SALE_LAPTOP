@@ -1,19 +1,352 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Liên Hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <address>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399<br />
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-    <address>
-        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
-</main>
+<style>
+    :root {
+        --wine-deep: #420c09;      /* Đỏ rượu vang thẫm */
+        --wine-main: #722F37;      /* Đỏ rượu vang chuẩn */
+        --wine-velvet: #800020;    /* Đỏ nhung */
+        --gold-antique: #C5A059;   /* Vàng cổ */
+        --gold-light: #E6C77E;     /* Vàng sáng */
+        --paper-cream: #F9F5EB;    /* Màu giấy cũ */
+        --text-ink: #1A1A1A;       /* Màu mực đen */
+    }
+
+    /* Tổng thể trang */
+    .contact-page-wrapper {
+        background-color: var(--wine-deep);
+        background-image: url("https://www.transparenttextures.com/patterns/dark-leather.png"); /* Vân da sang trọng */
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 1rem;
+        font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Tấm thiệp (Card) */
+    .luxury-card {
+        background-color: var(--paper-cream);
+        width: 100%;
+        max-width: 900px;
+        padding: 15px; /* Padding cho viền đôi */
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Viền đôi họa tiết (Double Border) */
+    .card-inner-border {
+        border: 2px solid var(--gold-antique);
+        padding: 3rem;
+        position: relative;
+        background:
+            linear-gradient(to right, var(--gold-antique) 1px, transparent 1px) 0 0,
+            linear-gradient(to right, var(--gold-antique) 1px, transparent 1px) 0 100%,
+            linear-gradient(to left, var(--gold-antique) 1px, transparent 1px) 100% 0,
+            linear-gradient(to left, var(--gold-antique) 1px, transparent 1px) 100% 100%,
+            linear-gradient(to bottom, var(--gold-antique) 1px, transparent 1px) 0 0,
+            linear-gradient(to bottom, var(--gold-antique) 1px, transparent 1px) 100% 0,
+            linear-gradient(to top, var(--gold-antique) 1px, transparent 1px) 0 100%,
+            linear-gradient(to top, var(--gold-antique) 1px, transparent 1px) 100% 100%;
+        background-size: 20px 20px;
+        background-repeat: no-repeat;
+    }
+
+    /* Họa tiết góc (Corner Ornaments) */
+    .card-inner-border::before, .card-inner-border::after {
+        content: "❖";
+        position: absolute;
+        color: var(--gold-antique);
+        font-size: 1.5rem;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--paper-cream);
+        padding: 0 10px;
+    }
+    .card-inner-border::after {
+        top: auto;
+        bottom: -14px;
+    }
+
+    /* Layout 2 cột */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    /* --- Typography --- */
+    .brand-title {
+        font-family: 'Cinzel', serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--wine-main);
+        margin-bottom: 0.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: -webkit-linear-gradient(45deg, var(--wine-deep), var(--wine-velvet));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .page-subtitle {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 2rem;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .page-subtitle::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 2px;
+        background-color: var(--gold-antique);
+        margin: 15px auto 0;
+    }
+
+    /* --- Thông tin liên hệ (Left Column) --- */
+    .info-item {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+    .info-item:hover {
+        transform: translateX(10px);
+    }
+
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        border: 1px solid var(--gold-antique);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--wine-main);
+        font-size: 1.2rem;
+        transform: rotate(45deg); /* Hình thoi */
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .info-item:hover .icon-box {
+        background: var(--wine-main);
+        color: var(--gold-light);
+        border-color: var(--wine-main);
+    }
+
+    .icon-inner {
+        transform: rotate(-45deg); /* Xoay ngược lại icon */
+    }
+
+    .info-content h4 {
+        font-family: 'Cinzel', serif;
+        font-size: 1.1rem;
+        color: var(--text-ink);
+        margin: 0 0 5px 0;
+        font-weight: 700;
+    }
+
+    .info-content p, .info-content a {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.3rem;
+        color: #555;
+        margin: 0;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .info-content a:hover {
+        color: var(--wine-velvet);
+        text-decoration: underline;
+        text-decoration-color: var(--gold-antique);
+    }
+
+    /* --- Form liên hệ (Right Column) --- */
+    .contact-form-container {
+        background: white;
+        padding: 2rem;
+        border: 1px solid #e0e0e0;
+        box-shadow: 10px 10px 0 var(--wine-glow); /* Đổ bóng cứng */
+        position: relative;
+    }
+    /* Hiệu ứng ghim giấy */
+    .contact-form-container::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 20px;
+        background: var(--gold-antique);
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .vintage-input {
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        padding: 10px 0;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        background: transparent;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s;
+        color: var(--text-ink);
+    }
+
+    .vintage-input:focus {
+        outline: none;
+        border-bottom-color: var(--wine-main);
+    }
+
+    .vintage-input::placeholder {
+        color: #999;
+        font-style: italic;
+    }
+
+    .btn-royal {
+        width: 100%;
+        padding: 15px;
+        background-color: var(--wine-main);
+        color: var(--gold-light);
+        border: 1px solid var(--wine-main);
+        font-family: 'Cinzel', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-royal:hover {
+        background-color: var(--wine-deep);
+        color: #fff;
+        border-color: var(--gold-antique);
+        box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+        .card-inner-border {
+            padding: 1.5rem;
+        }
+        .brand-title {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<div class="contact-page-wrapper">
+    <div class="luxury-card animate__animated animate__fadeInUp">
+        <div class="card-inner-border">
+
+            <h1 class="brand-title">Laptop Pro</h1>
+            <p class="page-subtitle">Đẳng cấp doanh nhân - Tinh hoa công nghệ</p>
+
+            <div class="contact-grid">
+
+                <div class="contact-info">
+
+                    <div class="info-item">
+                        <div class="icon-box">
+                            <i class="fa-solid fa-phone-volume icon-inner"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Hotline (24/7)</h4>
+                            <a href="tel:0961100165" style="font-size: 1.5rem; font-weight: 700; color: var(--wine-main);">0961 100 165</a>
+                            <p style="font-size: 1rem; color: #888; font-style: italic;">Hỗ trợ VIP</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="icon-box">
+                            <i class="fa-solid fa-envelope-open-text icon-inner"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Thư điện tử</h4>
+                            <a href="mailto:tranphuc2375@gmail.com">tranphuc2375@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="icon-box">
+                            <i class="fa-brands fa-facebook-f icon-inner"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Mạng xã hội</h4>
+                            <a href="https://facebook.com" target="_blank">Phúc Trần</a>
+                            <p style="font-size: 1rem;">Kết nối để nhận ưu đãi đặc quyền.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="icon-box">
+                            <i class="fa-solid fa-location-dot icon-inner"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Trụ sở chính</h4>
+                            <p>123 Đại lộ Doanh Nhân, Quận 1, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="contact-form-container">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Cinzel', serif; color: var(--wine-main); font-size: 1.5rem;">Gửi lời nhắn</h3>
+                        <p style="font-size: 1rem; color: #666;">Chúng tôi vinh hạnh được phục vụ bạn.</p>
+                    </div>
+
+                    <form>
+                        <input type="text" class="vintage-input" placeholder="Quý danh của bạn" required />
+                        <input type="text" class="vintage-input" placeholder="Số điện thoại liên lạc" required />
+                        <input type="email" class="vintage-input" placeholder="Địa chỉ Email" />
+                        <textarea class="vintage-input" rows="2" placeholder="Nội dung cần hỗ trợ..."></textarea>
+
+                        <button type="submit" class="btn-royal">
+                            Gửi yêu cầu <i class="fa-solid fa-paper-plane" style="margin-left: 8px;"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem; border-top: 1px solid #ddd; padding-top: 1rem;">
+                <p style="font-size: 0.9rem; color: #888; font-style: italic;">
+                    "Sự hài lòng của quý khách là chuẩn mực của sự thành công."
+                </p>
+                <div style="color: var(--gold-antique); font-size: 1.2rem; margin-top: 5px;">
+                    ✦ ✦ ✦
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
