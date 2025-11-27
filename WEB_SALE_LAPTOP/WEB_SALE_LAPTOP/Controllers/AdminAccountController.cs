@@ -16,7 +16,7 @@ namespace WEB_SALE_LAPTOP.Controllers
 
         public ActionResult Login()
         {
-            return View("Login"); // <-- Sửa ở đây
+            return View("Login"); 
         }
 
         [HttpPost]
@@ -24,41 +24,55 @@ namespace WEB_SALE_LAPTOP.Controllers
         {
             string tendn = collection["TENDN"];
             string matkhau = collection["MATKHAU"];
+
+            // 1. Tìm nhân viên theo User/Pass
             var nv = db.NHANVIENs.FirstOrDefault(n => n.TENDN == tendn && n.MATKHAU == matkhau);
 
-            if (nv == null)
+            if (nv != null)
             {
-                ViewBag.Error = "Tên đăng nhập hoặc Mật khẩu không đúng.";
-                return View();
-            }
+                // 2. Lấy danh sách TẤT CẢ quyền của nhân viên này
+                var dsQuyen = db.Database.SqlQuery<int>(
+                    "SELECT MAQUYEN FROM CAPQUYEN WHERE MANV = {0}", nv.MANV
+                ).ToList();
 
-            // (Logic kiểm tra Admin của bạn đã tốt, giữ nguyên)
-            bool isAdmin = db.Database.SqlQuery<int>(
-                "SELECT COUNT(*) FROM CAPQUYEN WHERE MANV = {0} AND MAQUYEN = 1", nv.MANV
-            ).FirstOrDefault() > 0;
+                // 3. Kiểm tra: Nếu có ít nhất 1 quyền thì cho vào
+                if (dsQuyen.Count > 0)
+                {
+                    // Lưu Session
+                    Session["AdminUser"] = nv;
+                    Session["AdminName"] = nv.HOTEN;
+                    Session["AdminQuyen"] = dsQuyen; 
 
-            if (isAdmin) // (Hoặc bạn có thể xóa check 'isAdmin' nếu muốn NV nào cũng vào được)
-            {
-                // LẤY DANH SÁCH QUYỀN CỦA NHÂN VIÊN
-                List<int> dsQuyen = db.Database.SqlQuery<int>(
-                                 "SELECT MAQUYEN FROM CAPQUYEN WHERE MANV = {0}", nv.MANV
-                             ).ToList();
-
-                // LƯU VÀO SESSION
-                Session["AdminUser"] = nv;
-                Session["AdminName"] = nv.HOTEN;
-                Session["AdminQuyen"] = dsQuyen; // <-- QUAN TRỌNG NHẤT
-
-                return RedirectToAction("Index", "ProductManagement");
+                    // Chuyển hướng thông minh dựa trên quyền
+                    if (dsQuyen.Contains(1)) // Admin
+                    {
+                        return RedirectToAction("Index", "Revenue"); // Admin vào xem báo cáo
+                    }
+                    else if (dsQuyen.Contains(2)) // Bán hàng
+                    {
+                        return RedirectToAction("Index", "OrderManagement"); // Bán hàng vào xem đơn
+                    }
+                    else if (dsQuyen.Contains(3)) // Thủ kho
+                    {
+                        return RedirectToAction("Index", "ProductManagement"); // Kho vào xem sản phẩm
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "ProductManagement"); // Mặc định
+                    }
+                }
+                else
+                {
+                    ViewBag.Error = "Tài khoản của bạn chưa được cấp quyền truy cập!";
+                    return View();
+                }
             }
             else
             {
-                ViewBag.Error = "Bạn không có quyền truy cập trang quản trị.";
+                ViewBag.Error = "Sai tên đăng nhập hoặc mật khẩu!";
                 return View();
             }
         }
-
-        // (Hàm Logout của bạn đã tốt, giữ nguyên)
         public ActionResult Logout()
         {
             Session.Remove("AdminUser");
@@ -66,9 +80,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             return RedirectToAction("Login", "AdminAccount");
         }
 
-        // ===================================================================
-        // NÂNG CẤP: Thêm hàm Dispose (Quản lý CSDL)
-        // ===================================================================
+   
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -5,7 +5,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WEB_SALE_LAPTOP.Models;
-using System.Data.Entity; // <-- THÊM DÒNG NÀY
+using System.Data.Entity; 
 
 namespace WEB_SALE_LAPTOP.Controllers
 {
