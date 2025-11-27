@@ -47,9 +47,7 @@
             gap: 20px;
             flex-wrap: nowrap; /* Không cho phép xuống dòng */
         }
-        /* Ẩn khi cuộn xuống */
 
-        /* 2. MEGA MENU */
         .main-nav-dropdown-menu {
             min-width: 250px;
             border: none;
@@ -261,6 +259,203 @@
             .search-container { order: 1; max-width: 100%; }
             .header-actions { display: none; } /* Ẩn nút giỏ hàng to trên mobile */
         }
+    /* === FORM TÌM KIẾM NÂNG CAO (PRO STYLE) === */
+    .advanced-filter-form {
+        padding: 10px;
+        background: #fff;
+    }
+
+    .filter-section {
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 10px;
+    }
+
+        .filter-section:last-child {
+            border-bottom: none;
+        }
+
+    .filter-heading {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--primary-color); /* Xanh Navy */
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .grid-2-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Chia 2 cột cho Hãng & CPU */
+        gap: 8px;
+    }
+
+    /* --- 1. Custom Checkbox (Ô vuông đẹp) --- */
+    .custom-checkbox {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+        .custom-checkbox input {
+            display: none;
+        }
+        /* Ẩn checkbox mặc định */
+
+        .custom-checkbox .box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+            position: relative;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        /* Khi chọn */
+        .custom-checkbox input:checked ~ .box {
+            background: var(--accent-color); /* Màu đỏ rượu */
+            border-color: var(--accent-color);
+        }
+
+            .custom-checkbox input:checked ~ .box::after {
+                content: '\2713'; /* Dấu tích */
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                position: absolute;
+                left: 3px;
+                top: -1px;
+            }
+
+        .custom-checkbox input:checked ~ .label-text {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+    /* --- 2. Custom Radio (Hình tròn đẹp) --- */
+    .custom-radio {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+        .custom-radio input {
+            display: none;
+        }
+
+        .custom-radio .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .custom-radio input:checked ~ .checkmark {
+            border-color: var(--accent-color);
+        }
+
+            .custom-radio input:checked ~ .checkmark::after {
+                content: '';
+                width: 10px;
+                height: 10px;
+                background: var(--accent-color);
+                border-radius: 50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+    /* --- 3. Tag Checkbox (Dạng nút bấm cho RAM/SSD) --- */
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .tag-checkbox input {
+        display: none;
+    }
+
+    .tag-checkbox span {
+        display: block;
+        padding: 5px 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: #666;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .tag-checkbox input:checked ~ span {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* --- 4. Nút Submit & Reset --- */
+    .adv-submit {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-search-pro {
+        flex: 1;
+        background: linear-gradient(135deg, var(--accent-color) 0%, #8a2b33 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-search-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(179, 64, 74, 0.4);
+        }
+
+    .btn-reset-pro {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+        color: #666;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+        .btn-reset-pro:hover {
+            background: #eee;
+            color: #333;
+        }
 </style>
 
     @RenderSection("styles", required: false)
@@ -310,6 +505,161 @@
             </div>
         </div>
 
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-memory"></i> Lọc Theo RAM</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "4GB" })">RAM 4GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "8GB" })">RAM 8GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "16GB" })">RAM 16GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "32GB" })">RAM 32GB trở lên</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-hard-drive"></i> Lọc Theo Bộ nhớ</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "256GB" })">256GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "512GB" })">512GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "1TB" })">1TB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "2TB" })">2TB</a></li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-layer-group"></i> Lọc Theo Loại Laptop</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Gaming" })">Laptop Gaming</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Văn phòng" })">Laptop Văn Phòng</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Macbook" })">MacBook</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Đồ họa - Kỹ thuật" })">Đồ họa - Kỹ thuật</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Mỏng nhẹ" })">Laptop Mỏng nhẹ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-group-title">
+                <span><i class="fa-solid fa-filter"></i> BỘ LỌC CHUYÊN SÂU</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+            </div>
+
+            <div class="filter-group-content">
+                <form action="@Url.Action("TimKiemNangCao", "Home")" method="get" class="advanced-filter-form">
+
+                    <div class="filter-section">
+                        <h6 class="filter-heading"><i class="fa-solid fa-coins"></i> Ngân sách</h6>
+                        <div class="filter-options">
+                            <label class="custom-radio">
+                                <input type="radio" name="mucGia" value="duoi-10" @(Request["mucGia"] == "duoi-10" ? "checked" : "")>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Dưới 10 triệu</span>
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="mucGia" value="10-15" @(Request["mucGia"] == "10-15" ? "checked" : "")>
+                                <span class="checkmark"></span>
+                                <span class="label-text">10 - 15 triệu</span>
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="mucGia" value="15-20" @(Request["mucGia"] == "15-20" ? "checked" : "")>
+                                <span class="checkmark"></span>
+                                <span class="label-text">15 - 20 triệu</span>
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="mucGia" value="tren-20" @(Request["mucGia"] == "tren-20" ? "checked" : "")>
+                                <span class="checkmark"></span>
+                                <span class="label-text">Trên 20 triệu</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h6 class="filter-heading"><i class="fa-solid fa-laptop"></i> Thương hiệu</h6>
+                        <div class="filter-options grid-2-col">
+                            @foreach (var hang in new[] { "Dell", "Asus", "HP", "Lenovo", "MSI", "Apple", "Acer" })
+                            {
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="hang" value="@hang" @(Request["hang"] != null && Request["hang"].Contains(hang) ? "checked" : "")>
+                                    <span class="box"></span>
+                                    <span class="label-text">@hang</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h6 class="filter-heading"><i class="fa-solid fa-shapes"></i> Nhu cầu</h6>
+                        <div class="filter-options">
+                            @foreach (var loai in new[] { "Laptop Gaming", "Laptop Văn phòng", "Macbook", "Laptop Đồ họa", "Laptop Mỏng nhẹ" })
+                            {
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="loai" value="@loai" @(Request["loai"] != null && Request["loai"].Contains(loai) ? "checked" : "")>
+                                    <span class="box"></span>
+                                    <span class="label-text">@loai</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h6 class="filter-heading"><i class="fa-solid fa-microchip"></i> Vi xử lý</h6>
+                        <div class="filter-options grid-2-col">
+                            @foreach (var cpu in new[] { "i3", "i5", "i7", "Ryzen 5", "Ryzen 7" })
+                            {
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" name="cpu" value="@cpu" @(Request["cpu"] != null && Request["cpu"].Contains(cpu) ? "checked" : "")>
+                                    <span class="box"></span>
+                                    <span class="label-text">@cpu</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h6 class="filter-heading"><i class="fa-solid fa-memory"></i> RAM & Ổ cứng</h6>
+                        <div class="filter-options">
+                            <div style="font-weight:600; font-size:0.8rem; margin-top:5px; color:#888;">RAM:</div>
+                            <div class="tags-container">
+                                @foreach (var ram in new[] { "4GB", "8GB", "16GB", "32GB" })
+                                {
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="ram" value="@ram" @(Request["ram"] != null && Request["ram"].Contains(ram) ? "checked" : "")>
+                                        <span>@ram</span>
+                                    </label>
+                                }
+                            </div>
+
+                            <div style="font-weight:600; font-size:0.8rem; margin-top:10px; color:#888;">SSD:</div>
+                            <div class="tags-container">
+                                @foreach (var ssd in new[] { "256GB", "512GB", "1TB" })
+                                {
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="oCung" value="@ssd" @(Request["oCung"] != null && Request["oCung"].Contains(ssd) ? "checked" : "")>
+                                        <span>@ssd</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="adv-submit">
+                        <button type="submit" class="btn-search-pro">
+                            <i class="fa-solid fa-magnifying-glass"></i> TÌM KẾT QUẢ
+                        </button>
+                        <a href="@Url.Action("Index", "Home")" class="btn-reset-pro">Đặt lại</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
         <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
             <div class="sidebar-promo-card">
                 <div class="promo-badge">HOT</div>
