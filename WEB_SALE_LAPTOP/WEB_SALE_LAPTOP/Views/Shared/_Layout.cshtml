@@ -310,6 +310,130 @@
             </div>
         </div>
 
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-memory"></i> Lọc Theo RAM</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "4GB" })">RAM 4GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "8GB" })">RAM 8GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "16GB" })">RAM 16GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoRAM", "Home", new { ramKey = "32GB" })">RAM 32GB trở lên</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-hard-drive"></i> Lọc Theo Bộ nhớ</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "256GB" })">256GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "512GB" })">512GB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "1TB" })">1TB</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoBoNho", "Home", new { boNhoKey = "2TB" })">2TB</a></li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-group-title"><span><i class="fa-solid fa-layer-group"></i> Lọc Theo Loại Laptop</span><i class="fa-solid fa-chevron-down arrow"></i></div>
+            <div class="filter-group-content">
+                <nav class="sidebar-menu filter-menu">
+                    <ul>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Gaming" })">Laptop Gaming</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Văn phòng" })">Laptop Văn Phòng</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Macbook" })">MacBook</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Đồ họa - Kỹ thuật" })">Đồ họa - Kỹ thuật</a></li>
+                        <li><a href="@Url.Action("TimKiemTheoTenLoai", "Home", new { tenLoai = "Laptop Mỏng nhẹ" })">Laptop Mỏng nhẹ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="filter-group ">
+
+            <div class="filter-group-title">
+                <span><i class="fa-solid fa-sliders"></i> TÌM KIẾM CHI TIẾT</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+            </div>
+
+            <div class="filter-group-content">
+                <form action="@Url.Action("TimKiemNangCao", "Home")" method="get" class="advanced-search-form">
+
+                    <div class="adv-section">
+                        <h6>Hãng Sản Xuất</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="checkbox" name="hang" value="Dell"> Dell</label>
+                            <label><input type="checkbox" name="hang" value="Asus"> Asus</label>
+                            <label><input type="checkbox" name="hang" value="HP"> HP</label>
+                            <label><input type="checkbox" name="hang" value="Lenovo"> Lenovo</label>
+                            <label><input type="checkbox" name="hang" value="MSI"> MSI</label>
+                            <label><input type="checkbox" name="hang" value="Apple"> Apple</label>
+                            <label><input type="checkbox" name="hang" value="Acer"> Acer</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-section">
+                        <h6>Loại Laptop</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="checkbox" name="loai" value="Laptop Gaming"> Gaming</label>
+                            <label><input type="checkbox" name="loai" value="Laptop Văn phòng"> Văn phòng</label>
+                            <label><input type="checkbox" name="loai" value="Macbook"> Macbook</label>
+                            <label><input type="checkbox" name="loai" value="Laptop Đồ họa"> Đồ họa</label>
+                            <label><input type="checkbox" name="loai" value="Laptop Mỏng nhẹ"> Mỏng nhẹ</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-section">
+                        <h6>Tầm Giá</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="radio" name="mucGia" value="duoi-10"> Dưới 10 triệu</label>
+                            <label><input type="radio" name="mucGia" value="10-15"> 10 - 15 triệu</label>
+                            <label><input type="radio" name="mucGia" value="15-20"> 15 - 20 triệu</label>
+                            <label><input type="radio" name="mucGia" value="tren-20"> Trên 20 triệu</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-section">
+                        <h6>Cấu Hình (CPU)</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="checkbox" name="cpu" value="i3"> Core i3</label>
+                            <label><input type="checkbox" name="cpu" value="i5"> Core i5</label>
+                            <label><input type="checkbox" name="cpu" value="i7"> Core i7</label>
+                            <label><input type="checkbox" name="cpu" value="Ryzen 5"> Ryzen 5</label>
+                            <label><input type="checkbox" name="cpu" value="Ryzen 7"> Ryzen 7</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-section">
+                        <h6>Bộ Nhớ RAM</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="checkbox" name="ram" value="4GB"> 4GB</label>
+                            <label><input type="checkbox" name="ram" value="8GB"> 8GB</label>
+                            <label><input type="checkbox" name="ram" value="16GB"> 16GB</label>
+                            <label><input type="checkbox" name="ram" value="32GB"> 32GB</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-section">
+                        <h6>Ổ Cứng</h6>
+                        <div class="checkbox-group list-vertical">
+                            <label><input type="checkbox" name="oCung" value="256GB"> 256GB</label>
+                            <label><input type="checkbox" name="oCung" value="512GB"> 512GB</label>
+                            <label><input type="checkbox" name="oCung" value="1TB"> 1TB</label>
+                            <label><input type="checkbox" name="oCung" value="2TB"> 2TB</label>
+                        </div>
+                    </div>
+
+                    <div class="adv-submit">
+                        <button type="submit" class="btn-add-cart" style="width: 100%; justify-content: center;">
+                            <i class="fa-solid fa-magnifying-glass"></i> TÌM SẢN PHẨM
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <a href="@Url.Action("TimKiemTheoLoai", "Home", new { tenLoai = "Laptop Gaming" })" class="sidebar-promo-link-wrapper">
             <div class="sidebar-promo-card">
                 <div class="promo-badge">HOT</div>

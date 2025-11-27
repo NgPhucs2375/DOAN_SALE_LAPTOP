@@ -214,6 +214,119 @@ namespace WEB_SALE_LAPTOP.Controllers
 
             return View("Index", ketQua);
         }
+
+        public ActionResult TimKiemTheoTenLoai(string tenLoai)
+        {
+            // Đặt tên loại vào ViewBag để View có thể hiển thị tiêu đề lọc
+            ViewBag.TieuDeLoc = tenLoai;
+
+            var ketQua = data.LAPTOPs
+                                .Include(l => l.HANG)
+                                .Include(l => l.LOAI_LAPTOP)
+                                .Where(l => l.LOAI_LAPTOP.TENLOAI.ToLower().Contains(tenLoai.ToLower())) // Dùng Contains cho linh hoạt hơn
+                                .ToList();
+
+            // Dùng lại View "Index" (Trang chủ) để hiển thị kết quả
+            return View("Index", ketQua);
+        }
+
+        // HÀM TÌM KIẾM THEO RAM
+        public ActionResult TimKiemTheoRAM(string ramKey)
+        {
+            ViewBag.TieuDeLoc = "RAM: " + ramKey;
+            string ramSearchTerm = ramKey.ToLower().Replace(" ", ""); // Ví dụ: "8gb"
+
+            var ketQua = data.LAPTOPs
+                                .Include(l => l.HANG)
+                                .Include(l => l.LOAI_LAPTOP)
+                                // Lọc theo chuỗi cấu hình (CAUHINH) chứa ramSearchTerm
+                                .Where(l => l.CAUHINH.ToLower().Contains(ramSearchTerm))
+                                .ToList();
+
+            return View("Index", ketQua);
+        }
+
+        // HÀM TÌM KIẾM THEO BỘ NHỚ (Ổ CỨNG)
+        public ActionResult TimKiemTheoBoNho(string boNhoKey)
+        {
+            ViewBag.TieuDeLoc = "Bộ nhớ: " + boNhoKey;
+            string boNhoSearchTerm = boNhoKey.ToLower().Replace(" ", ""); // Ví dụ: "256ssd" hoặc "1tbhdd"
+
+            var ketQua = data.LAPTOPs
+                                .Include(l => l.HANG)
+                                .Include(l => l.LOAI_LAPTOP)
+                                // Lọc theo chuỗi cấu hình (CAUHINH) chứa boNhoSearchTerm
+                                .Where(l => l.CAUHINH.ToLower().Contains(boNhoSearchTerm))
+                                .ToList();
+
+            return View("Index", ketQua);
+        }
+
+        public ActionResult TimKiemNangCao(string[] hang, string[] cpu, string[] ram, string[] oCung, string[] loai, string mucGia)
+        {
+            // 1. Khởi tạo query: Lấy tất cả sản phẩm đang bán, kèm theo thông tin Hãng và Loại
+            var query = data.LAPTOPs
+                            .Include(l => l.HANG)
+                            .Include(l => l.LOAI_LAPTOP)
+                            .Where(l => l.TRANGTHAI == true);
+
+            // 2. Lọc theo HÃNG (Brand) - Dựa vào tên Hãng
+            if (hang != null && hang.Length > 0)
+            {
+                query = query.Where(l => hang.Contains(l.HANG.TENHANG));
+            }
+
+            // 3. Lọc theo LOẠI LAPTOP (Type) - Dựa vào tên Loại
+            if (loai != null && loai.Length > 0)
+            {
+                query = query.Where(l => loai.Contains(l.LOAI_LAPTOP.TENLOAI));
+            }
+
+            // 4. Lọc theo CPU (Tìm trong chuỗi Cấu hình)
+            if (cpu != null && cpu.Length > 0)
+            {
+                // Logic: Lấy sản phẩm mà cấu hình có chứa bất kỳ từ khóa CPU nào được chọn
+                query = query.Where(l => cpu.Any(c => l.CAUHINH.ToLower().Contains(c.ToLower())));
+            }
+
+            // 5. Lọc theo RAM (Tìm trong chuỗi Cấu hình)
+            if (ram != null && ram.Length > 0)
+            {
+                query = query.Where(l => ram.Any(r => l.CAUHINH.ToLower().Contains(r.ToLower())));
+            }
+
+            // 6. Lọc theo BỘ NHỚ/Ổ CỨNG (Tìm trong chuỗi Cấu hình)
+            if (oCung != null && oCung.Length > 0)
+            {
+                query = query.Where(l => oCung.Any(o => l.CAUHINH.ToLower().Contains(o.ToLower())));
+            }
+
+            // 7. Lọc theo MỨC GIÁ
+            if (!string.IsNullOrEmpty(mucGia))
+            {
+                switch (mucGia)
+                {
+                    case "duoi-10":
+                        query = query.Where(l => l.GIA_BAN < 10000000);
+                        break;
+                    case "10-15":
+                        query = query.Where(l => l.GIA_BAN >= 10000000 && l.GIA_BAN <= 15000000);
+                        break;
+                    case "15-20":
+                        query = query.Where(l => l.GIA_BAN >= 15000000 && l.GIA_BAN <= 20000000);
+                        break;
+                    case "tren-20":
+                        query = query.Where(l => l.GIA_BAN > 20000000);
+                        break;
+                }
+            }
+
+            ViewBag.TieuDeLoc = "Kết quả tìm kiếm nâng cao";
+            return View("Index", query.ToList());
+        }
+
+
+
         [HttpPost]
         public ActionResult SubscribeNewsletter(string email)
         {
