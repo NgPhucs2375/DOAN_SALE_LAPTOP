@@ -15,7 +15,6 @@ namespace WEB_SALE_LAPTOP.Controllers
         // GET: Revenue
         public ActionResult Index()
         {
-            // Lấy năm hiện tại để mặc định thống kê
             int currentYear = DateTime.Now.Year;
             ViewBag.CurrentYear = currentYear;
 
@@ -74,6 +73,39 @@ namespace WEB_SALE_LAPTOP.Controllers
                     .ToList();
 
                 return Json(new { success = true, data = topProducts }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // API : Lấy thống kê tổng quan (Dashboard Stats)
+        [HttpGet]
+        public JsonResult GetDashboardStats()
+        {
+            try
+            {
+                // 1. Tổng số khách hàng
+                int totalCustomers = db.KHACHHANGs.Count();
+
+                // 2. Tổng số đơn hàng (Tất cả trạng thái)
+                int totalOrders = db.HOADONs.Count();
+
+                // 3. Tổng số sản phẩm đang kinh doanh
+                int totalProducts = db.LAPTOPs.Count(p => p.TRANGTHAI == true);
+
+                // 4. Đơn hàng chờ xử lý (Cần chú ý)
+                int pendingOrders = db.HOADONs.Count(h => h.TRANGTHAI == "Chờ xử lý");
+
+                return Json(new
+                {
+                    success = true,
+                    totalCustomers = totalCustomers,
+                    totalOrders = totalOrders,
+                    totalProducts = totalProducts,
+                    pendingOrders = pendingOrders
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

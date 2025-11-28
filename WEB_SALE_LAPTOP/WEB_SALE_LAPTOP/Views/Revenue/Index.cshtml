@@ -1,22 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Wine Red Analytics Dashboard";
+    ViewBag.Title = "Dashboard Quản Trị - Laptop Pro";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<!-- Import Font & Chart.js -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <style>
-    body, h1, h2, h3, h4, h5, h6,
-    p, a, span, li, div, label,
-    input, button, select, textarea,
-    .main-nav ul li a,
-    .footer-section h3,
-    .sidebar-title,
-    .filter-group-title {
-        font-family: 'Inter', sans-serif !important;
-    }
     /* --- BẢNG MÀU RƯỢU VANG SANG TRỌNG --- */
     :root {
         --wine-dark: #4a0404;      /* Đỏ đen */
@@ -46,7 +38,7 @@
         position: relative;
         overflow: hidden;
     }
-
+    
     .header-content h2 {
         font-family: 'Playfair Display', serif; /* Font kiểu tạp chí */
         font-size: 2.2rem; margin: 0;
@@ -54,7 +46,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-
+    
     /* Họa tiết nền */
     .header-bg-pattern {
         position: absolute; top: -50%; right: -10%; width: 300px; height: 300px;
@@ -77,11 +69,53 @@
     }
     .year-selector:hover { background: var(--gold-accent); color: var(--wine-dark); }
 
-    /* 2. THẺ CHỈ SỐ (KPI CARDS) - Chi tiết hơn */
-    .kpi-grid {
+    /* 2. THẺ TỔNG QUAN (STATS CARDS) - MỚI */
+    .stats-overview-grid {
         display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;
     }
 
+    .stat-box {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: transform 0.3s;
+        border-bottom: 4px solid transparent;
+    }
+    .stat-box:hover { transform: translateY(-5px); }
+
+    .stat-box-icon {
+        width: 50px; height: 50px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .stat-box-info h4 { margin: 0; font-size: 0.9rem; color: #666; font-weight: 600; }
+    .stat-box-info .number { font-size: 1.6rem; font-weight: 800; color: #333; margin-top: 5px; display: block; }
+
+    /* Màu sắc riêng cho từng stat box */
+    .stat-customers { border-bottom-color: #3b82f6; }
+    .stat-customers .stat-box-icon { background: #eff6ff; color: #3b82f6; }
+
+    .stat-orders { border-bottom-color: #8b5cf6; }
+    .stat-orders .stat-box-icon { background: #f5f3ff; color: #8b5cf6; }
+
+    .stat-products { border-bottom-color: #10b981; }
+    .stat-products .stat-box-icon { background: #ecfdf5; color: #10b981; }
+
+    .stat-pending { border-bottom-color: #f59e0b; }
+    .stat-pending .stat-box-icon { background: #fffbeb; color: #f59e0b; }
+
+
+    /* 3. THẺ CHỈ SỐ (KPI CARDS) - CŨ (Nhưng đẹp) */
+    .kpi-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;
+    }
+    
     .kpi-card {
         background: white; padding: 20px; border-radius: 16px;
         box-shadow: 0 5px 20px rgba(0,0,0,0.05);
@@ -91,17 +125,17 @@
         overflow: hidden;
     }
     .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(114, 47, 55, 0.15); }
-
+    
     .kpi-title { font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 10px; }
     .kpi-value { font-size: 1.5rem; font-weight: 800; color: var(--wine-dark); }
     .kpi-sub { font-size: 0.8rem; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
     .kpi-icon { position: absolute; right: 15px; top: 15px; font-size: 2rem; color: var(--wine-light); opacity: 0.1; }
-
+    
     /* Màu sắc riêng cho từng thẻ */
     .kpi-trend-up { color: #10b981; }
     .kpi-trend-down { color: #ef4444; }
 
-    /* 3. KHU VỰC BIỂU ĐỒ CHÍNH */
+    /* 4. KHU VỰC BIỂU ĐỒ CHÍNH */
     .main-chart-section {
         background: white; border-radius: 20px; padding: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
@@ -112,7 +146,7 @@
     .section-title { font-weight: 700; font-size: 1.1rem; color: var(--wine-dark); display: flex; align-items: center; gap: 10px; }
     .section-title::before { content: ''; width: 4px; height: 20px; background: var(--wine-main); border-radius: 2px; }
 
-    /* 4. GRID CHI TIẾT (Quarterly & Top Product) */
+    /* 5. GRID CHI TIẾT (Quarterly & Top Product) */
     .details-grid {
         display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px;
     }
@@ -136,13 +170,14 @@
 
     /* Responsive */
     @@media (max-width: 1200px) {
-        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .kpi-grid, .stats-overview-grid { grid-template-columns: repeat(2, 1fr); }
         .details-grid { grid-template-columns: 1fr; }
     }
 </style>
 
 <div class="revenue-dashboard animate__animated animate__fadeIn">
-
+    
+    <!-- 1. HEADER -->
     <div class="dashboard-header">
         <div class="header-bg-pattern"></div>
         <div class="header-content">
@@ -159,7 +194,48 @@
         </div>
     </div>
 
+    <!-- 2. THỐNG KÊ TỔNG QUAN (HỆ THỐNG) - MỚI -->
+    <h4 style="margin-bottom: 15px; color: var(--text-dark); font-weight: 700; padding-left: 5px; border-left: 4px solid var(--wine-main); line-height: 1.2;">TỔNG QUAN HỆ THỐNG</h4>
+    <div class="stats-overview-grid">
+        <!-- Khách hàng -->
+        <div class="stat-box stat-customers">
+            <div class="stat-box-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-box-info">
+                <h4>Tổng Khách Hàng</h4>
+                <span class="number" id="totalCustomers">0</span>
+            </div>
+        </div>
+        <!-- Đơn hàng -->
+        <div class="stat-box stat-orders">
+            <div class="stat-box-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+            <div class="stat-box-info">
+                <h4>Tổng Đơn Hàng</h4>
+                <span class="number" id="totalOrders">0</span>
+            </div>
+        </div>
+        <!-- Sản phẩm -->
+        <div class="stat-box stat-products">
+            <div class="stat-box-icon"><i class="fa-solid fa-laptop"></i></div>
+            <div class="stat-box-info">
+                <h4>Sản Phẩm Kinh Doanh</h4>
+                <span class="number" id="totalProducts">0</span>
+            </div>
+        </div>
+        <!-- Chờ xử lý -->
+        <div class="stat-box stat-pending">
+            <div class="stat-box-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="stat-box-info">
+                <h4>Đơn Chờ Xử Lý</h4>
+                <span class="number" id="pendingOrders" style="color: #f59e0b;">0</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 3. KPI CARDS (DOANH THU NĂM) -->
+    <h4 style="margin-bottom: 15px; color: var(--text-dark); font-weight: 700; padding-left: 5px; border-left: 4px solid var(--gold-accent); line-height: 1.2;">CHỈ SỐ TÀI CHÍNH (NĂM)</h4>
     <div class="kpi-grid">
+        <!-- Tổng thu -->
         <div class="kpi-card">
             <div class="kpi-title">Tổng Doanh Thu</div>
             <div class="kpi-value" id="kpiTotalRevenue">0 ₫</div>
@@ -169,6 +245,7 @@
             <i class="fa-solid fa-sack-dollar kpi-icon"></i>
         </div>
 
+        <!-- Tháng cao điểm -->
         <div class="kpi-card" style="border-left-color: var(--gold-accent);">
             <div class="kpi-title">Tháng Kỷ Lục</div>
             <div class="kpi-value" id="kpiBestMonth">--</div>
@@ -178,6 +255,7 @@
             <i class="fa-solid fa-trophy kpi-icon" style="color: var(--gold-accent);"></i>
         </div>
 
+        <!-- Trung bình tháng -->
         <div class="kpi-card" style="border-left-color: #2A9D8F;">
             <div class="kpi-title">Trung Bình / Tháng</div>
             <div class="kpi-value" id="kpiAvgRevenue">0 ₫</div>
@@ -187,6 +265,7 @@
             <i class="fa-solid fa-scale-balanced kpi-icon" style="color: #2A9D8F;"></i>
         </div>
 
+        <!-- Tổng sản phẩm -->
         <div class="kpi-card" style="border-left-color: #E76F51;">
             <div class="kpi-title">Đã Bán Ra</div>
             <div class="kpi-value" id="kpiSoldQty">0</div>
@@ -197,6 +276,7 @@
         </div>
     </div>
 
+    <!-- 4. BIỂU ĐỒ CHÍNH (MAIN CHART) -->
     <div class="main-chart-section">
         <div class="section-header">
             <div class="section-title">Diễn Biến Doanh Thu (12 Tháng)</div>
@@ -207,8 +287,10 @@
         </div>
     </div>
 
+    <!-- 5. CHI TIẾT (QUÝ & TOP SẢN PHẨM) -->
     <div class="details-grid">
-
+        
+        <!-- Phân tích theo Quý (Quarter) -->
         <div class="chart-box">
             <div class="section-header">
                 <div class="section-title">Hiệu Suất Theo Quý (Quarter)</div>
@@ -221,14 +303,18 @@
             </p>
         </div>
 
+        <!-- Top Sản Phẩm -->
         <div class="chart-box">
             <div class="section-header">
                 <div class="section-title">Top 5 "Best Seller"</div>
             </div>
+            <!-- Doughnut Chart nhỏ gọn -->
             <div style="height: 180px; display: flex; justify-content: center;">
                 <canvas id="topProdChart"></canvas>
             </div>
+            <!-- List chi tiết -->
             <div class="top-list" id="topProdList">
+                <!-- JS render -->
             </div>
         </div>
 
@@ -240,18 +326,36 @@
         // Cấu hình chung
         Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.color = '#666';
-
+        
         let mainChart = null;
         let quarterChart = null;
         let topChart = null;
 
         $(document).ready(function () {
             refreshData();
+            loadDashboardStats(); // Gọi hàm lấy thống kê tổng quan
         });
 
         function refreshData() {
             loadRevenueStats();
             loadTopProducts();
+        }
+
+        // --- 0. LẤY THỐNG KÊ TỔNG QUAN (MỚI) ---
+        function loadDashboardStats() {
+            $.ajax({
+                url: '/Revenue/GetDashboardStats',
+                type: 'GET',
+                success: function (res) {
+                    if (res.success) {
+                        // Hiệu ứng số chạy
+                        animateValue("totalCustomers", 0, res.totalCustomers, 1000, false);
+                        animateValue("totalOrders", 0, res.totalOrders, 1000, false);
+                        animateValue("totalProducts", 0, res.totalProducts, 1000, false);
+                        animateValue("pendingOrders", 0, res.pendingOrders, 1000, false);
+                    }
+                }
+            });
         }
 
         // --- 1. XỬ LÝ DỮ LIỆU DOANH THU & QUÝ ---
@@ -268,15 +372,15 @@
                         // A. TÍNH TOÁN KPI
                         var total = data.reduce((a, b) => a + b, 0);
                         var avg = total / 12;
-
+                        
                         // Tìm tháng cao nhất
                         var maxVal = Math.max(...data);
                         var maxIndex = data.indexOf(maxVal);
-
+                        
                         // Render KPI
                         animateValue("kpiTotalRevenue", 0, total, 1000, true);
                         $('#kpiAvgRevenue').text(avg.toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + ' ₫');
-
+                        
                         if (maxVal > 0) {
                             $('#kpiBestMonth').text("Tháng " + (maxIndex + 1));
                             $('#kpiBestMonthVal').text(maxVal.toLocaleString('vi-VN') + ' ₫');
@@ -433,13 +537,13 @@
             data.forEach((item, index) => {
                 var rankClass = index === 0 ? 'rank-1' : '';
                 html += `
-                    <div class="top-item">
-                        <div style="display:flex; align-items:center; overflow:hidden;">
-                            <div class="rank ${rankClass}">${index + 1}</div>
-                            <div class="prod-name" title="${item.TenLaptop}">${item.TenLaptop}</div>
-                        </div>
-                        <div class="prod-val">${item.SoLuongBan}</div>
-                    </div>`;
+                <div class="top-item">
+                    <div style="display:flex; align-items:center; overflow:hidden;">
+                        <div class="rank ${rankClass}">${index + 1}</div>
+                        <div class="prod-name" title="${item.TenLaptop}">${item.TenLaptop}</div>
+                    </div>
+                    <div class="prod-val">${item.SoLuongBan}</div>
+                </div>`;
             });
             $('#topProdList').html(html);
         }
@@ -451,7 +555,7 @@
             var current = start;
             var increment = end > start ? 1 : -1;
             var stepTime = Math.abs(Math.floor(duration / 50));
-            var timer = setInterval(function () {
+            var timer = setInterval(function() {
                 current += range / 50;
                 if (current >= end) {
                     current = end;
