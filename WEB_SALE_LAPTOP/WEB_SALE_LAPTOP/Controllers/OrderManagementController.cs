@@ -55,13 +55,12 @@ namespace WEB_SALE_LAPTOP.Controllers
                                     .ToList();
             }
 
-            return View(viewModel); // <-- Trả về ViewModel "Pro" mới
+            return View(viewModel); 
         }
 
-        // (Hàm Details và UpdateStatus của bạn đã rất tốt, giữ nguyên)
+   
         public ActionResult Details(int? id)
         {
-            // ... (code cũ giữ nguyên) ...
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
             HOADON hoadon = db.HOADONs
                 .Include(h => h.KHACHHANG)
@@ -99,10 +98,9 @@ namespace WEB_SALE_LAPTOP.Controllers
         {
             var listOrder = db.HOADONs.OrderByDescending(x => x.NGAYLAP).ToList();
 
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Bắt buộc với bản mới
-            // Không cần nuaữ tự thêm vô web.cònig rôig bản mới nhất không cần khai báo lại
 
-            using (ExcelPackage pck = new ExcelPackage())
+
+            using (ExcelPackage pck = new ExcelPackage()) // Lỗi xảy ra tại dòng này
             {
                 ExcelWorksheet ws = pck.Workbook.Worksheets.Add("DanhSachDonHang");
 
@@ -117,15 +115,15 @@ namespace WEB_SALE_LAPTOP.Controllers
                 int rowStart = 2;
                 foreach (var item in listOrder)
                 {
+                    // ... (Code đổ dữ liệu giữ nguyên)
                     ws.Cells[string.Format("A{0}", rowStart)].Value = item.MAHD;
-                    ws.Cells[string.Format("B{0}", rowStart)].Value = item.NGAYLAP.Value.ToString("dd/MM/yyyy");
-                    ws.Cells[string.Format("C{0}", rowStart)].Value = item.SDT_GIAO; // Hoặc tên KH
+                    ws.Cells[string.Format("B{0}", rowStart)].Value = item.NGAYLAP.HasValue ? item.NGAYLAP.Value.ToString("dd/MM/yyyy") : "";
+                    ws.Cells[string.Format("C{0}", rowStart)].Value = item.SDT_GIAO;
                     ws.Cells[string.Format("D{0}", rowStart)].Value = item.TONG_THANHTOAN;
                     ws.Cells[string.Format("E{0}", rowStart)].Value = item.TRANGTHAI;
                     rowStart++;
                 }
 
-                // Tự động dãn cột
                 ws.Cells["A:AZ"].AutoFitColumns();
 
                 // Xuất file

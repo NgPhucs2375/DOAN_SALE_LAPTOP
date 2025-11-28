@@ -14,7 +14,6 @@ namespace WEB_SALE_LAPTOP.Controllers
     // Kế thừa BaseAdminController đã tự động bảo vệ và gán Layout
     public class ProductManagementController : BaseAdminController
     {
-        // (BaseAdminController đã cung cấp 'db', không cần khai báo lại)
 
         // GET: Index
         public ActionResult Index(string search, int? page, int? brandId, int? categoryId)
@@ -31,20 +30,18 @@ namespace WEB_SALE_LAPTOP.Controllers
             viewModel.Categories = new SelectList(categoriesList, "Key", "Value", categoryId);
 
             // 3. Bắt đầu Truy vấn (Query) "gốc" (base)
-            // SỬA LỖI LINQ: Xóa .OrderBy() khỏi đây
             var laptops = db.LAPTOPs
                             .Include(l => l.HANG)
                             .Include(l => l.LOAI_LAPTOP)
                             .AsQueryable(); // <-- Biến nó thành IQueryable
 
-            // 4. "TIẾN HÓA": Tính toán Thống kê (Giữ nguyên, đã tốt)
+            //  Tính toán Thống kê (Giữ nguyên, đã tốt)
             // (Tạm thời tải (load) tất cả để đếm)
             var allProducts = laptops.OrderBy(l => l.TENLAPTOP).ToList();
             viewModel.TongSoSanPham = allProducts.Count();
             viewModel.SanPhamDangBan = allProducts.Count(p => p.TRANGTHAI == true);
             viewModel.SanPhamDaAn = allProducts.Count(p => p.TRANGTHAI == false);
 
-            // 5. "TIẾN HÓA": Áp dụng (Apply) Lọc (Filters) (Giữ nguyên, đã tốt)
             if (!string.IsNullOrEmpty(search))
             {
                 laptops = laptops.Where(l => l.TENLAPTOP.Contains(search) || l.CAUHINH.Contains(search));
@@ -75,7 +72,7 @@ namespace WEB_SALE_LAPTOP.Controllers
         // GET: Create
         public ActionResult Create()
         {
-            // KHÔNG CẦN GÁN ViewBag.Layout ở đây nữa
+           
             ViewBag.MALOAI = new SelectList(db.LOAI_LAPTOP, "MALOAI", "TENLOAI");
             ViewBag.MAHANG = new SelectList(db.HANGs, "MAHANG", "TENHANG");
             return View();
@@ -119,25 +116,49 @@ namespace WEB_SALE_LAPTOP.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(
-            [Bind(Include = "MALAPTOP,TENLAPTOP,MOTA,CAUHINH,GIA_GOC,GIA_BAN,SOLUONG_TON,MALOAI,MAHANG,TRANGTHAI,HINHANH0,HINHANH1,HINHANH2,HINHANH3")] LAPTOP laptop,
-            HttpPostedFileBase HINHANH0_File, HttpPostedFileBase HINHANH1_File,
-            HttpPostedFileBase HINHANH2_File, HttpPostedFileBase HINHANH3_File)
+     [Bind(Include = "MALAPTOP,TENLAPTOP,MOTA,CAUHINH,GIA_GOC,GIA_BAN,SOLUONG_TON,MALOAI,MAHANG,TRANGTHAI,HINHANH0,HINHANH1,HINHANH2,HINHANH3")] LAPTOP laptop,
+     HttpPostedFileBase HINHANH0_File, HttpPostedFileBase HINHANH1_File,
+     HttpPostedFileBase HINHANH2_File, HttpPostedFileBase HINHANH3_File)
         {
             if (ModelState.IsValid)
             {
-                string newImg0 = SaveImage(HINHANH0_File);
-                if (newImg0 != null) laptop.HINHANH0 = newImg0;
-                string newImg1 = SaveImage(HINHANH1_File);
-                if (newImg1 != null) laptop.HINHANH1 = newImg1;
-                string newImg2 = SaveImage(HINHANH2_File);
-                if (newImg2 != null) laptop.HINHANH2 = newImg2;
-                string newImg3 = SaveImage(HINHANH3_File);
-                if (newImg3 != null) laptop.HINHANH3 = newImg3;
+                // 1. TÌM VÀ NẠP SẢN PHẨM GỐC TỪ CSDL (Tracked Entity)
+                var productInDb = db.LAPTOPs.Find(laptop.MALAPTOP);
 
-                db.Entry(laptop).State = EntityState.Modified;
+                if (productInDb == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // 2. CẬP NHẬT ẢNH MỚI (Bảo toàn ảnh cũ nếu không có file mới)
+                string newImg0 = SaveImage(HINHANH0_File);
+                if (newImg0 != null) productInDb.HINHANH0 = newImg0;
+
+                string newImg1 = SaveImage(HINHANH1_File);
+                if (newImg1 != null) productInDb.HINHANH1 = newImg1;
+
+                string newImg2 = SaveImage(HINHANH2_File);
+                if (newImg2 != null) productInDb.HINHANH2 = newImg2;
+
+                string newImg3 = SaveImage(HINHANH3_File);
+                if (newImg3 != null) productInDb.HINHANH3 = newImg3;
+
+                // 3. CẬP NHẬT TẤT CẢ CÁC TRƯỜNG DỮ LIỆU
+                productInDb.TENLAPTOP = laptop.TENLAPTOP;
+                productInDb.MOTA = laptop.MOTA;
+                productInDb.CAUHINH = laptop.CAUHINH;
+                productInDb.GIA_GOC = laptop.GIA_GOC;
+                productInDb.GIA_BAN = laptop.GIA_BAN;
+                productInDb.SOLUONG_TON = laptop.SOLUONG_TON;
+                productInDb.MALOAI = laptop.MALOAI;
+                productInDb.MAHANG = laptop.MAHANG;
+                productInDb.TRANGTHAI = laptop.TRANGTHAI;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            // Nếu ModelState không hợp lệ, tải lại SelectList cho View
             ViewBag.MALOAI = new SelectList(db.LOAI_LAPTOP, "MALOAI", "TENLOAI", laptop.MALOAI);
             ViewBag.MAHANG = new SelectList(db.HANGs, "MAHANG", "TENHANG", laptop.MAHANG);
             return View(laptop);
@@ -175,7 +196,6 @@ namespace WEB_SALE_LAPTOP.Controllers
             return RedirectToAction("Index");
         }
 
-        // (Hàm SaveImage - Giữ nguyên)
         private string SaveImage(HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
@@ -192,7 +212,6 @@ namespace WEB_SALE_LAPTOP.Controllers
 
         public ProductManagementController() : base(maQuyenCanCo: 3)
         {
-            // Để trống
         }
     }
 }

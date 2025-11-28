@@ -1,27 +1,32 @@
 ﻿@model WEB_SALE_LAPTOP.Models.ProductManagementViewModel
-@using PagedList.Mvc; 
+@using PagedList.Mvc;
 
- @{ ViewBag.Title = "Quản lý Sản phẩm"; }
+@{
+    ViewBag.Title = "Quản lý Sản phẩm (Pro)";
+}
 
 <div class="stat-card-grid" style="grid-template-columns: repeat(3, 1fr);">
-    <div class="stat-card">
+
+    <div class="stat-card total">
         <div class="stat-icon icon-total"><i class="fa-solid fa-box-archive"></i></div>
         <div class="stat-info">
             <span class="stat-title">Tổng số Sản phẩm</span>
             <span class="stat-value">@Model.TongSoSanPham</span>
         </div>
     </div>
-    <div class="stat-card">
+
+    <div class="stat-card active-sale">
         <div class="stat-icon icon-revenue"><i class="fa-solid fa-check-circle"></i></div>
         <div class="stat-info">
             <span class="stat-title">Đang bán</span>
             <span class="stat-value">@Model.SanPhamDangBan</span>
         </div>
     </div>
-    <div class="stat-card">
+
+    <div class="stat-card inactive-stock">
         <div class="stat-icon icon-pending"><i class="fa-solid fa-eye-slash"></i></div>
         <div class="stat-info">
-            <span class="stat-title">Đã ẩn</span>
+            <span class="stat-title">Đã ẩn / Hết hàng</span>
             <span class="stat-value">@Model.SanPhamDaAn</span>
         </div>
     </div>
@@ -41,15 +46,18 @@
         <i class="fa-solid fa-search"></i>
         @Html.TextBox("search", Model.CurrentSearch, new { @class = "filter-input", placeholder = "Tìm theo tên, cấu hình..." })
     </div>
+
     <div class="filter-group">
         <i class="fa-solid fa-tag"></i>
         @Html.DropDownList("brandId", Model.Brands, new { @class = "filter-select" })
     </div>
+
     <div class="filter-group">
         <i class="fa-solid fa-list"></i>
         @Html.DropDownList("categoryId", Model.Categories, new { @class = "filter-select" })
     </div>
-    <button type="submit" class="btn-primary-admin" style="padding: 10px 15px;">
+
+    <button type="submit" class="btn-primary-admin filter-submit-btn">
         <i class="fa-solid fa-filter"></i> Lọc
     </button>
 }
@@ -64,7 +72,7 @@
                 <th>Giá Bán</th>
                 <th>Tồn kho</th>
                 <th>Trạng thái</th>
-                <th></th>
+                <th style="text-align: right;"></th>
             </tr>
         </thead>
         <tbody>
@@ -81,10 +89,16 @@
                     <td>@Html.DisplayFor(modelItem => item.HANG.TENHANG)</td>
                     <td>@Html.DisplayFor(modelItem => item.LOAI_LAPTOP.TENLOAI)</td>
 
-                    <td style="color: var(--color-accent); font-weight: bold;">
+                    <td style="color: var(--primary-color); font-weight: bold; font-size: 1.1rem;">
                         @String.Format("{0:N0}", item.GIA_BAN) ₫
                     </td>
-                    <td>@Html.DisplayFor(modelItem => item.SOLUONG_TON)</td>
+
+                    <td style="font-weight: 700;">
+                        <span class="stock-qty-badge @(item.SOLUONG_TON < 5 ? "low-stock" : "")">
+                            @Html.DisplayFor(modelItem => item.SOLUONG_TON)
+                        </span>
+                    </td>
+
                     <td>
                         @if (item.TRANGTHAI == true)
                         {
@@ -95,6 +109,7 @@
                             <span class="status status-inactive">Đã ẩn</span>
                         }
                     </td>
+
                     <td class="action-buttons">
                         <a href="@Url.Action("Edit", new { id=item.MALAPTOP })" class="btn-action btn-edit" title="Sửa">
                             <i class="fa-solid fa-pencil"></i>
@@ -111,16 +126,21 @@
 
 <div class="pagination-container">
     @Html.PagedListPager(Model.Products, page => Url.Action("Index",
-        new { page,
+        new
+            {
+                page,
             search = Model.CurrentSearch,
             brandId = Model.CurrentBrandId,
             categoryId = Model.CurrentCategoryId
         }),
         new PagedListRenderOptions
         {
-            // SỬA LỖI 3: Xóa thuộc tính 'PageClasses' không hợp lệ
+            // Set Class chung cho thẻ UL
+            UlElementClasses = new[] { "pagination" },
+            // Set Class cho thẻ LI
             LiElementClasses = new[] { "page-item" },
-            // PageClasses = new[] { "page-link" }, <-- DÒNG NÀY GÂY LỖI
+            // SỬA LỖI: Không cần đặt PageClasses vì style CSS đã xử lý link bên trong LI
+
             DisplayLinkToFirstPage = PagedListDisplayMode.IfNeeded,
             DisplayLinkToLastPage = PagedListDisplayMode.IfNeeded,
             DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
@@ -132,3 +152,18 @@
             LinkToLastPageFormat = "Cuối »"
         })
 </div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var currentBrand = '@Model.CurrentBrandId';
+            if (currentBrand && currentBrand !== '0') {
+                $('#brandId').val(currentBrand);
+            }
+            var currentCategory = '@Model.CurrentCategoryId';
+            if (currentCategory && currentCategory !== '0') {
+                $('#categoryId').val(currentCategory);
+            }
+        });
+    </script>
+}

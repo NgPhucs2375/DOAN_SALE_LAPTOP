@@ -694,3 +694,159 @@ input, button, select, textarea,
         transform: scale(1);
     }
 }
+/* --- CSS CHO TRANG QUẢN LÝ SẢN PHẨM --- */
+
+/* 1. THỐNG KÊ (KPI Cards) */
+.stat-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-left: 5px solid var(--primary-color);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.stat-card.total {
+    border-left-color: #007bff;
+}
+
+.stat-card.active-sale .stat-icon {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stat-card.inactive-stock .stat-icon {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.stat-info .stat-title {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.stat-info .stat-value {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+/* 2. BỘ LỌC NGANG (Filter Bar) */
+.admin-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+    .filter-group i {
+        padding-left: 10px;
+        color: var(--text-muted);
+    }
+
+.filter-input, .filter-select {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    background-color: transparent;
+}
+
+.filter-submit-btn {
+    flex-shrink: 0;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* 3. BẢNG SẢN PHẨM (SẢN PHẨM CÓ ẢNH VÀ TÊN) */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .data-table th, .data-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .data-table thead th {
+        background-color: #f8f9fa;
+        color: #64748b;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+.product-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 350px;
+}
+
+.table-product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.product-info-text strong {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.stock-qty-badge.low-stock {
+    color: var(--accent-color);
+    font-weight: bold;
+    background: #fef2f2;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+}

@@ -175,6 +175,20 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
 
             List<CartItem> cart = GetCart();
+            foreach (var item in cart)
+            {
+                var spCheck = db.LAPTOPs.Find(item.MaLaptop);
+                if (spCheck == null)
+                {
+                    TempData["CheckoutError"] = $"Sản phẩm '{item.TenLaptop}' không tồn tại hoặc đã bị xóa.";
+                    return RedirectToAction("Checkout");
+                }
+                if (spCheck.SOLUONG_TON < item.SoLuong)
+                {
+                    TempData["CheckoutError"] = $"Sản phẩm '{item.TenLaptop}' chỉ còn {spCheck.SOLUONG_TON} chiếc. Quý khách vui lòng giảm số lượng.";
+                    return RedirectToAction("Checkout"); // Quay lại trang thanh toán để báo lỗi
+                }
+            }
             string maVoucher = Session["MaVoucher"] as string;
             decimal soTienGiam = (decimal)(Session["SoTienGiam"] ?? 0m);
             decimal tongTienHang = cart.Sum(item => item.ThanhTien);

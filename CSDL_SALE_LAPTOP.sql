@@ -8,7 +8,7 @@ create table PHANQUYEN
 (
     MAQUYEN int IDENTITY(1,1) primary key,
     TENQUYEN nvarchar(50) NOT NULL,
-    MOTA nvarchar(200),
+    MOTA nvarchar(200)
 )
 GO
 
