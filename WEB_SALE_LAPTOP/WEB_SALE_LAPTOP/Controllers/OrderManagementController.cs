@@ -6,22 +6,19 @@ using System.Web.Mvc;
 using WEB_SALE_LAPTOP.Models;
 using System.Data.Entity;
 using System.Net;
+using OfficeOpenXml; // Thư viện EPPlus để xuất Excel
 
 namespace WEB_SALE_LAPTOP.Controllers
 {
-    // Kế thừa "bộ não" Admin (Đã "tiến hóa")
+
     public class OrderManagementController : BaseAdminController
     {
-        // "TIẾN HÓA": Yêu cầu Quyền 2 (Bán hàng) hoặc 1 (Admin)
+        //Yêu cầu Quyền 2 (Bán hàng) hoặc 1 (Admin)
         public OrderManagementController() : base(maQuyenCanCo: 2)
         {
             // Để trống
         }
 
-        // ===================================================================
-        // "TIẾN HÓA PRO" (CẤP 3) - HÀM INDEX MỚI
-        // ===================================================================
-        // Chấp nhận một "status" (trạng thái) để lọc
         public ActionResult Index(string status = null)
         {
             // 1. Lấy TẤT CẢ hóa đơn (để làm thống kê)
@@ -31,7 +28,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                                 .OrderByDescending(h => h.NGAYLAP)
                                 .ToList();
 
-            // 2. "TIẾN HÓA" (Requirement #1): Tính toán Thống kê
             var viewModel = new OrderManagementViewModel
             {
                 // Tính tổng doanh thu (chỉ từ các đơn "Hoàn thành")
@@ -45,7 +41,7 @@ namespace WEB_SALE_LAPTOP.Controllers
                 CurrentFilter = status // Ghi nhớ bộ lọc hiện tại
             };
 
-            // 3. "TIẾN HÓA" (Requirement #3): Lọc (Filter) Bảng
+
             if (string.IsNullOrEmpty(status))
             {
                 // Nếu không lọc, hiển thị tất cả
@@ -78,7 +74,6 @@ namespace WEB_SALE_LAPTOP.Controllers
         [HttpPost]
         public ActionResult UpdateStatus(int maHD, string newStatus)
         {
-            // ... (code cũ giữ nguyên) ...
             var hoadon = db.HOADONs.Find(maHD);
             if (hoadon == null) { return RedirectToAction("Index"); }
 
@@ -98,6 +93,48 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public void ExportToExcel()
+        {
+            var listOrder = db.HOADONs.OrderByDescending(x => x.NGAYLAP).ToList();
+
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Bắt buộc với bản mới
+            // Không cần nuaữ tự thêm vô web.cònig rôig bản mới nhất không cần khai báo lại
+
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("DanhSachDonHang");
+
+                // Tạo tiêu đề cột
+                ws.Cells["A1"].Value = "Mã Đơn";
+                ws.Cells["B1"].Value = "Ngày Đặt";
+                ws.Cells["C1"].Value = "Khách Hàng";
+                ws.Cells["D1"].Value = "Tổng Tiền";
+                ws.Cells["E1"].Value = "Trạng Thái";
+
+                // Đổ dữ liệu
+                int rowStart = 2;
+                foreach (var item in listOrder)
+                {
+                    ws.Cells[string.Format("A{0}", rowStart)].Value = item.MAHD;
+                    ws.Cells[string.Format("B{0}", rowStart)].Value = item.NGAYLAP.Value.ToString("dd/MM/yyyy");
+                    ws.Cells[string.Format("C{0}", rowStart)].Value = item.SDT_GIAO; // Hoặc tên KH
+                    ws.Cells[string.Format("D{0}", rowStart)].Value = item.TONG_THANHTOAN;
+                    ws.Cells[string.Format("E{0}", rowStart)].Value = item.TRANGTHAI;
+                    rowStart++;
+                }
+
+                // Tự động dãn cột
+                ws.Cells["A:AZ"].AutoFitColumns();
+
+                // Xuất file
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment: filename=BaoCaoDonHang.xlsx");
+                Response.BinaryWrite(pck.GetAsByteArray());
+                Response.End();
+            }
         }
     }
 }

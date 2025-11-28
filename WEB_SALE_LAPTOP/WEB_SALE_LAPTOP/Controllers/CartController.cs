@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity; 
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WEB_SALE_LAPTOP.Models;
-using System.Data.Entity; // <-- Đảm bảo bạn có dòng này
+using WEB_SALE_LAPTOP.Common;
 
 namespace WEB_SALE_LAPTOP.Controllers
 {
@@ -13,9 +14,6 @@ namespace WEB_SALE_LAPTOP.Controllers
         private QL_LAPTOP db = new QL_LAPTOP();
         private const string CartSession = "CartSession";
 
-        // ===================================================================
-        // SỬA LỖI: Thêm lại 2 hàm helper đã mất
-        // ===================================================================
         private List<CartItem> GetCart()
         {
             List<CartItem> cart = Session[CartSession] as List<CartItem>;
@@ -32,11 +30,6 @@ namespace WEB_SALE_LAPTOP.Controllers
             Session[CartSession] = cart;
         }
 
-        // ===================================================================
-        // CÁC HÀM CÒN LẠI (ĐÃ CHUẨN EF)
-        // ===================================================================
-
-        // GET: /Cart/Index
         public ActionResult Index()
         {
             List<CartItem> cart = GetCart();
@@ -67,7 +60,7 @@ namespace WEB_SALE_LAPTOP.Controllers
                 LAPTOP laptop = db.LAPTOPs.Find(maLaptop);
                 if (laptop != null)
                 {
-                    // Dùng class CartItem của bạn
+                    // Dùng class CartItem 
                     cart.Add(new CartItem(maLaptop, laptop, soLuongThucTe));
                 }
             }
@@ -214,9 +207,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                     THANHTIEN = item.ThanhTien
                 };
 
-                // ===================================================================
-                // SỬA LỖI: Tên đúng là 'CT_HOADON' (số ít)
-                // ===================================================================
                 db.CT_HOADON.Add(ct);
 
                 LAPTOP sp = db.LAPTOPs.Find(item.MaLaptop);
@@ -233,6 +223,43 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
 
             db.SaveChanges();
+            // --- BẮT ĐẦU GỬI MAIL ---
+            try
+            {
+                // 1. Đọc nội dung giỏ hàng để tạo HTML
+                string contentCustomer = System.IO.File.ReadAllText(Server.MapPath("~/Content/templates/send2.html"));
+
+                // Tạo bảng chi tiết sản phẩm
+                string productRows = "";
+                foreach (var item in cart)
+                {
+                    productRows += $"<tr><td>{item.TenLaptop}</td><td>{item.SoLuong}</td><td>{item.ThanhTien:N0}đ</td></tr>";
+                }
+
+                // 2. Thay thế các biến trong template
+                contentCustomer = contentCustomer.Replace("{{MaDon}}", hoadon.MAHD.ToString());
+                contentCustomer = contentCustomer.Replace("{{NgayDat}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                contentCustomer = contentCustomer.Replace("{{TenKhachHang}}", hoadon.SDT_GIAO); // Hoặc tên nếu có
+                contentCustomer = contentCustomer.Replace("{{Phone}}", hoadon.SDT_GIAO);
+                contentCustomer = contentCustomer.Replace("{{DiaChi}}", hoadon.DIACHI_GIAO);
+                contentCustomer = contentCustomer.Replace("{{SanPham}}", productRows);
+                contentCustomer = contentCustomer.Replace("{{TongTien}}", hoadon.TONG_THANHTOAN.Value.ToString("N0"));
+
+                // 3. Gửi mail
+                // Lấy email khách từ Session hoặc form (ở đây ví dụ lấy từ Session user)
+                var userEmail = (Session["UserCustomer"] as KHACHHANG)?.EMAIL;
+
+                if (!string.IsNullOrEmpty(userEmail))
+                {
+                    new MailHelper().SendMail(userEmail, "Đơn hàng mới từ Laptop Pro #" + hoadon.MAHD, contentCustomer);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần, nhưng không chặn quy trình đặt hàng
+                System.Diagnostics.Debug.WriteLine("Gửi mail lỗi: " + ex.Message);
+            }
+            // ------------------------
             Session.Remove(CartSession);
             Session.Remove("MaVoucher");
             Session.Remove("SoTienGiam");
