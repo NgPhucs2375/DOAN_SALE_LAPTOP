@@ -34,11 +34,11 @@ namespace WEB_SALE_LAPTOP.Controllers
             // Sau khi test xong, bạn có thể bỏ dòng này để dùng số tiền thật
             string amount = "10000";
 
-            // Cấu hình MoMo (Key Công cộng chuẩn nhất hiện nay)
+            // Cấu hình MoMo (Key riêng của Phúc )
             string endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-            string partnerCode = "MOMO5RGX20191128";
-            string accessKey = "M8brj9K6E1Rv0859";
-            string secretKey = "nqQiVSgDMy809JoPF6OzP5OdBUB550Y4";
+            string partnerCode = "MOMOPFMX20251128_TEST";
+            string accessKey = "IfRyvtqXls95lcAr";
+            string secretKey = "vM1hUcS0WeZARay7xKOI167gAGudjXh3";
 
             string orderInfo = "Thanh toan laptop";
             string redirectUrl = "https://localhost:44311/Payment/MomoReturn";
