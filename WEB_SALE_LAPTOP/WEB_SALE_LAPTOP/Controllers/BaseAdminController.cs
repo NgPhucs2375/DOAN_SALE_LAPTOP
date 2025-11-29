@@ -11,7 +11,6 @@ namespace WEB_SALE_LAPTOP.Controllers
     {
         protected QL_LAPTOP db = new QL_LAPTOP();
 
-        // Biến này sẽ lưu quyền MÀ CONTROLLER CON YÊU CẦU
         private readonly int? _requiredQuyen;
 
         // Hàm khởi tạo (Constructor)

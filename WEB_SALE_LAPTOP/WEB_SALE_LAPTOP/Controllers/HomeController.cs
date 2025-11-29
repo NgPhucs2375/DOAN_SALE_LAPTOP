@@ -96,13 +96,10 @@ namespace WEB_SALE_LAPTOP.Controllers
                                     .ToList();
             }
 
-            // QUAN TRỌNG: Trả về View "Index" (Trang chủ)
-            // để hiển thị kết quả tìm kiếm DƯỚI DẠNG CARD SẢN PHẨM
-            // thay vì một trang mới.
+
             return View("Index", ketQuaTimKiem);
         }
 
-        // ========== CÁC HÀM KHÁC (GIỮ NGUYÊN) ==========
 
         [ChildActionOnly]
         [OutputCache(Duration = 3600, VaryByParam = "none")] // Cache trong 3600 giây = 1 giờ
@@ -125,7 +122,6 @@ namespace WEB_SALE_LAPTOP.Controllers
             return View();
         }
 
-        // THAY ĐỔI 2: Thêm hàm Dispose để đóng kết nối CSDL (Sửa Vấn đề 2)
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -137,7 +133,6 @@ namespace WEB_SALE_LAPTOP.Controllers
 
         public ActionResult TimKiemTheoLoai(string tenLoai)
         {
-            // Đặt tên loại vào ViewBag để View có thể hiển thị
             ViewBag.TieuDeLoc = tenLoai;
 
             var ketQua = data.LAPTOPs
@@ -146,7 +141,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                             .Where(l => l.LOAI_LAPTOP.TENLOAI.ToLower() == tenLoai.ToLower())
                             .ToList();
 
-            // Dùng lại View "Index" (Trang chủ) để hiển thị kết quả
             return View("Index", ketQua);
         }
 

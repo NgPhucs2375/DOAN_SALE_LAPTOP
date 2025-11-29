@@ -1,25 +1,18 @@
 ﻿@{
-    // "BỘ NÃO" (BRAIN) CỦA LAYOUT
 
-    // Mặc định (default), tất cả các trang sẽ dùng Layout Khách hàng
     string layoutToUse = "~/Views/Shared/_Layout.cshtml";
 
-    // "TIẾN HÓA": Kiểm tra xem Controller hiện tại có phải là Controller Admin không
-    // (Bằng cách kiểm tra xem nó có kế thừa (inherit) từ "BaseAdminController" không)
+
     if (Html.ViewContext.Controller is WEB_SALE_LAPTOP.Controllers.BaseAdminController)
     {
-        // Nếu ĐÚNG (this is an Admin page), "ép" (force) nó dùng Layout Admin
         layoutToUse = "~/Views/Shared/_AdminLayout.cshtml";
     }
 
-    // "TIẾN HÓA 2": Xử lý trường hợp "Ngoại lệ" (Exception) - Trang Đăng nhập
-    // (Trang Đăng nhập Admin KHÔNG ĐƯỢC CÓ Sidebar Admin)
+
     if (Html.ViewContext.Controller is WEB_SALE_LAPTOP.Controllers.AdminAccountController)
     {
-        // Nếu là trang Đăng nhập Admin, dùng lại Layout Khách hàng
         layoutToUse = "~/Views/Shared/_Layout.cshtml";
     }
 
-    // Gán layout
     Layout = layoutToUse;
 }

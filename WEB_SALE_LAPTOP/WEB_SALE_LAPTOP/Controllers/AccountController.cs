@@ -11,15 +11,10 @@ namespace WEB_SALE_LAPTOP.Controllers
     {
         private QL_LAPTOP db = new QL_LAPTOP();
 
-        // (Hàm Register (GET) của bạn đã tốt, giữ nguyên)
         public ActionResult Register()
         {
             return View();
         }
-
-        // ===================================================================
-        // REGISTER (POST) - ĐÃ "TIẾN HÓA" SANG EF
-        // ===================================================================
         [HttpPost]
         public ActionResult Register(FormCollection collection)
         {
@@ -30,7 +25,6 @@ namespace WEB_SALE_LAPTOP.Controllers
             string matkhau = collection["MATKHAU"];
             string matkhau_nhaplai = collection["MATKHAU_NHAPLAI"];
 
-            // (Logic kiểm tra của bạn đã tốt, giữ nguyên)
             if (matkhau != matkhau_nhaplai) { /* ... */ }
             var existingUserByEmail = db.KHACHHANGs.FirstOrDefault(k => k.EMAIL == email);
             if (existingUserByEmail != null) { /* ... */ }
@@ -42,16 +36,16 @@ namespace WEB_SALE_LAPTOP.Controllers
                 EMAIL = email,
                 SODT = sodt,
                 DIACHI = diachi,
-                MATKHAU = matkhau, // (LƯU Ý: Bạn nên mã hóa mật khẩu này)
+                MATKHAU = matkhau, 
                 NGAYTAO = DateTime.Now
             };
 
             try
             {
-                // === SỬA LỖI: DÙNG CÚ PHÁP EF ===
-                db.KHACHHANGs.Add(newCustomer); // Thay vì InsertOnSubmit
-                db.SaveChanges();               // Thay vì SubmitChanges
-                // ================================
+                
+                db.KHACHHANGs.Add(newCustomer); 
+                db.SaveChanges();       
+                
 
                 return RedirectToAction("Login");
             }
@@ -62,7 +56,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
         }
 
-        // (Hàm Login (GET & POST) của bạn đã rất tốt, giữ nguyên)
+       
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -98,7 +92,6 @@ namespace WEB_SALE_LAPTOP.Controllers
             }
         }
 
-        // (Hàm Logout của bạn đã tốt, giữ nguyên)
         public ActionResult Logout()
         {
             Session.Clear();
@@ -106,7 +99,7 @@ namespace WEB_SALE_LAPTOP.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // (Hàm Dispose của bạn đã tốt, giữ nguyên)
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -117,13 +110,11 @@ namespace WEB_SALE_LAPTOP.Controllers
         }
         public ActionResult Profile()
         {
-            // 1. Bảo vệ (Secure)
             if (Session["UserCustomer"] == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // 2. Lấy ID Khách hàng
             var customer = Session["UserCustomer"] as KHACHHANG;
             int khachHangID = customer.MAKH;
 
@@ -133,7 +124,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                 // 4. Lấy thông tin khách hàng (mới nhất từ CSDL)
                 CustomerInfo = db.KHACHHANGs.Find(khachHangID),
 
-                // 5. "TIẾN HÓA": Lấy Lịch sử Đơn hàng (Nội dung mới)
                 OrderHistory = db.HOADONs
                                 .Where(h => h.MAKH == khachHangID)
                                 .OrderByDescending(h => h.NGAYLAP)
@@ -141,7 +131,7 @@ namespace WEB_SALE_LAPTOP.Controllers
                                 .ToList()
             };
 
-            return View(viewModel); // <-- Trả về ViewModel "Pro"
+            return View(viewModel); 
         }
 
         [HttpPost]
@@ -155,7 +145,6 @@ namespace WEB_SALE_LAPTOP.Controllers
 
             try
             {
-                // 2. Tìm khách hàng trong CSDL
                 var customerInDb = db.KHACHHANGs.Find(customerData.MAKH);
                 if (customerInDb == null)
                 {
@@ -171,7 +160,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                 // 4. Lưu vào CSDL
                 db.SaveChanges();
 
-                // 5. "TIẾN HÓA": Cập nhật lại Session
                 Session["UserCustomer"] = customerInDb;
                 Session["UserName"] = customerInDb.HOTEN;
             }
@@ -180,7 +168,6 @@ namespace WEB_SALE_LAPTOP.Controllers
                 // (Xử lý lỗi)
             }
 
-            // 6. Quay lại trang Profile
             return RedirectToAction("Profile");
         }
 

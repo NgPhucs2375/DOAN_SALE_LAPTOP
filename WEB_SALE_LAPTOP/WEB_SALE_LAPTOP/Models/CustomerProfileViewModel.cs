@@ -5,7 +5,6 @@ using System.Web;
 
 namespace WEB_SALE_LAPTOP.Models
 {
-    // "Bộ não" mới, chứa MỌI THỨ mà trang Profile cần
     public class CustomerProfileViewModel
     {
         // 1. Thông tin để "Sửa" (Edit)

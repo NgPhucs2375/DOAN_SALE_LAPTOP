@@ -9,7 +9,6 @@ namespace WEB_SALE_LAPTOP.Common
     {
         public void SendMail(string toEmail, string subject, string content)
         {
-            // CẤU HÌNH SMTP GOOGLE
             var fromEmailAddress = "tranphuc2375@gmail.com"; // <-- Thay Email của bạn
             var fromEmailPassword = "bkxf uiid pvag raaa";    // <-- Thay Mật khẩu ứng dụng 16 ký tự
             var smtpHost = "smtp.gmail.com";

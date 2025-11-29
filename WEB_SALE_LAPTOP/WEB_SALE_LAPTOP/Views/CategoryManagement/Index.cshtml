@@ -279,11 +279,9 @@
         var apiUrl = '/CategoryManagement';
 
         $(document).ready(function () {
-            // Giả lập loading 0.8s cho đẹp rồi mới load thật
             setTimeout(loadData, 800);
         });
 
-        // 1. Load danh sách (Hiệu ứng FadeIn)
         function loadData() {
             $.ajax({
                 url: apiUrl + '/GetAll',
@@ -312,7 +310,6 @@
             });
         }
 
-        // 2. Tìm kiếm nhanh (Client Side)
         function searchTable() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("searchInput");
@@ -333,7 +330,6 @@
             }
         }
 
-        // 3. Modal Logic
         function openModal(id, name) {
             $('#hiddenId').val(id);
             $('#txtTenLoai').val(name);
@@ -349,7 +345,6 @@
             $('#categoryModal').fadeOut(200);
         }
 
-        // 4. Lưu dữ liệu (Dùng SweetAlert2 thay alert)
         function saveCategory() {
             var id = $('#hiddenId').val();
             var ten = $('#txtTenLoai').val();
@@ -389,7 +384,6 @@
             });
         }
 
-        // 5. Xóa (Dùng SweetAlert2 Confirm cực đẹp)
         function deleteCategory(id) {
             Swal.fire({
                 title: 'Bạn chắc chắn chứ?',

@@ -961,3 +961,127 @@ INSERT INTO LAPTOP (TENLAPTOP, MOTA, CAUHINH, GIA_GOC, GIA_BAN, SOLUONG_TON, MAL
 GO
 
 
+UPDATE LAPTOP 
+SET SOLUONG_TON = SOLUONG_TON + 200 
+WHERE SOLUONG_TON < 200;
+GO
+
+-- ============================================================
+-- PHẦN 2: TỰ ĐỘNG SINH 50 KHÁCH HÀNG MỚI (TRÁNH TRÙNG LẶP)
+-- Sử dụng vòng lặp và check NOT EXISTS để an toàn tuyệt đối
+-- ============================================================
+PRINT N'Dang tao khach hang gia lap...';
+DECLARE @k INT = 1;
+DECLARE @fakePhone VARCHAR(15);
+DECLARE @fakeEmail NVARCHAR(100);
+
+WHILE @k <= 50
+BEGIN
+    -- Tạo SĐT và Email ngẫu nhiên theo index
+    SET @fakePhone = '099' + RIGHT('000000' + CAST(@k AS VARCHAR(10)), 7);
+    SET @fakeEmail = 'user.auto.' + CAST(@k AS VARCHAR(10)) + '@gmail.com';
+
+    -- Chỉ thêm nếu chưa tồn tại (Tránh lỗi Unique Key)
+    IF NOT EXISTS (SELECT 1 FROM KHACHHANG WHERE EMAIL = @fakeEmail OR SODT = @fakePhone)
+    BEGIN
+        INSERT INTO KHACHHANG (HOTEN, SODT, EMAIL, DIACHI, MATKHAU, NGAYTAO)
+        VALUES (
+            N'Khách Hàng Ảo ' + CAST(@k AS NVARCHAR(10)), 
+            @fakePhone, 
+            @fakeEmail, 
+            N'Địa chỉ ngẫu nhiên số ' + CAST(@k AS NVARCHAR(10)) + N', TP.HCM', 
+            '123456', -- Mật khẩu giả
+            DATEADD(DAY, -CAST(RAND()*365 AS INT), GETDATE()) -- Ngày tạo ngẫu nhiên trong 1 năm qua
+        );
+    END
+    SET @k = @k + 1;
+END
+GO
+
+-- ============================================================
+-- PHẦN 3: CỖ MÁY THỜI GIAN - TẠO 300 ĐƠN HÀNG QUÁ KHỨ
+-- Giúp biểu đồ Doanh thu vẽ đẹp (có dữ liệu 12 tháng)
+-- ============================================================
+PRINT N'Dang chay co may thoi gian tao don hang...';
+
+DECLARE @i INT = 1;
+DECLARE @TotalOrders INT = 300; -- Số lượng đơn giả lập muốn tạo
+
+-- Biến tạm
+DECLARE @RandomDate DATETIME;
+DECLARE @RandomKhach INT;
+DECLARE @RandomProduct INT;
+DECLARE @ProductPrice DECIMAL(15,2);
+DECLARE @RandomQty INT;
+DECLARE @RandomStatus NVARCHAR(50);
+DECLARE @NewOrderID INT;
+
+WHILE @i <= @TotalOrders
+BEGIN
+    -- 1. Random Ngày: Trong vòng 365 ngày trở lại đây
+    SET @RandomDate = DATEADD(DAY, -CAST(RAND()*365 AS INT), GETDATE());
+    
+    -- 2. Random Khách: Lấy ngẫu nhiên 1 khách
+    SELECT TOP 1 @RandomKhach = MAKH FROM KHACHHANG ORDER BY NEWID();
+    
+    -- 3. Random Sản phẩm: Lấy ngẫu nhiên 1 laptop
+    SELECT TOP 1 @RandomProduct = MALAPTOP, @ProductPrice = GIA_BAN 
+    FROM LAPTOP ORDER BY NEWID();
+    
+    -- 4. Random Số lượng: 1 đến 3 chiếc
+    SET @RandomQty = CAST(RAND()*2 AS INT) + 1; 
+
+    -- 5. Random Trạng thái (80% Hoàn thành, 10% Hủy, 10% Chờ)
+    DECLARE @dice FLOAT = RAND();
+    IF @dice > 0.2 
+        SET @RandomStatus = N'Hoàn thành';
+    ELSE IF @dice > 0.1
+        SET @RandomStatus = N'Đã hủy';
+    ELSE
+        SET @RandomStatus = N'Chờ xử lý';
+
+    BEGIN TRAN;
+        -- A. Tạo Hóa Đơn
+		INSERT INTO HOADON (NGAYLAP, MAKH, MANV, TONGTIEN_HANG, TONG_THANHTOAN, TRANGTHAI, DIACHI_GIAO, SDT_GIAO)
+        VALUES (
+            @RandomDate, 
+            @RandomKhach, 
+            1, -- Gán tạm cho Admin (MANV=1)
+            @ProductPrice * @RandomQty, 
+            @ProductPrice * @RandomQty, -- Tạm thời không tính voucher cho đơn giản
+            @RandomStatus, 
+            N'Địa chỉ giao hàng tự động', 
+            '0900000000'
+        );
+        
+        SET @NewOrderID = SCOPE_IDENTITY();
+
+        -- B. Tạo Chi Tiết Hóa Đơn
+        INSERT INTO CT_HOADON (MAHD, MALAPTOP, SOLUONG, DONGIA, THANHTIEN)
+        VALUES (@NewOrderID, @RandomProduct, @RandomQty, @ProductPrice, @ProductPrice * @RandomQty);
+
+        -- C. Trừ Tồn Kho (Chỉ trừ nếu đơn không hủy)
+        IF @RandomStatus != N'Đã hủy'
+        BEGIN
+            UPDATE LAPTOP 
+            SET SOLUONG_TON = CASE WHEN SOLUONG_TON >= @RandomQty THEN SOLUONG_TON - @RandomQty ELSE 0 END
+            WHERE MALAPTOP = @RandomProduct;
+        END
+
+        -- D. Tạo Thanh Toán (Nếu hoàn thành)
+        IF @RandomStatus = N'Hoàn thành'
+        BEGIN
+            INSERT INTO THANHTOAN (MAHD, HINHTHUC, NGAYTHANHTOAN, SOTIEN, TRANGTHAI)
+            VALUES (
+                @NewOrderID, 
+                CASE WHEN RAND() > 0.5 THEN N'MoMo' ELSE N'Tiền mặt' END, -- 50/50 MoMo hoặc Tiền mặt
+                @RandomDate, 
+                @ProductPrice * @RandomQty, 
+                N'Đã thanh toán'
+            );
+        END
+    COMMIT;
+
+    SET @i = @i + 1;
+END
+GO
